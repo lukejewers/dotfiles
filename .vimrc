@@ -27,4 +27,4 @@ set wildmenu wildmode=longest:full,full
 colorscheme desert
 
 " Leader
-let mapleader = ","
+let mapleader = " "
