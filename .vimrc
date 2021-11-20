@@ -24,7 +24,7 @@ set nocursorline
 set ttyfast
 set incsearch
 set wildmenu wildmode=longest:full,full
-colorscheme desert
+colorscheme elflord 
 
 " Leader
 let mapleader = " "
