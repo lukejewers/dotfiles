@@ -1,4 +1,4 @@
-;; Initialize package sources
+;; initialize package sources
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
@@ -8,7 +8,7 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-;; Initialize use-package on non-Linux platforms
+;; initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
@@ -27,14 +27,15 @@
 (setq-default display-line-numbers 'relative)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
+(delete-selection-mode 1)
+(setq-default make-backup-files nil
+	      indent-tabs-mode nil)
 
 ;; global keybindings
 (setq mac-option-modifier 'meta
       mac-command-modifier 'super)
 
-(delete-selection-mode 1)
-
-;; Allow hash to be entered  
+;; allow hash to be entered  
 (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
 
 ;; expand region
