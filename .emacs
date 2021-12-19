@@ -88,6 +88,15 @@
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
+;; move text
+(use-package move-text)
+(global-set-key (kbd "M-p") 'move-text-up)
+(global-set-key (kbd "M-n") 'move-text-down)
+
+;; yasnippet
+(use-package yasnippet)
+(yas-global-mode 1)
+
 ;; lsp-mode
 (use-package lsp-mode
   :ensure t
@@ -126,4 +135,3 @@
 (setq magit-auto-revert-mode nil)
 (global-set-key (kbd "C-c m s") 'magit-status)
 (global-set-key (kbd "C-c m l") 'magit-log)
-
