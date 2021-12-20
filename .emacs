@@ -100,12 +100,10 @@
 ;; lsp-mode
 (use-package lsp-mode
   :ensure t
-  :hook
-  ((python-mode . lsp)
-  (javascript-mode . lsp)
-  (typescript-mode . lsp)
-  (rust-mode . lsp)) 
-  :commands lsp)
+  :hook ((python-mode rust-mode js-mode
+          js2-mode typescript-mode web-mode
+          c-mode c++-mode rust-mode)
+        . lsp-deferred))
 
 ;; ido
 (ido-mode 1)
@@ -121,7 +119,7 @@
 
 ;; paredit
 (autoload 'enable-paredit-mode "paredit" t)
-(add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
+(add-hook 'emacs-mode-hook       'enable-paredit-mode)
 (add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
 (add-hook 'ielm-mode-hook             'enable-paredit-mode)
 (add-hook 'lisp-mode-hook             'enable-paredit-mode)
@@ -135,3 +133,4 @@
 (setq magit-auto-revert-mode nil)
 (global-set-key (kbd "C-c m s") 'magit-status)
 (global-set-key (kbd "C-c m l") 'magit-log)
+
