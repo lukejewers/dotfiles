@@ -59,11 +59,11 @@
 
 (global-set-key (kbd "C-!") 'eshell-here)
 
-;; allow hash to be entered  
+;; allow hash to be entered
 (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
 
 ;; expand region
-(require 'expand-region)
+(use-package expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; company
@@ -93,9 +93,25 @@
 (global-set-key (kbd "M-p") 'move-text-up)
 (global-set-key (kbd "M-n") 'move-text-down)
 
+;; duplicate line
+(defun duplicate-line ()
+  "Duplicate current line"
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (newline)
+  (yank))
+
+(global-set-key (kbd "C-,") 'duplicate-line)
+
 ;; yasnippet
 (use-package yasnippet)
 (yas-global-mode 1)
+
+;; flycheck
+(use-package flycheck
+  :init (global-flycheck-mode))
 
 ;; lsp-mode
 (use-package lsp-mode
@@ -103,7 +119,12 @@
   :hook ((python-mode rust-mode js-mode
           js2-mode typescript-mode web-mode
           c-mode c++-mode rust-mode)
-        . lsp-deferred))
+         . lsp-deferred)
+  :config (setq gc-cons-threshold 100000000)
+          (setq lsp-completion-provider :capf)
+          (setq lsp-idle-delay 0.500)
+          (setq lsp-log-io nil)
+          (setq lsp-prefer-flymake nil))
 
 ;; ido
 (ido-mode 1)
@@ -134,3 +155,6 @@
 (global-set-key (kbd "C-c m s") 'magit-status)
 (global-set-key (kbd "C-c m l") 'magit-log)
 
+;; sly
+(use-package sly)
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
