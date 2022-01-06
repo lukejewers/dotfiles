@@ -93,6 +93,15 @@
 (global-set-key (kbd "M-p") 'move-text-up)
 (global-set-key (kbd "M-n") 'move-text-down)
 
+;; select line
+(defun select-current-line ()
+  "Select the current line"
+  (interactive)
+  (end-of-line)
+  (set-mark (line-beginning-position)))
+
+(global-set-key (kbd "C-;") 'select-current-line)
+
 ;; duplicate line
 (defun duplicate-line ()
   "Duplicate current line"
@@ -126,6 +135,13 @@
           (setq lsp-log-io nil)
           (setq lsp-prefer-flymake nil))
 
+;; lsp-pyright
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp)))) 
+
 ;; ido
 (ido-mode 1)
 (setq ido-everywhere 1)
@@ -158,3 +174,4 @@
 ;; sly
 (use-package sly)
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
+
