@@ -1,3 +1,12 @@
+;; minimize garbage collection during startup
+(setq gc-cons-threshold most-positive-fixnum)
+
+;; lower threshold to speed up garbage collection
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 2 1000 1000))))
+
+
 ;; initialize package sources
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -39,6 +48,10 @@
 (setq mac-option-modifier 'meta
       mac-command-modifier 'super)
 
+;; dired
+(require 'dired-x)
+(use-package dired-single)
+
 ;; eshell
 (defun eshell-here ()
       "Opens up a new shell in the directory associated with the
@@ -73,8 +86,6 @@
 
 ;; org mode
 (require 'org)
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
 
 ;; whitespace
@@ -86,7 +97,7 @@
 (global-set-key (kbd "C->")         'mc/mark-next-like-this)
 (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this)
-(global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
+(global-set-key (kbd "C-|")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
 ;; move text
@@ -124,38 +135,38 @@
   :init (global-flycheck-mode))
 
 ;; lsp-mode
-(use-package lsp-mode
-  :ensure t
-  :defer t
-  :hook ((python-mode . lsp-deferred)
-         (js2-mode . lsp-deferred)
-         (tide-mode . lsp-deferred)
-         (web-mode . lsp-deferred)
-         (css-mode . lsp-deferred)
-         (rust-mode . lsp-deferred)
-         (c-mode . lsp-deferred))
-  :config (setq gc-cons-threshold 100000000)
-          (setq lsp-completion-provider :capf)
-          (setq lsp-idle-delay 0.500)
-          (setq lsp-log-io nil)
-          (setq lsp-prefer-flymake nil)
-          (setq lsp-enable-file-watchers nil))
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :defer t
+;;   :hook ((python-mode . lsp-deferred)
+;;          (js2-mode . lsp-deferred)
+;;          (tide-mode . lsp-deferred)
+;;          (web-mode . lsp-deferred)
+;;          (css-mode . lsp-deferred)
+;;          (rust-mode . lsp-deferred)
+;;          (c-mode . lsp-deferred))
+;;   :config (setq gc-cons-threshold 100000000)
+;;           (setq lsp-completion-provider :capf)
+;;           (setq lsp-idle-delay 0.500)
+;;           (setq lsp-log-io nil)
+;;           (setq lsp-prefer-flymake nil)
+;;           (setq lsp-enable-file-watchers nil))
 
 ;; lsp-ui
-(use-package lsp-ui
-  :commands lsp-ui-mode
-  :config (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-sideline-enable nil)
-  (setq lsp-modeline-code-actions-enable nil)
-  (setq lsp-signature-render-documentation nil))
+;; (use-package lsp-ui
+;;   :commands lsp-ui-mode
+;;   :config (setq lsp-ui-doc-enable nil)
+;;   (setq lsp-ui-sideline-enable nil)
+;;   (setq lsp-modeline-code-actions-enable nil)
+;;   (setq lsp-signature-render-documentation nil))
 
 
 ;; lsp-pyright
-(use-package lsp-pyright
-  :ensure t
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))
+;; (use-package lsp-pyright
+;;   :ensure t
+;;   :hook (python-mode . (lambda ()
+;;                           (require 'lsp-pyright)
+;;                           (lsp))))
 
 ;; python shell
 (setq python-shell-interpreter "python3")
@@ -184,12 +195,18 @@
          (typescript-mode . tide-hl-identifier-mode)
          (before-save . tide-format-before-save)))
 
+;; emmet
+(use-package emmet-mode)
+
 ;; ido
 (ido-mode 1)
 (setq ido-everywhere 1)
 (setq ido-enable-flex-matching t)
-(require 'ido-completing-read+)
+(use-package ido-completing-read+)
 (ido-ubiquitous-mode 1)
+(use-package ido-vertical-mode)
+(ido-vertical-mode 1)
+(setq ido-vertical-define-keys 'C-n-and-C-p-only)
 
 ;; smex
 (use-package smex)
@@ -216,17 +233,3 @@
 ;; sly
 (use-package sly)
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(tide which-key web-mode-edit-element use-package-hydra typescript-mode treemacs smex sly paredit multiple-cursors move-text magit macrostep lsp-pyright ido-completing-read+ gruber-darker-theme flycheck expand-region exec-path-from-shell elpy eglot blacken)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
