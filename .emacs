@@ -134,39 +134,18 @@
 (use-package flycheck
   :init (global-flycheck-mode))
 
-;; lsp-mode
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :defer t
-;;   :hook ((python-mode . lsp-deferred)
-;;          (js2-mode . lsp-deferred)
-;;          (tide-mode . lsp-deferred)
-;;          (web-mode . lsp-deferred)
-;;          (css-mode . lsp-deferred)
-;;          (rust-mode . lsp-deferred)
-;;          (c-mode . lsp-deferred))
-;;   :config (setq gc-cons-threshold 100000000)
-;;           (setq lsp-completion-provider :capf)
-;;           (setq lsp-idle-delay 0.500)
-;;           (setq lsp-log-io nil)
-;;           (setq lsp-prefer-flymake nil)
-;;           (setq lsp-enable-file-watchers nil))
-
-;; lsp-ui
-;; (use-package lsp-ui
-;;   :commands lsp-ui-mode
-;;   :config (setq lsp-ui-doc-enable nil)
-;;   (setq lsp-ui-sideline-enable nil)
-;;   (setq lsp-modeline-code-actions-enable nil)
-;;   (setq lsp-signature-render-documentation nil))
-
-
-;; lsp-pyright
-;; (use-package lsp-pyright
-;;   :ensure t
-;;   :hook (python-mode . (lambda ()
-;;                           (require 'lsp-pyright)
-;;                           (lsp))))
+;; eglot
+(use-package eglot
+  :bind (:map eglot-mode-map
+              ("C-c r" . eglot-rename)
+              ("C-h ." . display-local-help)
+              ("C-h d" . eldoc-doc-buffer)
+              ("M-RET" . eglot-code-actions))
+  :ensure t
+  :hook ((c-mode  . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (python-mode . eglot-ensure))
+  :commands (eglot eglot-ensure))
 
 ;; python shell
 (setq python-shell-interpreter "python3")
@@ -197,6 +176,12 @@
 
 ;; emmet
 (use-package emmet-mode)
+
+;; haskell
+(use-package haskell-mode :ensure t :mode "\\.hs\\'")
+
+;; rust
+(use-package rust-mode    :ensure t :mode "\\.rs\\'")
 
 ;; ido
 (ido-mode 1)
