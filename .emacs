@@ -48,9 +48,20 @@
 (setq mac-option-modifier 'meta
       mac-command-modifier 'super)
 
+
+;; compile
+(global-set-key (kbd "C-c c") 'compile)
+(global-set-key (kbd "C-c r") 'recompile)
+
+;; exec path from shell
+(use-package exec-path-from-shell
+    :config
+    (if (eq system-type 'darwin)
+        (exec-path-from-shell-initialize)))
+
+
 ;; dired
 (require 'dired-x)
-(use-package dired-single)
 
 ;; eshell
 (defun eshell-here ()
@@ -134,18 +145,32 @@
 (use-package flycheck
   :init (global-flycheck-mode))
 
-;; eglot
-(use-package eglot
-  :bind (:map eglot-mode-map
-              ("C-c r" . eglot-rename)
-              ("C-h ." . display-local-help)
-              ("C-h d" . eldoc-doc-buffer)
-              ("M-RET" . eglot-code-actions))
+;; lsp-mode
+(use-package lsp-mode
   :ensure t
-  :hook ((c-mode  . eglot-ensure)
-         (js-mode . eglot-ensure)
-         (python-mode . eglot-ensure))
-  :commands (eglot eglot-ensure))
+  :defer t
+  :hook ((python-mode . lsp-deferred)
+         (js2-mode . lsp-deferred)
+         (tide-mode . lsp-deferred)
+         (web-mode . lsp-deferred)
+         (css-mode . lsp-deferred)
+         (rust-mode . lsp-deferred)
+         (haskell-mode . lsp-deferred)
+         (c-mode . lsp-deferred))
+  :config (setq gc-cons-threshold 100000000)
+          (setq lsp-completion-provider :capf)
+          (setq lsp-idle-delay 0.500)
+          (setq lsp-log-io nil)
+          (setq lsp-prefer-flymake nil)
+          (setq lsp-enable-file-watchers nil))
+
+;; lsp-ui
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :config (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-sideline-enable nil)
+  (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-signature-render-documentation nil))
 
 ;; python shell
 (setq python-shell-interpreter "python3")
@@ -177,21 +202,12 @@
 ;; emmet
 (use-package emmet-mode)
 
-;; haskell
-(use-package haskell-mode :ensure t :mode "\\.hs\\'")
-
-;; rust
-(use-package rust-mode    :ensure t :mode "\\.rs\\'")
-
 ;; ido
 (ido-mode 1)
 (setq ido-everywhere 1)
 (setq ido-enable-flex-matching t)
 (use-package ido-completing-read+)
 (ido-ubiquitous-mode 1)
-(use-package ido-vertical-mode)
-(ido-vertical-mode 1)
-(setq ido-vertical-define-keys 'C-n-and-C-p-only)
 
 ;; smex
 (use-package smex)
