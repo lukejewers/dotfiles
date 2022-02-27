@@ -48,7 +48,6 @@
 (setq mac-option-modifier 'meta
       mac-command-modifier 'super)
 
-
 ;; compile
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
@@ -58,7 +57,6 @@
     :config
     (if (eq system-type 'darwin)
         (exec-path-from-shell-initialize)))
-
 
 ;; dired
 (require 'dired-x)
@@ -92,8 +90,10 @@
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; company
-(use-package company)
-(add-hook 'after-init-hook 'global-company-mode)
+(use-package company
+  :ensure
+  :init (global-company-mode t)
+  :custom (company-idle-delay 0.5))
 
 ;; org mode
 (require 'org)
@@ -150,14 +150,16 @@
   :ensure t
   :defer t
   :hook ((python-mode . lsp-deferred)
-         (js2-mode . lsp-deferred)
+         (js-mode . lsp-deferred)
          (tide-mode . lsp-deferred)
          (web-mode . lsp-deferred)
+         (emmet-mode . lsp-deferred)
          (css-mode . lsp-deferred)
-         (rust-mode . lsp-deferred)
+         (rustic . lsp-deferred)
          (haskell-mode . lsp-deferred)
          (c-mode . lsp-deferred))
   :config (setq gc-cons-threshold 100000000)
+          (setq lsp-prefer-capf t)
           (setq lsp-completion-provider :capf)
           (setq lsp-idle-delay 0.500)
           (setq lsp-log-io nil)
@@ -175,6 +177,22 @@
 ;; python shell
 (setq python-shell-interpreter "python3")
 (setq python-shell-completion-native-enable nil)
+
+;; rust
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode))
+
+;; rustic
+(use-package rustic
+  :mode ("\\.rs\\'" . rustic-mode)
+  :hook (rustic-mode . rust-compile-command)
+  :config
+  (setq rustic-lsp-client 'lsp-mode
+        rustic-lsp-server 'rust-analyzer
+        rustic-analyzer-command '("~/.cargo/bin/rust-analyzer")
+        rustic-format-on-save t)
+  (add-hook 'rustic-mode-hook #'company-mode)
+  (add-hook 'rustic-mode-hook #'electric-pair-mode))
 
 ;; web-mode
 (use-package web-mode
@@ -234,3 +252,16 @@
 ;; sly
 (use-package sly)
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(rustic web-mode-edit-element use-package-hydra tide smex sly sass-mode rust-mode popup pfuture paredit multiple-cursors move-text magit macrostep lsp-ui ido-completing-read+ hydra haskell-mode gruber-darker-theme expand-region exec-path-from-shell emmet-mode elpy dired-single cfrs blacken async ace-window)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
