@@ -92,8 +92,7 @@
 ;; company
 (use-package company
   :ensure
-  :init (global-company-mode t)
-  :custom (company-idle-delay 0.5))
+  :init (global-company-mode t))
 
 ;; org mode
 (require 'org)
