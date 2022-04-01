@@ -1,30 +1,26 @@
+;;;; startup ;;;;
 ;; minimize garbage collection during startup
 (setq gc-cons-threshold most-positive-fixnum)
 
 ;; lower threshold to speed up garbage collection
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold (* 2 1000 1000))))
-
+(add-hook 'emacs-startup-hook (lambda ()
+                                (setq gc-cons-threshold (* 50 1000 1000))))
 
 ;; initialize package sources
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
-
 (package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
+(unless package-archive-contents (package-refresh-contents))
 
 ;; initialize use-package
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
-
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; appearance
+;;;; appearance ;;;;
 (setq inihibit-startup-screen t)
 (setq inhibit-startup-message t)
 (menu-bar-mode 0)
@@ -35,64 +31,63 @@
 (set-frame-font "Iosevka 20" nil t)
 (setq-default display-line-numbers 'relative)
 
-;; defaults
+;; mood-line
+(use-package mood-line
+  :init (mood-line-mode))
+
+;; rainbow-mode
+(use-package
+  rainbow-mode
+  :ensure t)
+
+;;;; defaults ;;;;
 (defalias 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
 (electric-pair-mode 1)
 (setq electric-pair-preserve-balance nil)
 (delete-selection-mode 1)
-(setq-default make-backup-files nil
-	      indent-tabs-mode nil)
+(global-unset-key (kbd "C-z"))
+(setq-default make-backup-files nil indent-tabs-mode nil)
+(global-set-key (kbd "M-i") 'indent-region)
+(global-set-key (kbd "C-M-9") 'shrink-window)
+(global-set-key (kbd "C-M-0") 'enlarge-window)
 
 ;; global keybindings
-(setq mac-option-modifier 'meta
-      mac-command-modifier 'super)
+(setq mac-left-option-modifier 'super mac-left-control-modifier 'control mac-right-control-modifier
+      'meta mac-right-option-modifier 'meta)
+
+;; allow hash to be entered
+(global-set-key (kbd "M-3")
+                '(lambda ()
+                   (interactive)
+                   (insert "#")))
 
 ;; compile
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
 
 ;; exec path from shell
-(use-package exec-path-from-shell
-    :config
-    (if (eq system-type 'darwin)
-        (exec-path-from-shell-initialize)))
+(use-package
+  exec-path-from-shell
+  :config (if (eq system-type 'darwin)
+              (exec-path-from-shell-initialize)))
 
 ;; dired
+(use-package dired
+  :ensure nil
+  :commands (dired)
+  :bind (:map dired-mode-map
+              ("-" . dired-up-directory)))
 (require 'dired-x)
 
-;; eshell
-(defun eshell-here ()
-      "Opens up a new shell in the directory associated with the
-    current buffer's file. The eshell is renamed to match that
-    directory to make multiple eshell windows easier."
-      (interactive)
-      (let* ((parent (if (buffer-file-name)
-                         (file-name-directory (buffer-file-name))
-                       default-directory))
-             (height (/ (window-total-height) 3))
-             (name   (car (last (split-string parent "/" t)))))
-        (split-window-vertically (- height))
-        (other-window 1)
-        (eshell "new")
-        (rename-buffer (concat "*eshell: " name "*"))
-
-        (insert (concat "ls"))
-        (eshell-send-input)))
-
-(global-set-key (kbd "C-!") 'eshell-here)
-
-;; allow hash to be entered
-(global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
-
-;; expand region
-(use-package expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
-
-;; company
-(use-package company
-  :ensure
-  :init (global-company-mode t))
+;; ibuffer
+(use-package ibuffer
+  :ensure nil
+  :bind ("C-x C-b" . ibuffer)
+  :hook (ibuffer-mode . hl-line-mode)
+  :config
+  (setq ibuffer-expert t)
+  (setq ibuffer-show-empty-filter-groups nil))
 
 ;; org mode
 (require 'org)
@@ -101,8 +96,26 @@
 ;; whitespace
 (whitespace-mode 1)
 
+;; move text
+(use-package
+  move-text)
+(global-set-key (kbd "M-p") 'move-text-up)
+(global-set-key (kbd "M-n") 'move-text-down)
+
+;; avy
+(use-package
+  avy
+  :config
+  (global-set-key (kbd "M-j") 'avy-goto-char-timer))
+
+;; expand region
+(use-package
+  expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
 ;; multiple cursors
-(use-package multiple-cursors)
+(use-package
+  multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->")         'mc/mark-next-like-this)
 (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
@@ -110,18 +123,12 @@
 (global-set-key (kbd "C-|")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
-;; move text
-(use-package move-text)
-(global-set-key (kbd "M-p") 'move-text-up)
-(global-set-key (kbd "M-n") 'move-text-down)
-
 ;; select line
 (defun select-current-line ()
   "Select the current line"
   (interactive)
   (end-of-line)
   (set-mark (line-beginning-position)))
-
 (global-set-key (kbd "C-;") 'select-current-line)
 
 ;; duplicate line
@@ -133,68 +140,191 @@
   (yank)
   (newline)
   (yank))
-
 (global-set-key (kbd "C-,") 'duplicate-line)
 
-;; yasnippet
-(use-package yasnippet)
-(yas-global-mode 1)
+;;;; terminals ;;;;;
+;; eshell
+(defun eshell-here ()
+  "Opens up a new shell in the directory associated with the
+    current buffer's file. The eshell is renamed to match that
+    directory to make multiple eshell windows easier."
+  (interactive)
+  (let* ((parent (if (buffer-file-name)
+                     (file-name-directory (buffer-file-name)) default-directory))
+         (height (/ (window-total-height) 3))
+         (name   (car (last (split-string parent "/" t)))))
+    (split-window-vertically (- height))
+    (other-window 1)
+    (eshell "new")
+    (rename-buffer (concat "*eshell: " name "*"))
+    (insert (concat "ls"))
+    (eshell-send-input)))
+(global-set-key (kbd "C-!") 'eshell-here)
 
-;; flycheck
-(use-package flycheck
-  :init (global-flycheck-mode))
+;; vterm
+(use-package
+  vterm
+  :ensure t)
 
+(add-hook 'vterm-mode-hook (lambda ()
+      (menu-bar--display-line-numbers-mode-none)
+                             (message nil)))
+
+(use-package
+  vterm-toggle
+  :config
+  (global-set-key (kbd "C-x t") 'vterm)
+  (setq vterm-toggle-fullscreen-p nil)
+  (add-to-list 'display-buffer-alist
+             '((lambda(bufname _) (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                (display-buffer-reuse-window display-buffer-at-bottom)
+                ;;(display-buffer-reuse-window display-buffer-in-direction)
+                ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+                ;;(direction . bottom)
+                ;;(dedicated . t) ;dedicated is supported in emacs27
+                (reusable-frames . visible)
+                (window-height . 0.3))))
+
+;;;; completion ;;;;
+;; vertico
+(use-package
+  vertico
+  :ensure t
+  :config (vertico-mode))
+
+;; marginalia
+(use-package
+  marginalia
+  :ensure t
+  :config (marginalia-mode))
+
+;; orderless
+(use-package
+  orderless
+  :ensure t
+  :config (setq completion-styles '(orderless)))
+
+;; consult
+(use-package
+  consult
+  :ensure t)
+
+;; embark
+(use-package
+  embark
+  :ensure t
+  :bind (("C-." . embark-act)
+         ("M-." . embark-dwim)
+         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init (setq prefix-help-command #'embark-prefix-help-command)
+  :config (add-to-list 'display-buffer-alist '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"   nil (window-parameters (mode-line-format . none)))))
+
+;; embark consult
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+;; company
+(use-package
+  company
+  :ensure
+  :init (global-company-mode t))
+
+;; ido
+;; (use-package ido
+;;   :config
+;;   (ido-mode +1)
+;;   (setq ido-everywhere t
+;;         ido-enable-flex-matching t))
+;; (use-package ido-vertical-mode
+;;   :config
+;;   (ido-vertical-mode +1)
+;;   (setq ido-vertical-define-keys 'C-n-C-p-up-and-down))
+;; (use-package ido-completing-read+ :config (ido-ubiquitous-mode +1))
+;; (use-package flx-ido :config (flx-ido-mode +1))
+
+;; smex
+;; (use-package
+;;   smex)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;;;; version control ;;;;
+;; magit
+(use-package
+  magit)
+(setq magit-auto-revert-mode nil)
+(global-set-key (kbd "C-c m s") 'magit-status)
+(global-set-key (kbd "C-c m l") 'magit-log)
+
+;;;; language servers ;;;;
 ;; lsp-mode
-(use-package lsp-mode
+(use-package
+  lsp-mode
   :ensure t
   :defer t
-  :hook ((python-mode . lsp-deferred)
-         (js-mode . lsp-deferred)
-         (tide-mode . lsp-deferred)
-         (web-mode . lsp-deferred)
-         (emmet-mode . lsp-deferred)
-         (css-mode . lsp-deferred)
-         (rustic . lsp-deferred)
-         (haskell-mode . lsp-deferred)
-         (c-mode . lsp-deferred))
-  :config (setq gc-cons-threshold 100000000)
-          (setq lsp-prefer-capf t)
-          (setq lsp-completion-provider :capf)
-          (setq lsp-idle-delay 0.500)
-          (setq lsp-log-io nil)
-          (setq lsp-prefer-flymake nil)
-          (setq lsp-enable-file-watchers nil))
+  :bind (:map lsp-mode-map
+              ("C-c d" . lsp-describe-thing-at-point)
+              ("C-c a" . lsp-execute-code-action))
+  :bind-keymap ("C-c l" . lsp-command-map)
+  :hook ((python-mode
+          js-mode
+          typescript-mode
+          web-mode
+          emmet-mode
+          css-mode
+          rust-mode
+          c-mode
+          ) . lsp-deferred)
+  :config
+  (setq gc-cons-threshold 100000000)
+  (setq lsp-prefer-capf t)
+  (setq lsp-completion-provider :capf)
+  (setq lsp-idle-delay 0.500)
+  (setq lsp-log-io nil)
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-enable-file-watchers nil))
 
 ;; lsp-ui
-(use-package lsp-ui
+(use-package
+  lsp-ui
   :commands lsp-ui-mode
   :config (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-modeline-code-actions-enable nil)
   (setq lsp-signature-render-documentation nil))
 
+;; flycheck
+(use-package
+  flycheck
+  :init (global-flycheck-mode))
+
+;; pyright
+(use-package
+  lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp-deferred))))
+
 ;; python shell
 (setq python-shell-interpreter "python3")
 (setq python-shell-completion-native-enable nil)
 
 ;; rust
-(use-package rust-mode
-  :mode ("\\.rs\\'" . rust-mode))
-
-;; rustic
-(use-package rustic
-  :mode ("\\.rs\\'" . rustic-mode)
-  :hook (rustic-mode . rust-compile-command)
-  :config
-  (setq rustic-lsp-client 'lsp-mode
-        rustic-lsp-server 'rust-analyzer
-        rustic-analyzer-command '("~/.cargo/bin/rust-analyzer")
-        rustic-format-on-save t)
-  (add-hook 'rustic-mode-hook #'company-mode)
-  (add-hook 'rustic-mode-hook #'electric-pair-mode))
+(use-package
+  rust-mode
+  :mode ("\\.rs\\'" . rust-mode)
+  :hook ((rust-mode . flycheck-mode)
+         (rust-mode . lsp-deferred))
+  :config (setq rust-format-on-save t))
 
 ;; web-mode
-(use-package web-mode
+(use-package
+  web-mode
   :ensure t
   :mode (("\\.html?\\'" . web-mode))
   (("\\.jsx\\'" . web-mode))
@@ -204,32 +334,34 @@
   (setq web-mode-enable-auto-pairing t))
 
 ;; sass-mode
-(use-package sass-mode
+(use-package
+  sass-mode
   :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode))
   :ensure t)
 
 ;; tide
-(use-package tide
+(use-package
+  tide
   :ensure t
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save)))
+         ;; (before-save . tide-format-before-save)
+         ))
 
 ;; emmet
-(use-package emmet-mode)
+(use-package
+  emmet-mode)
 
-;; ido
-(ido-mode 1)
-(setq ido-everywhere 1)
-(setq ido-enable-flex-matching t)
-(use-package ido-completing-read+)
-(ido-ubiquitous-mode 1)
+;; sly
+(use-package
+  sly)
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
 
-;; smex
-(use-package smex)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;; yasnippet
+(use-package
+  yasnippet)
+(yas-global-mode 1)
 
 ;; paredit
 (autoload 'enable-paredit-mode "paredit" t)
@@ -242,25 +374,4 @@
 (add-hook 'clojure-mode-hook          'enable-paredit-mode)
 (add-hook 'racket-mode-hook           'enable-paredit-mode)
 
-;; magit
-(use-package magit)
-(setq magit-auto-revert-mode nil)
-(global-set-key (kbd "C-c m s") 'magit-status)
-(global-set-key (kbd "C-c m l") 'magit-log)
-
-;; sly
-(use-package sly)
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(rustic web-mode-edit-element use-package-hydra tide smex sly sass-mode rust-mode popup pfuture paredit multiple-cursors move-text magit macrostep lsp-ui ido-completing-read+ hydra haskell-mode gruber-darker-theme expand-region exec-path-from-shell emmet-mode elpy dired-single cfrs blacken async ace-window)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(put 'dired-find-alternate-file 'disabled nil)
