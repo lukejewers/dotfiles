@@ -32,35 +32,61 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; auto-package-update
+(use-package auto-package-update
+  :defer t
+  :custom
+  (auto-package-update-interval 14)
+  (auto-package-update-prompt-before-update t)
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
+
 ;;;; appearance ;;;;
 (load-theme 'gruber-darker t)
 (setq custom-safe-themes t)
 (set-frame-font "Iosevka 20" nil t)
 (setq-default display-line-numbers 'relative)
 
+;; show absolute path in frame title
+(setq frame-title-format
+      '(:eval (if buffer-file-name  (abbreviate-file-name buffer-file-name) "%b")))
+
 ;; mood-line
 (use-package
   mood-line
-  :init (mood-line-mode))
+  :init (mood-line-mode)
+  :config (custom-set-faces '(mode-line ((t
+                                          (:background "#3b3a40"
+                                                       :foreground "#ffffff"
+                                                       :box (:line-width (1 . 2)
+                                                                         :color "gray26")))))
+                            '(mode-line-buffer-id ((t
+                                                    (:background "#3b3a40"
+                                                                 :foreground "#ffffff"))))))
 
 ;; rainbow-mode
 (use-package
-  rainbow-mode
-  :ensure t)
+  rainbow-mode)
 
 ;;;; defaults ;;;;
-(setq mac-left-option-modifier 'super
+(setq mac-left-option-modifier 'control
       mac-left-control-modifier 'control
       mac-right-control-modifier 'meta
-      mac-right-option-modifier 'meta)
+      mac-right-option-modifier 'meta
+      mac-command-modifier 'super)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
 (electric-pair-mode 1)
 (setq electric-pair-preserve-balance nil)
 (delete-selection-mode 1)
-(setq-default make-backup-files nil)
+(setq-default
+ make-backup-files nil
+ auto-save-default nil
+ create-lockfiles nil)
 
-;; global keybindings
+;; global keybindingspppppp
 (global-set-key (kbd "M-i") 'indent-region)
 (global-set-key (kbd "C-M-9") 'shrink-window)
 (global-set-key (kbd "C-M-0") 'enlarge-window)
@@ -70,6 +96,7 @@
 ;; global keyunbindings
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x f"))
+(global-unset-key (kbd "C-x C-c"))
 
 ;; allow hash to be entered
 (global-set-key (kbd "M-3")
@@ -111,12 +138,11 @@
 ;; whitespace
 (whitespace-mode 1)
 (customize-set-variable 'indent-tabs-mode nil)
-(add-hook 'before-save-hook #'whitespace-cleanup)
+(add-hook 'before-save-hook 'whitespace-cleanup)
 (setq whitespace-line-column 250)
 
 ;; editor config
 (use-package editorconfig
-  :ensure t
   :config
   (editorconfig-mode 1))
 
@@ -166,6 +192,14 @@
   (yank))
 (global-set-key (kbd "C-,") 'duplicate-line)
 
+;; undo-tree
+(use-package undo-tree
+  :diminish
+  :bind (("C-c _" . undo-tree-visualize))
+  :config
+  (global-undo-tree-mode +1)
+  (unbind-key "M-_" undo-tree-map))
+
 ;;;; terminals ;;;;;
 ;; eshell
 (defun eshell-here ()
@@ -183,7 +217,10 @@ directory to make multiple eshell windows easier."
     (rename-buffer (concat "*eshell: " name "*"))
     (insert (concat "ls"))
     (eshell-send-input)))
-(global-set-key (kbd "C-!") 'eshell-here)
+(global-set-key (kbd "C-x t e") 'eshell-here)
+
+;; shell
+(global-set-key (kbd "C-x t s") 'shell)
 
 ;; vterm
 (use-package
@@ -195,17 +232,13 @@ directory to make multiple eshell windows easier."
 ;; vterm toggle
 (use-package
   vterm-toggle
+  :bind ("C-x v" . vterm-toggle)
   :config
-  (global-set-key (kbd "C-x t") 'vterm)
   (setq vterm-toggle-fullscreen-p nil)
   (add-to-list 'display-buffer-alist
                '((lambda(bufname _)
                    (with-current-buffer bufname (equal major-mode 'vterm-mode)))
                  (display-buffer-reuse-window display-buffer-at-bottom)
-                 ;;(display-buffer-reuse-window display-buffer-in-direction)
-                 ;;display-buffer-in-direction/direction/dedicated is added in emacs27
-                 ;;(direction . bottom)
-                 ;;(dedicated . t) ;dedicated is supported in emacs27
                  (reusable-frames . visible)
                  (window-height . 0.3))))
 
@@ -213,34 +246,31 @@ directory to make multiple eshell windows easier."
 ;; vertico
 (use-package
   vertico
-  :ensure t
-  :config (vertico-mode))
+  :config (vertico-mode)
+  (set-face-background 'highlight "#3b3a40"))
 
 ;; marginalia
 (use-package
   marginalia
-  :ensure t
-  :config (marginalia-mode))
+  :config (marginalia-mode)
+  (set-face-foreground 'shadow "#81888f"))
 
 ;; orderless
 (use-package
   orderless
-  :ensure t
   :config (setq completion-styles '(orderless)))
 
 ;; consult
 (use-package
-  consult
-  :ensure t)
+  consult)
 
 ;; embark
 (use-package
   embark
-  :ensure t
   :bind (("C-." . embark-act)
          ("M-." . embark-dwim)
-         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-  :init (setq prefix-help-command #'embark-prefix-help-command)
+         ("C-h b" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init (setq prefix-help-command 'embark-prefix-help-command)
   :config (add-to-list 'display-buffer-alist '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*" nil (window-parameters (mode-line-format . none)))))
 
 ;; embark consult
@@ -255,34 +285,34 @@ directory to make multiple eshell windows easier."
 ;; company
 (use-package
   company
-  :ensure
+  :ensure nil
   :init (global-company-mode t))
 
 ;;;; version control ;;;;
 ;; magit
 (use-package
-  magit)
-(setq magit-auto-revert-mode nil)
-(global-set-key (kbd "C-c m s") 'magit-status)
-(global-set-key (kbd "C-c m l") 'magit-log)
+  magit
+  :bind (("C-c m s" . magit-status)
+         ("C-c m l" . magit-log)))
+
+;; diff-hl
+(use-package
+  diff-hl)
 
 ;;;; languages ;;;;
 ;; lsp-mode
 (use-package
   lsp-mode
-  :ensure t
   :defer t
   :init (setq lsp-keymap-prefix "C-c l")
   :bind (:map lsp-mode-map
-              ("C-c d" . lsp-describe-thing-at-point)
-              ("C-c a" . lsp-execute-code-action))
-  :hook ((python-mode
-          js-mode
-          typescript-mode
-          web-mode
-          css-mode
-          rust-mode
-          c-mode) . lsp-deferred)
+              ("C-c l d" . lsp-describe-thing-at-point)
+              ("C-c l a" . lsp-execute-code-action))
+  :hook ((python-mode . lsp-deferred)
+          (js-mode . lsp-deferred)
+          (typescript-mode . lsp-deferred)
+          (rust-mode . lsp-deferred)
+          (c-mode . lsp-deferred))
   :config
   (setq gc-cons-threshold 100000000)
   (setq lsp-prefer-capf t)
@@ -305,13 +335,21 @@ directory to make multiple eshell windows easier."
 ;; dap
 (use-package
   dap-mode
-  :config
-  (dap-ui-mode 1)
-  (dap-tooltip-mode 1)
+  :init
   (require 'dap-node)
   (dap-node-setup)
   (require 'dap-chrome)
-  (require 'dap-python))
+  (require 'dap-python)
+  :config
+  (dap-ui-mode 1)
+  (dap-tooltip-mode 1)
+  (dap-auto-configure-mode)
+  :bind
+  (:map dap-mode-map
+        ("C-c d b" . dap-breakpoint-toggle)
+        ("C-c d r" . dap-debug-restart)
+        ("C-c d l" . dap-debug-last)
+        ("C-c d d" . dap-debug)))
 
 ;; flycheck
 (use-package
@@ -321,14 +359,22 @@ directory to make multiple eshell windows easier."
 ;; pyright
 (use-package
   lsp-pyright
-  :ensure t
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp-deferred))))
 
+;; pyvenv
+(use-package pyvenv
+  :init (setenv "WORKON_HOME" "~/.virtualenvs/")
+  :config (pyvenv-mode t))
+
 ;; python shell
 (setq python-shell-interpreter "python3")
 (setq python-shell-completion-native-enable nil)
+
+;; blacken
+(use-package blacken
+  :hook (python-mode . blacken-mode))
 
 ;; rust
 (use-package
@@ -341,7 +387,6 @@ directory to make multiple eshell windows easier."
 ;; web-mode
 (use-package
   web-mode
-  :ensure t
   :mode (("\\.html?\\'" . web-mode))
   (("\\.jsx\\'" . web-mode))
   :config (setq web-mode-engines-alist '(("django" . "\\.html\\'")))
@@ -352,13 +397,11 @@ directory to make multiple eshell windows easier."
 ;; sass-mode
 (use-package
   sass-mode
-  :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode))
-  :ensure t)
+  :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode)))
 
 ;; tide
 (use-package
   tide
-  :ensure t
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
