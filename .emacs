@@ -95,7 +95,6 @@
 (global-set-key (kbd "M-g t") 'beginning-of-buffer)
 (global-set-key (kbd "M-g b") 'end-of-buffer)
 
-
 ;; global keyunbindings
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x f"))
@@ -333,8 +332,7 @@ directory to make multiple eshell windows easier."
   :config (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-modeline-code-actions-enable nil)
-  (setq lsp-signature-render-documentation nil)
-  (setq lsp-headerline-breadcrumb-enable-diagnostics t))
+  (setq lsp-signature-render-documentation nil))
 
 ;; dap
 (use-package
