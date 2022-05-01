@@ -86,12 +86,15 @@
  auto-save-default nil
  create-lockfiles nil)
 
-;; global keybindingspppppp
+;; global keybindings
 (global-set-key (kbd "M-i") 'indent-region)
 (global-set-key (kbd "C-M-9") 'shrink-window)
 (global-set-key (kbd "C-M-0") 'enlarge-window)
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
+(global-set-key (kbd "M-g t") 'beginning-of-buffer)
+(global-set-key (kbd "M-g b") 'end-of-buffer)
+
 
 ;; global keyunbindings
 (global-unset-key (kbd "C-z"))
@@ -330,7 +333,8 @@ directory to make multiple eshell windows easier."
   :config (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-modeline-code-actions-enable nil)
-  (setq lsp-signature-render-documentation nil))
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-headerline-breadcrumb-enable-diagnostics t))
 
 ;; dap
 (use-package
