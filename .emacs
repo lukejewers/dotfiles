@@ -36,7 +36,7 @@
 (use-package auto-package-update
   :defer t
   :custom
-  (auto-package-update-interval 14)
+  (auto-package-update-interval 28)
   (auto-package-update-prompt-before-update t)
   :config
   (setq auto-package-update-delete-old-versions t)
@@ -245,44 +245,17 @@ directory to make multiple eshell windows easier."
                  (window-height . 0.3))))
 
 ;;;; completion ;;;;
-;; vertico
-(use-package
-  vertico
-  :config (vertico-mode)
-  (set-face-background 'highlight "#3b3a40"))
+;; ido
+(ido-mode 1)
+(setq ido-everywhere 1)
+(setq ido-enable-flex-matching t)
+(use-package ido-completing-read+)
+(ido-ubiquitous-mode 1)
 
-;; marginalia
-(use-package
-  marginalia
-  :config (marginalia-mode)
-  (set-face-foreground 'shadow "#81888f"))
-
-;; orderless
-(use-package
-  orderless
-  :config (setq completion-styles '(orderless)))
-
-;; consult
-(use-package
-  consult)
-
-;; embark
-(use-package
-  embark
-  :bind (("C-." . embark-act)
-         ("M-." . embark-dwim)
-         ("C-h b" . embark-bindings)) ;; alternative for `describe-bindings'
-  :init (setq prefix-help-command 'embark-prefix-help-command)
-  :config (add-to-list 'display-buffer-alist '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*" nil (window-parameters (mode-line-format . none)))))
-
-;; embark consult
-(use-package
-  embark-consult
-  :ensure t
-  :after (embark consult)
-  :demand t
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
+;; smex
+(use-package smex)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; company
 (use-package
@@ -296,10 +269,6 @@ directory to make multiple eshell windows easier."
   magit
   :bind (("C-c m s" . magit-status)
          ("C-c m l" . magit-log)))
-
-;; diff-hl
-(use-package
-  diff-hl)
 
 ;;;; languages ;;;;
 ;; lsp-mode
@@ -315,15 +284,14 @@ directory to make multiple eshell windows easier."
           (typescript-mode . lsp-deferred)
           (rust-mode . lsp-deferred)
           (c-mode . lsp-deferred))
-  :config
-  (setq gc-cons-threshold 100000000)
-  (setq lsp-prefer-capf t)
-  (setq lsp-completion-provider
-        :capf)
-  (setq lsp-idle-delay 0.500)
-  (setq lsp-log-io nil)
-  (setq lsp-prefer-flymake nil)
-  (setq lsp-enable-file-watchers nil))
+  :custom
+  (gc-cons-threshold 100000000)
+  (lsp-enable-completion-at-point t)
+  (lsp-completion-provider :capf)
+  (lsp-idle-delay 0.500)
+  (lsp-log-io nil)
+  (lsp-prefer-flymake nil)
+  (lsp-enable-file-watchers nil))
 
 ;; lsp-ui
 (use-package
@@ -333,25 +301,6 @@ directory to make multiple eshell windows easier."
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-modeline-code-actions-enable nil)
   (setq lsp-signature-render-documentation nil))
-
-;; dap
-(use-package
-  dap-mode
-  :init
-  (require 'dap-node)
-  (dap-node-setup)
-  (require 'dap-chrome)
-  (require 'dap-python)
-  :config
-  (dap-ui-mode 1)
-  (dap-tooltip-mode 1)
-  (dap-auto-configure-mode)
-  :bind
-  (:map dap-mode-map
-        ("C-c d b" . dap-breakpoint-toggle)
-        ("C-c d r" . dap-debug-restart)
-        ("C-c d l" . dap-debug-last)
-        ("C-c d d" . dap-debug)))
 
 ;; flycheck
 (use-package
@@ -378,7 +327,7 @@ directory to make multiple eshell windows easier."
 (use-package blacken
   :hook (python-mode . blacken-mode))
 
-;; rust
+;; rust-mode
 (use-package
   rust-mode
   :mode ("\\.rs\\'" . rust-mode)
