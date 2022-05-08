@@ -53,23 +53,6 @@
 (setq frame-title-format
       '(:eval (if buffer-file-name  (abbreviate-file-name buffer-file-name) "%b")))
 
-;; mood-line
-(use-package
-  mood-line
-  :init (mood-line-mode)
-  :config (custom-set-faces '(mode-line ((t
-                                          (:background "#3b3a40"
-                                                       :foreground "#ffffff"
-                                                       :box (:line-width (1 . 2)
-                                                                         :color "gray26")))))
-                            '(mode-line-buffer-id ((t
-                                                    (:background "#3b3a40"
-                                                                 :foreground "#ffffff"))))))
-
-;; rainbow-mode
-(use-package
-  rainbow-mode)
-
 ;;;; defaults ;;;;
 (setq mac-left-option-modifier 'control
       mac-left-control-modifier 'control
@@ -109,8 +92,7 @@
 ;; exec path from shell
 (use-package
   exec-path-from-shell
-  :config (if (eq system-type 'darwin)
-              (exec-path-from-shell-initialize)))
+  :init (exec-path-from-shell-initialize))
 
 ;; dired
 (use-package
@@ -132,10 +114,6 @@
   :config
   (setq ibuffer-expert t)
   (setq ibuffer-show-empty-filter-groups nil))
-
-;; org mode
-(require 'org)
-(setq org-log-done t)
 
 ;; whitespace
 (whitespace-mode 1)
