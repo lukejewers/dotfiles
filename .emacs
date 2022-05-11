@@ -172,14 +172,6 @@
   (yank))
 (global-set-key (kbd "C-,") 'duplicate-line)
 
-;; undo-tree
-(use-package undo-tree
-  :diminish
-  :bind (("C-c _" . undo-tree-visualize))
-  :config
-  (global-undo-tree-mode +1)
-  (unbind-key "M-_" undo-tree-map))
-
 ;;;; terminals ;;;;;
 ;; eshell
 (defun eshell-here ()
@@ -323,10 +315,10 @@ directory to make multiple eshell windows easier."
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-auto-pairing t))
 
-;; sass-mode
+;; scss-mode
 (use-package
-  sass-mode
-  :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . sass-mode)))
+  scss-mode
+  :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode)))
 
 ;; tide
 (use-package
