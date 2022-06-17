@@ -132,6 +132,9 @@
 (global-set-key (kbd "M-p") 'move-text-up)
 (global-set-key (kbd "M-n") 'move-text-down)
 
+;; org
+(setq org-startup-truncated nil)
+
 ;; avy
 (use-package
   avy
@@ -267,7 +270,8 @@ directory to make multiple eshell windows easier."
 (use-package
   lsp-ui
   :commands lsp-ui-mode
-  :config (setq lsp-ui-doc-enable nil)
+  :config
+  (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-modeline-code-actions-enable nil)
   (setq lsp-signature-render-documentation nil))
