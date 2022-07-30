@@ -24,14 +24,14 @@ PACKAGES=(
     git
     graphviz
     flake8
+    go
     htop
     npm
     node
     postgresql
     python
     python3
-    rustup
-    rust-analyzer
+    rust
     tmux
     typescript
     wget
@@ -78,9 +78,14 @@ tell application "Terminal"
     set ProfilesNames to name of every settings set
     repeat with ProfileName in ProfilesNames
         set font name of settings set ProfileName to "Iosevka"
-        set font size of settings set ProfileName to 22
+        set font size of settings set ProfileName to 20
     end repeat
 end tell
+
+echo "Symlinking dotfiles..."
+ln -s -f ~/dotfiles/.emacs ~/.emacs
+ln -s -f ~/dotfiles/.vimrc ~/.vimrc
+ln -s -f ~/dotfiles/.tmux.conf ~/.tmux.conf
 
 echo "Configuring OSX..."
 
