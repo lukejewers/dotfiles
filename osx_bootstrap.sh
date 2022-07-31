@@ -3,17 +3,15 @@
 # Bootstrap idempotent script for setting up a new OSX machine
 echo "starting bootstrapping"
 
-# install Xcode cli dev tools
-if test ! $(which xcode-select); then
-    echo "Installing Xcode"
-    xcode-select --install
-fi
-
 # Check for Homebrew, install if don't have it
 if test ! $(which brew); then
     echo "Installing homebrew..."
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
+
+# add brew to PATH
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/Luke/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Update homebrew recipes
 brew update
@@ -25,7 +23,6 @@ PACKAGES=(
     awk
     deno
     curl
-    emacs-plus@28
     gcc
     git
     graphviz
@@ -50,8 +47,6 @@ echo "Cleaning up..."
 brew cleanup
 
 echo "Installing cask..."
-brew install homebrew/cask
-
 CASKS=(
     alfred
     amethyst
@@ -60,15 +55,13 @@ CASKS=(
     google-chrome
     slack
 )
+brew install --cask ${CASKS[@]}
 
 echo "Installing fonts..."
-brew tap caskroom/fonts
-
 FONTS=(
     font-iosevka
 )
-
-brew cask install ${FONTS[@]}
+brew install --cask ${FONTS[@]}
 
 echo "Installing global npm packages..."
 npm install -g typescript-language-server typescript
@@ -86,22 +79,13 @@ PYTHON_PACKAGES=(
 
 sudo pip install ${PYTHON_PACKAGES[@]}
 
-# Set terminal font family and size
-tell application "Terminal"
-    set ProfilesNames to name of every settings set
-    repeat with ProfileName in ProfilesNames
-        set font name of settings set ProfileName to "Iosevka"
-        set font size of settings set ProfileName to 20
-    end repeat
-end tell
-
 echo "Symlinking dotfiles..."
 ln -s -f ~/dotfiles/.emacs ~/.emacs
 ln -s -f ~/dotfiles/.vimrc ~/.vimrc
 ln -s -f ~/dotfiles/.tmux.conf ~/.tmux.conf
+ln -s /opt/homebrew/opt/emacs-plus@29/Emacs.app /Applications
 
 echo "Configuring OSX..."
-
 # Enable tap-to-click
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
