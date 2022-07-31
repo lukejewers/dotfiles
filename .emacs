@@ -16,7 +16,6 @@
 
 ;; keep customize settings in their own file
 (setq custom-file "~/.emacs.d/custom-vars.el")
-(when (file-exists-p custom-file) (load custom-file))
 
 ;;; initialize package sources ;;;
 (require 'package)
@@ -64,6 +63,7 @@
 (electric-pair-mode 1)
 (setq electric-pair-preserve-balance nil)
 (delete-selection-mode 1)
+(setq vc-follow-symlinks t)
 (setq-default
  make-backup-files nil
  auto-save-default nil
