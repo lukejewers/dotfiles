@@ -36,6 +36,7 @@ PACKAGES=(
     python
     python3
     rust
+    rust-analyzer
     tmux
     typescript
     wget
