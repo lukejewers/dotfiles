@@ -65,6 +65,7 @@
 (delete-selection-mode 1)
 (setq vc-follow-symlinks t)
 (setq-default
+ truncate-lines t
  make-backup-files nil
  auto-save-default nil
  create-lockfiles nil)
