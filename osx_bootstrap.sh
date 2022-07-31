@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
 # Bootstrap idempotent script for setting up a new OSX machine
-
 echo "starting bootstrapping"
+
+# install Xcode cli dev tools
+if test ! $(which xcode-select); then
+    echo "Installing Xcode"
+    xcode-select --install
+fi
 
 # Check for Homebrew, install if don't have it
 if test ! $(which brew); then
@@ -19,6 +24,7 @@ brew install bash
 PACKAGES=(
     awk
     deno
+    curl
     emacs-plus@28
     gcc
     git
@@ -47,15 +53,21 @@ echo "Installing cask..."
 brew install homebrew/cask
 
 CASKS=(
+    alfred
+    amethyst
+    bitwarden
+    firefox
     google-chrome
     slack
 )
 
 echo "Installing fonts..."
 brew tap caskroom/fonts
+
 FONTS=(
     font-iosevka
 )
+
 brew cask install ${FONTS[@]}
 
 echo "Installing global npm packages..."
@@ -71,6 +83,7 @@ PYTHON_PACKAGES=(
     virtualenv
     virtualenvwrapper
 )
+
 sudo pip install ${PYTHON_PACKAGES[@]}
 
 # Set terminal font family and size
@@ -89,14 +102,18 @@ ln -s -f ~/dotfiles/.tmux.conf ~/.tmux.conf
 
 echo "Configuring OSX..."
 
-# Set fast key repeat rate
-defaults write NSGlobalDomain KeyRepeat -int 0
-
-# Show filename extensions by default
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-
 # Enable tap-to-click
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+# Disable 'Character Picker'
+$ defaults write -g ApplePressAndHoldEnabled -bool false
+
+# Set fast key repeat rate
+defaults write -g InitialKeyRepeat -int 15
+defaults write -g KeyRepeat -int 2
+
+# Show filename extensions by default
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 echo "Bootstrapping complete"
