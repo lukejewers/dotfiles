@@ -77,7 +77,6 @@ PYTHON_PACKAGES=(
     virtualenv
     virtualenvwrapper
 )
-
 sudo pip install ${PYTHON_PACKAGES[@]}
 
 echo "Symlinking dotfiles..."
