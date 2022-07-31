@@ -23,6 +23,7 @@ PACKAGES=(
     awk
     deno
     curl
+    cmake
     gcc
     git
     graphviz
