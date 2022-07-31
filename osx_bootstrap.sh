@@ -71,6 +71,9 @@ npm install -g typescript-language-server typescript
 echo "Installing nvm..."
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
+echo "Updating pip..."
+python3 -m pip install --upgrade pip
+
 echo "Installing Python packages..."
 PYTHON_PACKAGES=(
     ipython
