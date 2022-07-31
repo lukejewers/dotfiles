@@ -108,4 +108,7 @@ defaults write -g KeyRepeat -int 2
 # Show filename extensions by default
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
+# Update terminal prompt
+echo 'PS1="%n%f %~ $ "' >> ~/.zshrc
+
 echo "Bootstrapping complete"
