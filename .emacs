@@ -302,6 +302,10 @@ directory to make multiple eshell windows easier."
 (use-package blacken
   :hook (python-mode . blacken-mode))
 
+;; c
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
 ;; rust-mode
 (use-package
   rust-mode
