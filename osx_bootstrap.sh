@@ -88,7 +88,7 @@ brew tap d12frosted/emacs-plus
 brew install emacs-plus@29 --with-native-comp
 
 echo "Symlinking dotfiles..."
-ln -s -f ~/dotfiles/.emacs ~/.emacs
+ln -s -f ~/dotfiles/.emacs ~/.emacs.d/init.el
 ln -s -f ~/dotfiles/.vimrc ~/.vimrc
 ln -s -f ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s /opt/homebrew/opt/emacs-plus@29/Emacs.app /Applications
