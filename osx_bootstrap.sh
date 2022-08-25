@@ -37,6 +37,7 @@ PACKAGES=(
     python3
     rust
     rust-analyzer
+    sass/sass/sass
     tmux
     typescript
     wget
