@@ -72,8 +72,10 @@
 
 ;; global keybindings
 (global-set-key (kbd "M-i") 'indent-region)
+(global-set-key (kbd "C-M-8") 'shrink-window-horizontally)
 (global-set-key (kbd "C-M-9") 'shrink-window)
 (global-set-key (kbd "C-M-0") 'enlarge-window)
+(global-set-key (kbd "C-M--") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
 (global-set-key (kbd "M-g t") 'beginning-of-buffer)
@@ -277,6 +279,13 @@ directory to make multiple eshell windows easier."
   (setq lsp-modeline-code-actions-enable nil)
   (setq lsp-signature-render-documentation nil))
 
+;; typescript
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
+
 ;; flycheck
 (use-package
   flycheck
@@ -330,13 +339,13 @@ directory to make multiple eshell windows easier."
   :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode)))
 
 ;; tide
-(use-package
-  tide
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
+;; (use-package
+;;   tide
+;;   :after (typescript-mode company flycheck)
+;;   :hook ((typescript-mode . tide-setup)
+;;          (typescript-mode . tide-hl-identifier-mode)
          ;; (before-save . tide-format-before-save)
-         ))
+         ;; ))
 
 ;; sly
 (use-package
