@@ -64,6 +64,7 @@
 (setq electric-pair-preserve-balance nil)
 (delete-selection-mode 1)
 (setq vc-follow-symlinks t)
+(setq-default indent-tabs-mode nil)
 (setq-default
  truncate-lines t
  make-backup-files nil
@@ -247,61 +248,12 @@ directory to make multiple eshell windows easier."
          ("C-c m l" . magit-log)))
 
 ;;;; languages ;;;;
-;; lsp-mode
-(use-package
-  lsp-mode
-  :defer t
-  :init (setq lsp-keymap-prefix "C-c l")
-  :bind (:map lsp-mode-map
-              ("C-c l d" . lsp-describe-thing-at-point)
-              ("C-c l a" . lsp-execute-code-action))
-  :hook ((python-mode . lsp-deferred)
-          (js-mode . lsp-deferred)
-          (typescript-mode . lsp-deferred)
-          (rust-mode . lsp-deferred)
-          (c-mode . lsp-deferred))
-  :custom
-  (gc-cons-threshold 100000000)
-  (lsp-enable-completion-at-point t)
-  (lsp-completion-provider :capf)
-  (lsp-idle-delay 0.500)
-  (lsp-log-io nil)
-  (lsp-prefer-flymake nil)
-  (lsp-enable-file-watchers nil))
-
-;; lsp-ui
-(use-package
-  lsp-ui
-  :commands lsp-ui-mode
-  :config
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-sideline-enable nil)
-  (setq lsp-modeline-code-actions-enable nil)
-  (setq lsp-signature-render-documentation nil))
-
-;; typescript
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
-  :config
-  (setq typescript-indent-level 2))
-
-;; flycheck
-(use-package
-  flycheck
-  :init (global-flycheck-mode))
-
-;; pyright
-(use-package
-  lsp-pyright
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-pyright)
-                         (lsp-deferred))))
-
-;; pyvenv
-(use-package pyvenv
-  :init (setenv "WORKON_HOME" "~/.virtualenvs/")
-  :config (pyvenv-mode t))
+;; eglot
+(use-package eglot)
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'rust-mode-hook 'eglot-ensure)
+(add-hook 'typescript-mode-hook 'eglot-ensure)
+(add-hook 'python-mode-hook 'eglot-ensure)
 
 ;; python shell
 (setq python-shell-interpreter "python3")
@@ -315,37 +267,10 @@ directory to make multiple eshell windows easier."
 (setq c-default-style "linux"
       c-basic-offset 4)
 
-;; rust-mode
-(use-package
-  rust-mode
-  :mode ("\\.rs\\'" . rust-mode)
-  :hook ((rust-mode . flycheck-mode)
-         (rust-mode . lsp-deferred))
-  :config (setq rust-format-on-save t))
-
-;; web-mode
-(use-package
-  web-mode
-  :mode (("\\.html?\\'" . web-mode))
-  (("\\.jsx\\'" . web-mode))
-  :config (setq web-mode-engines-alist '(("django" . "\\.html\\'")))
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-auto-pairing t))
-
 ;; scss-mode
 (use-package
   scss-mode
   :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode)))
-
-;; tide
-;; (use-package
-;;   tide
-;;   :after (typescript-mode company flycheck)
-;;   :hook ((typescript-mode . tide-setup)
-;;          (typescript-mode . tide-hl-identifier-mode)
-         ;; (before-save . tide-format-before-save)
-         ;; ))
 
 ;; sly
 (use-package
