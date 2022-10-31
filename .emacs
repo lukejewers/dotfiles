@@ -255,6 +255,10 @@ directory to make multiple eshell windows easier."
 (add-hook 'typescript-mode-hook 'eglot-ensure)
 (add-hook 'python-mode-hook 'eglot-ensure)
 
+;; flymake
+(define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error)
+(define-key flymake-mode-map (kbd "C-c l n") 'flymake-goto-next-error)
+
 ;; python shell
 (setq python-shell-interpreter "python3")
 (setq python-shell-completion-native-enable nil)
