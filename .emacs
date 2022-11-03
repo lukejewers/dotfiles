@@ -235,8 +235,10 @@ directory to make multiple eshell windows easier."
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; corfu
-(use-package
-  corfu
+(use-package corfu
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
   :init (global-corfu-mode))
 
 ;;;; version control ;;;;
