@@ -234,11 +234,10 @@ directory to make multiple eshell windows easier."
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; company
+;; corfu
 (use-package
-  company
-  :ensure nil
-  :init (global-company-mode t))
+  corfu
+  :init (global-corfu-mode))
 
 ;;;; version control ;;;;
 ;; magit
