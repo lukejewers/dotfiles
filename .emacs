@@ -280,7 +280,7 @@ directory to make multiple eshell windows easier."
 ;; sly
 (use-package
   sly)
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq inferior-lisp-program "/opt/homebrew/bin/sbcl")
 
 ;; yasnippet
 (use-package
