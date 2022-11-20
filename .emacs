@@ -286,11 +286,6 @@ directory to make multiple eshell windows easier."
   sly)
 (setq inferior-lisp-program "/opt/homebrew/bin/sbcl")
 
-;; yasnippet
-(use-package
-  yasnippet)
-(yas-global-mode 1)
-
 ;; paredit
 (use-package paredit)
 (autoload 'enable-paredit-mode "paredit" t)
