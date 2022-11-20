@@ -277,6 +277,10 @@ directory to make multiple eshell windows easier."
   scss-mode
   :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode)))
 
+;; sqlformat
+(use-package sqlformat
+  :config (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
+
 ;; sly
 (use-package
   sly)
