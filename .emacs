@@ -72,7 +72,6 @@
  create-lockfiles nil)
 
 ;; global keybindings
-(global-set-key (kbd "M-i") 'indent-region)
 (global-set-key (kbd "C-M-8") 'shrink-window-horizontally)
 (global-set-key (kbd "C-M-9") 'shrink-window)
 (global-set-key (kbd "C-M-0") 'enlarge-window)
