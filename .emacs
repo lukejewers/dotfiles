@@ -1,6 +1,6 @@
 ;;;; startup ;;;;
 ;; minimize garbage collection during startup
-(setq gc-cons-threshold (* 50 1000 1000))
+(setq gc-cons-threshold most-positive-fixnum)
 
 (add-hook 'emacs-startup-hook(lambda () (message "Emacs loaded in %s with %d garbage collections."
            (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done)))
@@ -179,6 +179,14 @@
   (yank))
 (global-set-key (kbd "C-,") 'duplicate-line)
 
+;; copy full path
+(defun copy-full-path-to-kill-ring ()
+  "copy buffer's full path to kill ring"
+  (interactive)
+  (when buffer-file-name
+    (kill-new (file-truename buffer-file-name))))
+(global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
+
 ;;;; terminals ;;;;;
 ;; eshell
 (defun eshell-here ()
@@ -202,24 +210,11 @@ directory to make multiple eshell windows easier."
 (global-set-key (kbd "C-x t s") 'shell)
 
 ;; vterm
-(use-package
-  vterm
-  :ensure t)
-(add-hook 'vterm-mode-hook (lambda ()
-                             (menu-bar--display-line-numbers-mode-none)
-                             (message nil)))
-;; vterm toggle
-(use-package
-  vterm-toggle
-  :bind ("C-x v" . vterm-toggle)
-  :config
-  (setq vterm-toggle-fullscreen-p nil)
-  (add-to-list 'display-buffer-alist
-               '((lambda(bufname _)
-                   (with-current-buffer bufname (equal major-mode 'vterm-mode)))
-                 (display-buffer-reuse-window display-buffer-at-bottom)
-                 (reusable-frames . visible)
-                 (window-height . 0.3))))
+(use-package vterm
+  :ensure t
+  :config (add-hook 'vterm-mode-hook (lambda ()
+                                       (menu-bar--display-line-numbers-mode-none)
+                                       (message nil))))
 
 ;;;; completion ;;;;
 ;; ido
@@ -250,11 +245,11 @@ directory to make multiple eshell windows easier."
 
 ;;;; languages ;;;;
 ;; eglot
-(use-package eglot)
-(add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'rust-mode-hook 'eglot-ensure)
-(add-hook 'typescript-mode-hook 'eglot-ensure)
-(add-hook 'python-mode-hook 'eglot-ensure)
+(use-package eglot
+  :init (add-hook 'c-mode-hook 'eglot-ensure)
+  (add-hook 'rust-mode-hook 'eglot-ensure)
+  (add-hook 'typescript-mode-hook 'eglot-ensure)
+  (add-hook 'python-mode-hook 'eglot-ensure))
 
 ;; flymake
 (define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error)
@@ -287,15 +282,15 @@ directory to make multiple eshell windows easier."
 (setq inferior-lisp-program "/opt/homebrew/bin/sbcl")
 
 ;; paredit
-(use-package paredit)
-(autoload 'enable-paredit-mode "paredit" t)
-(add-hook 'emacs-mode-hook 'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
-(add-hook 'lisp-mode-hook 'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+(use-package paredit
+  :init (autoload 'enable-paredit-mode "paredit" t)
+  (add-hook 'emacs-mode-hook 'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook 'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+  (add-hook 'clojure-mode-hook 'enable-paredit-mode))
 
 ;;; garbage collection ;;;
-(setq gc-cons-threshold (* 2 1000 1000))
+(setq gc-cons-threshold (* 1024 1024 100))
 
 ;;; .emacs ends here
