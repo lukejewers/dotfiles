@@ -180,7 +180,7 @@
 
 ;; copy full path
 (defun copy-full-path-to-kill-ring ()
-  "copy buffer's full path to kill ring"
+  "Copy buffer's full path to kill ring"
   (interactive)
   (when buffer-file-name
     (kill-new (file-truename buffer-file-name))))
@@ -189,9 +189,8 @@
 ;;;; terminals ;;;;;
 ;; eshell
 (defun eshell-here ()
-  "Opens up a new shell in the directory associated with the
-current buffer's file. The eshell is renamed to match that
-directory to make multiple eshell windows easier."
+  "Opens up a new eshell in the directory associated with the
+current buffer's file."
   (interactive)
   (let* ((parent (if (buffer-file-name)
                      (file-name-directory (buffer-file-name)) default-directory))
@@ -203,10 +202,24 @@ directory to make multiple eshell windows easier."
     (rename-buffer (concat "*eshell: " name "*"))
     (insert (concat "ls"))
     (eshell-send-input)))
+
 (global-set-key (kbd "C-x t e") 'eshell-here)
 
 ;; shell
-(global-set-key (kbd "C-x t s") 'shell)
+(defun shell-here ()
+  "Opens up a new shell in the directory associated with the
+current buffer's file."
+  (interactive)
+  (let* ((parent (if (buffer-file-name)
+                     (file-name-directory (buffer-file-name)) default-directory))
+         (height (/ (window-total-height) 3))
+         (name (car (last (split-string parent "/" t)))))
+    (split-window-vertically (- height))
+    (other-window 1)
+    (shell "new")
+    (rename-buffer (concat "*shell: " name "*"))))
+
+(global-set-key (kbd "C-x t s") 'shell-here)
 
 ;; vterm
 (use-package vterm
