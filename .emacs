@@ -256,6 +256,15 @@ current buffer's file."
          ("C-c m l" . magit-log)))
 
 ;;;; languages ;;;;
+;; tree-sitter
+(use-package tree-sitter-langs :ensure t)
+(use-package tree-sitter
+  :ensure t
+  :after tree-sitter-langs
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
 ;; eglot
 (use-package eglot
   :init (add-hook 'c-mode-hook 'eglot-ensure)
