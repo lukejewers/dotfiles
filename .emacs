@@ -213,13 +213,13 @@ current buffer's file."
     (funcall term-fn "new")
     (rename-buffer (concat "*" term-name ": " dirname "*"))))
 
-(defun shell-open () (interactive) (term-open 'shell "shell"))
+(defun shell-open ()  (term-open 'shell "shell"))
 (global-set-key (kbd "C-x t s") 'shell-open)
 
-(defun eshell-open () (interactive) (term-open 'eshell "eshell"))
+(defun eshell-open () (term-open 'eshell "eshell"))
 (global-set-key (kbd "C-x t e") 'eshell-open)
 
-(defun vterm-open () (interactive) (term-open 'vterm "vterm"))
+(defun vterm-open ()  (term-open 'vterm "vterm"))
 (global-set-key (kbd "C-x t v") 'vterm-open)
 
 ;;;; completion ;;;;
