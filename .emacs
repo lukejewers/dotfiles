@@ -188,7 +188,7 @@
 
 ;;;; terminals ;;;;;
 ;; eshell
-(defun eshell-here ()
+(defun eshell-open ()
   "Opens up a new eshell in the directory associated with the
 current buffer's file."
   (interactive)
@@ -203,10 +203,10 @@ current buffer's file."
     (insert (concat "ls"))
     (eshell-send-input)))
 
-(global-set-key (kbd "C-x t e") 'eshell-here)
+(global-set-key (kbd "C-x t e") 'eshell-open)
 
 ;; shell
-(defun shell-here ()
+(defun shell-open ()
   "Opens up a new shell in the directory associated with the
 current buffer's file."
   (interactive)
@@ -219,7 +219,7 @@ current buffer's file."
     (shell "new")
     (rename-buffer (concat "*shell: " name "*"))))
 
-(global-set-key (kbd "C-x t s") 'shell-here)
+(global-set-key (kbd "C-x t s") 'shell-open)
 
 ;; vterm
 (use-package vterm
@@ -227,6 +227,26 @@ current buffer's file."
   :config (add-hook 'vterm-mode-hook (lambda ()
                                        (menu-bar--display-line-numbers-mode-none)
                                        (message nil))))
+
+(define-key vterm-mode-map (kbd "M-f") 'vterm-send-M-f)
+(define-key vterm-mode-map (kbd "M-b") 'vterm-send-M-b)
+(define-key vterm-mode-map (kbd "M-p") 'vterm-send-M-p)
+(define-key vterm-mode-map (kbd "M-n") 'vterm-send-M-n)
+(define-key vterm-mode-map (kbd "C-s") 'vterm--self-insert)
+(define-key vterm-mode-map (kbd "C-r") 'vterm--self-insert)
+
+;; vterm toggle
+(use-package
+  vterm-toggle
+  :bind ("C-x t v" . vterm-toggle)
+  :config
+  (setq vterm-toggle-fullscreen-p nil)
+  (add-to-list 'display-buffer-alist
+               '((lambda(bufname _)
+                   (with-current-buffer bufname (equal major-mode 'vterm-mode)))
+                 (display-buffer-reuse-window display-buffer-at-bottom)
+                 (reusable-frames . visible)
+                 (window-height . 0.3))))
 
 ;;;; completion ;;;;
 ;; ido
