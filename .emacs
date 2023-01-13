@@ -203,7 +203,6 @@
 (defun term-open (term-fn term-name)
   "Opens up a new terminal in the directory associated with the
 current buffer's file."
-  (interactive)
   (let* ((parent (if (buffer-file-name)
                      (file-name-directory (buffer-file-name)) default-directory))
          (height (/ (window-total-height) 3))
@@ -213,13 +212,13 @@ current buffer's file."
     (funcall term-fn "new")
     (rename-buffer (concat "*" term-name ": " dirname "*"))))
 
-(defun shell-open ()  (term-open 'shell "shell"))
+(defun shell-open () (interactive) (term-open 'shell "shell"))
 (global-set-key (kbd "C-x t s") 'shell-open)
 
-(defun eshell-open () (term-open 'eshell "eshell"))
+(defun eshell-open () (interactive) (term-open 'eshell "eshell"))
 (global-set-key (kbd "C-x t e") 'eshell-open)
 
-(defun vterm-open ()  (term-open 'vterm "vterm"))
+(defun vterm-open () (interactive) (term-open 'vterm "vterm"))
 (global-set-key (kbd "C-x t v") 'vterm-open)
 
 ;;;; completion ;;;;
