@@ -187,40 +187,6 @@
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
 ;;;; terminals ;;;;;
-;; eshell
-(defun eshell-open ()
-  "Opens up a new eshell in the directory associated with the
-current buffer's file."
-  (interactive)
-  (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name)) default-directory))
-         (height (/ (window-total-height) 3))
-         (name (car (last (split-string parent "/" t)))))
-    (split-window-vertically (- height))
-    (other-window 1)
-    (eshell "new")
-    (rename-buffer (concat "*eshell: " name "*"))
-    (insert (concat "ls"))
-    (eshell-send-input)))
-
-(global-set-key (kbd "C-x t e") 'eshell-open)
-
-;; shell
-(defun shell-open ()
-  "Opens up a new shell in the directory associated with the
-current buffer's file."
-  (interactive)
-  (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name)) default-directory))
-         (height (/ (window-total-height) 3))
-         (name (car (last (split-string parent "/" t)))))
-    (split-window-vertically (- height))
-    (other-window 1)
-    (shell "new")
-    (rename-buffer (concat "*shell: " name "*"))))
-
-(global-set-key (kbd "C-x t s") 'shell-open)
-
 ;; vterm
 (use-package vterm
   :ensure t
@@ -232,21 +198,29 @@ current buffer's file."
 (define-key vterm-mode-map (kbd "M-b") 'vterm-send-M-b)
 (define-key vterm-mode-map (kbd "M-p") 'vterm-send-M-p)
 (define-key vterm-mode-map (kbd "M-n") 'vterm-send-M-n)
-(define-key vterm-mode-map (kbd "C-s") 'vterm--self-insert)
-(define-key vterm-mode-map (kbd "C-r") 'vterm--self-insert)
 
-;; vterm toggle
-(use-package
-  vterm-toggle
-  :bind ("C-x t v" . vterm-toggle)
-  :config
-  (setq vterm-toggle-fullscreen-p nil)
-  (add-to-list 'display-buffer-alist
-               '((lambda(bufname _)
-                   (with-current-buffer bufname (equal major-mode 'vterm-mode)))
-                 (display-buffer-reuse-window display-buffer-at-bottom)
-                 (reusable-frames . visible)
-                 (window-height . 0.3))))
+;; open terminals 1/3 screen size
+(defun term-open (term-fn term-name)
+  "Opens up a new terminal in the directory associated with the
+current buffer's file."
+  (interactive)
+  (let* ((parent (if (buffer-file-name)
+                     (file-name-directory (buffer-file-name)) default-directory))
+         (height (/ (window-total-height) 3))
+         (dirname (car (last (split-string parent "/" t)))))
+    (split-window-vertically (- height))
+    (other-window 1)
+    (funcall term-fn "new")
+    (rename-buffer (concat "*" term-name ": " dirname "*"))))
+
+(defun shell-open () (interactive) (term-open 'shell "shell"))
+(global-set-key (kbd "C-x t s") 'shell-open)
+
+(defun eshell-open () (interactive) (term-open 'eshell "eshell"))
+(global-set-key (kbd "C-x t e") 'eshell-open)
+
+(defun vterm-open () (interactive) (term-open 'vterm "vterm"))
+(global-set-key (kbd "C-x t v") 'vterm-open)
 
 ;;;; completion ;;;;
 ;; ido
