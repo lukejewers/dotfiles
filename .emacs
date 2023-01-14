@@ -26,10 +26,13 @@
 (unless package-archive-contents (package-refresh-contents))
 
 ;; initialize use-package
+(setq use-package-always-ensure t)
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq use-package-verbose t
+      comp-async-report-warnings-errors nil
+      comp-deferred-compilation t)
 
 ;; auto-package-update
 (use-package auto-package-update
