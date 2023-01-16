@@ -266,7 +266,12 @@ current buffer's file."
   :init (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'rust-mode-hook 'eglot-ensure)
   (add-hook 'typescript-mode-hook 'eglot-ensure)
-  (add-hook 'python-mode-hook 'eglot-ensure))
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'go-mode-hook 'eglot-ensure)
+  (add-hook 'go-mode-hook #'eglot-format-buffer-on-save))
+
+(defun eglot-format-buffer-on-save ()
+  (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
 ;; flymake
 (define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error)
