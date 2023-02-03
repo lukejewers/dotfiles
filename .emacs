@@ -106,6 +106,7 @@
   :ensure nil
   :commands (dired)
   :init (add-hook 'dired-mode-hook 'auto-revert-mode)
+  :config (setq dired-kill-when-opening-new-dired-buffer t)
   :bind (:map dired-mode-map
               ("-" . dired-up-directory)))
 (put 'dired-find-alternate-file 'disabled nil)
