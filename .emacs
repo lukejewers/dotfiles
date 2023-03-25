@@ -238,12 +238,12 @@ current buffer's file."
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; corfu
-(use-package corfu
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)
-  :init (global-corfu-mode))
+;; company
+(use-package company
+  :bind
+  (:map company-active-map ("<tab>" . company-complete-selection)))
+
+(add-hook 'after-init-hook 'global-company-mode)
 
 ;;;; version control ;;;;
 ;; magit
@@ -279,7 +279,7 @@ current buffer's file."
 (define-key flymake-mode-map (kbd "C-c l n") 'flymake-goto-next-error)
 
 ;; python shell
-(setq python-shell-interpreter "python3")
+(setq python-shell-interpreter "ipython")
 (setq python-shell-completion-native-enable nil)
 
 ;; blacken
@@ -287,6 +287,7 @@ current buffer's file."
   :hook (python-mode . blacken-mode))
 
 ;; typescript
+(setq-default typescript-indent-level 2)
 ;; (use-package typescript-mode
 ;;   :after tree-sitter
 ;;   :config
