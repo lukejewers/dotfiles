@@ -262,6 +262,17 @@ current buffer's file."
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
+;; typescript
+(use-package typescript-mode
+  :after tree-sitter
+  :config
+  (define-derived-mode typescriptreact-mode typescript-mode
+    "TypeScript TSX")
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescriptreact-mode))
+  (add-to-list 'tree-sitter-major-mode-language-alist '(typescriptreact-mode . tsx))
+  (setq-default typescript-indent-level 2)
+  (add-hook 'typescript-mode-hook 'prettier-js-mode))
+
 ;; eglot
 (use-package eglot
   :init (add-hook 'c-mode-hook 'eglot-ensure)
@@ -286,15 +297,8 @@ current buffer's file."
 (use-package blacken
   :hook (python-mode . blacken-mode))
 
-;; typescript
-(setq-default typescript-indent-level 2)
-;; (use-package typescript-mode
-;;   :after tree-sitter
-;;   :config
-;;   (define-derived-mode typescriptreact-mode typescript-mode
-;;     "TypeScript TSX")
-;;   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescriptreact-mode))
-;;   (add-to-list 'tree-sitter-major-mode-language-alist '(typescriptreact-mode . tsx)))
+;; prettier
+(use-package prettier-js)
 
 ;; c
 (setq c-default-style "linux"
