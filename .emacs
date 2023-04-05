@@ -73,6 +73,7 @@
  make-backup-files nil
  auto-save-default nil
  create-lockfiles nil)
+(setq ffap-require-prefix t)
 
 ;; global keybindings
 (global-set-key (kbd "C-M-8") 'shrink-window-horizontally)
@@ -230,8 +231,10 @@ current buffer's file."
 (ido-mode 1)
 (setq ido-everywhere 1)
 (setq ido-enable-flex-matching t)
+(setq ido-use-filename-at-point 'guess)
 (use-package ido-completing-read+)
 (ido-ubiquitous-mode 1)
+(setq ido-use-url-at-point nil)
 
 ;; smex
 (use-package smex)
