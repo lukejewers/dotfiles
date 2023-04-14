@@ -283,6 +283,9 @@ current buffer's file."
   (add-hook 'go-mode-hook 'eglot-ensure)
   (add-hook 'go-mode-hook #'eglot-format-buffer-on-save))
 
+(define-key eglot-mode-map (kbd "C-c l r") 'eglot-rename)
+
+
 (defun eglot-format-buffer-on-save ()
   (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
