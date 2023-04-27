@@ -298,8 +298,7 @@ current buffer's file."
 (setq python-shell-completion-native-enable nil)
 
 ;; blacken
-(use-package blacken
-  :hook (python-mode . blacken-mode))
+(use-package blacken)
 
 ;; prettier
 (use-package prettier-js)
