@@ -69,7 +69,7 @@
 (setq vc-follow-symlinks t)
 (setq-default indent-tabs-mode nil)
 (setq-default
- truncate-lines t
+ ;; truncate-lines t
  make-backup-files nil
  auto-save-default nil
  create-lockfiles nil)
