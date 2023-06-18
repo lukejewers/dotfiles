@@ -123,10 +123,11 @@
   (setq ibuffer-show-empty-filter-groups nil))
 
 ;; whitespace
-(whitespace-mode 1)
-(customize-set-variable 'indent-tabs-mode nil)
-(add-hook 'before-save-hook 'whitespace-cleanup)
-(setq whitespace-line-column 250)
+(use-package whitespace
+:init (add-hook 'before-save-hook #'whitespace-cleanup)
+:config (setq whitespace-line-column 80) ;; limit line length
+(setq whitespace-style
+      '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
 
 ;; editor config
 (use-package editorconfig
