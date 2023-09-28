@@ -34,17 +34,6 @@
       comp-async-report-warnings-errors nil
       comp-deferred-compilation t)
 
-;; auto-package-update
-(use-package auto-package-update
-  :defer t
-  :custom
-  (auto-package-update-interval 28)
-  (auto-package-update-prompt-before-update t)
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
-  (auto-package-update-maybe))
-
 ;;;; appearance ;;;;
 (load-theme 'gruber-darker t)
 (setq custom-safe-themes t)
@@ -143,12 +132,6 @@
 ;; org
 (setq org-startup-truncated nil)
 
-;; avy
-(use-package
-  avy
-  :config
-  (global-set-key (kbd "M-j") 'avy-goto-char-timer))
-
 ;; expand region
 (use-package
   expand-region)
@@ -192,18 +175,6 @@
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
 ;;;; terminals ;;;;;
-;; vterm
-(use-package vterm
-  :ensure t
-  :config (add-hook 'vterm-mode-hook (lambda ()
-                                       (menu-bar--display-line-numbers-mode-none)
-                                       (message nil))))
-
-(define-key vterm-mode-map (kbd "M-f") 'vterm-send-M-f)
-(define-key vterm-mode-map (kbd "M-b") 'vterm-send-M-b)
-(define-key vterm-mode-map (kbd "M-p") 'vterm-send-M-p)
-(define-key vterm-mode-map (kbd "M-n") 'vterm-send-M-n)
-
 ;; open terminals 1/3 screen size
 (defun term-open (term-fn term-name)
   "Opens up a new terminal in the directory associated with the
@@ -222,9 +193,6 @@ current buffer's file."
 
 (defun eshell-open () (interactive) (term-open 'eshell "eshell"))
 (global-set-key (kbd "C-x t e") 'eshell-open)
-
-(defun vterm-open () (interactive) (term-open 'vterm "vterm"))
-(global-set-key (kbd "C-x t v") 'vterm-open)
 
 ;;;; completion ;;;;
 ;; ido
@@ -300,9 +268,6 @@ current buffer's file."
 
 ;; blacken
 (use-package blacken)
-
-;; prettier
-(use-package prettier-js)
 
 ;; c
 (setq c-default-style "linux"
