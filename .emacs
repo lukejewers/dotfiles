@@ -129,9 +129,6 @@
 (global-set-key (kbd "M-p") 'move-text-up)
 (global-set-key (kbd "M-n") 'move-text-down)
 
-;; org
-(setq org-startup-truncated nil)
-
 ;; expand region
 (use-package
   expand-region)
@@ -281,11 +278,6 @@ current buffer's file."
 ;; sqlformat
 (use-package sqlformat
   :config (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
-
-;; sly
-(use-package
-  sly)
-(setq inferior-lisp-program "/opt/homebrew/bin/sbcl")
 
 ;; paredit
 (use-package paredit
