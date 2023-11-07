@@ -21,7 +21,8 @@
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
+                         ("elpa" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 (package-initialize)
 (unless package-archive-contents (package-refresh-contents))
 
@@ -48,7 +49,7 @@
 (setq mac-left-option-modifier 'control
       mac-left-control-modifier 'control
       mac-right-control-modifier 'meta
-      mac-right-option-modifier 'meta
+      mac-right-option-modifier 'hyper
       mac-command-modifier 'super)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
@@ -72,6 +73,9 @@
 (global-set-key (kbd "C-c r") 'recompile)
 (global-set-key (kbd "M-g t") 'beginning-of-buffer)
 (global-set-key (kbd "M-g b") 'end-of-buffer)
+;; sexps
+(global-set-key (kbd "H-f") 'forward-sexp)
+(global-set-key (kbd "H-b") 'backward-sexp)
 
 ;; global keyunbindings
 (global-unset-key (kbd "C-z"))
