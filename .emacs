@@ -176,9 +176,13 @@
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
 ;;;; terminals ;;;;;
-;; open terminals 1/3 screen size
+;; vterm
+(use-package vterm
+  :ensure t)
+
+;; open shell/terminals 1/3 screen size
 (defun term-open (term-fn term-name)
-  "Opens up a new terminal in the directory associated with the
+  "Opens up a new shell/terminal in the directory associated with the
 current buffer's file."
   (let* ((parent (if (buffer-file-name)
                      (file-name-directory (buffer-file-name)) default-directory))
@@ -194,6 +198,10 @@ current buffer's file."
 
 (defun eshell-open () (interactive) (term-open 'eshell "eshell"))
 (global-set-key (kbd "C-x t e") 'eshell-open)
+
+(defun vterm-open () (interactive) (term-open 'vterm "vterm"))
+(global-set-key (kbd "C-x t v") 'vterm-open)
+
 
 ;;;; completion ;;;;
 ;; ido
