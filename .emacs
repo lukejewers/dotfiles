@@ -38,7 +38,7 @@
 ;;;; appearance ;;;;
 (load-theme 'gruber-darker t)
 (setq custom-safe-themes t)
-(set-frame-font "Iosevka 20" nil t)
+(set-frame-font "Iosevka 18" nil t)
 (setq-default display-line-numbers 'relative)
 
 ;; show absolute path in frame title
@@ -89,9 +89,14 @@
                    (insert "#")))
 
 ;; exec path from shell
-(use-package
-  exec-path-from-shell
-  :init (exec-path-from-shell-initialize))
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
+;; org
+(use-package org)
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
 
 ;; dired
 (use-package
