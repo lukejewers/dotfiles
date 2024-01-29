@@ -34,6 +34,7 @@
 (setq use-package-verbose t
       comp-async-report-warnings-errors nil
       comp-deferred-compilation t)
+(setq package-install-upgrade-built-in t)
 
 ;;;; appearance ;;;;
 (load-theme 'gruber-darker t)
@@ -63,16 +64,16 @@
  make-backup-files nil
  auto-save-default nil
  create-lockfiles nil)
+(global-set-key (kbd "M-o") #'other-window)
+(global-set-key (kbd "M-O") #'other-frame)
 
 ;; global keybindings
-(global-set-key (kbd "C-M-8") 'shrink-window-horizontally)
-(global-set-key (kbd "C-M-9") 'shrink-window)
-(global-set-key (kbd "C-M-0") 'enlarge-window)
-(global-set-key (kbd "C-M--") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-M-9") 'enlarge-window)
+(global-set-key (kbd "C-M-0") 'shrink-window)
+(global-set-key (kbd "C-M--") 'shrink-window-horizontally)
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
-(global-set-key (kbd "M-g t") 'beginning-of-buffer)
-(global-set-key (kbd "M-g b") 'end-of-buffer)
 ;; sexps
 (global-set-key (kbd "H-f") 'forward-sexp)
 (global-set-key (kbd "H-b") 'backward-sexp)
@@ -109,6 +110,11 @@
               ("-" . dired-up-directory)))
 (put 'dired-find-alternate-file 'disabled nil)
 (require 'dired-x)
+
+;; grep
+(global-set-key (kbd "M-s g") 'grep)
+(setq grep-command "grep -rn "
+      grep-use-null-device nil)
 
 ;; ibuffer
 (use-package
@@ -180,14 +186,20 @@
     (kill-new (file-truename buffer-file-name))))
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
+;; smartscan
+(use-package smartscan
+  :ensure t
+  :bind ("H-n" . smartscan-symbol-go-forward)
+        ("H-p" . smartscan-symbol-go-backward))
+
 ;;;; terminals ;;;;;
 ;; vterm
 (use-package vterm
-  :ensure t)
+    :ensure t)
 
-;; open shell/terminals 1/3 screen size
+;; open terminals 1/3 screen size
 (defun term-open (term-fn term-name)
-  "Opens up a new shell/terminal in the directory associated with the
+  "Opens up a new terminal in the directory associated with the
 current buffer's file."
   (let* ((parent (if (buffer-file-name)
                      (file-name-directory (buffer-file-name)) default-directory))
@@ -280,12 +292,24 @@ current buffer's file."
 (setq python-shell-interpreter "ipython")
 (setq python-shell-completion-native-enable nil)
 
+;; poetry
+(use-package poetry)
+
 ;; blacken
 (use-package blacken)
+
+;; prettier
+(use-package prettier-js)
 
 ;; c
 (setq c-default-style "linux"
       c-basic-offset 4)
+
+;; devdocs
+(use-package devdocs
+  :ensure t
+  :defer
+  :bind ("C-h D" . 'devdocs-lookup))
 
 ;; scss-mode
 (use-package
