@@ -254,11 +254,6 @@ the directory associated with the current buffer's file."
 (define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error)
 (define-key flymake-mode-map (kbd "C-c l n") 'flymake-goto-next-error)
 
-(use-package devdocs
-  :ensure t
-  :defer
-  :bind ("C-h D" . 'devdocs-lookup))
-
 (setq python-shell-interpreter "ipython")
 (setq python-shell-completion-native-enable nil)
 (use-package poetry)
