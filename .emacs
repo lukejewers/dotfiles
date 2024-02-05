@@ -61,6 +61,7 @@
 (electric-pair-mode 1)
 (setq electric-pair-preserve-balance nil)
 (delete-selection-mode 1)
+(setq compilation-scroll-output 'first-error)
 (setq vc-follow-symlinks t)
 (setq-default indent-tabs-mode nil)
 (setq-default make-backup-files nil
