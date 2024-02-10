@@ -67,8 +67,6 @@
 (setq-default make-backup-files nil
               auto-save-default nil
               create-lockfiles nil)
-(global-set-key (kbd "M-o") #'other-window)
-(global-set-key (kbd "M-O") #'other-frame)
 (global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-M-9") 'enlarge-window)
 (global-set-key (kbd "C-M-0") 'shrink-window)
@@ -243,11 +241,21 @@ the directory associated with the current buffer's file."
 (use-package eglot
   :init (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'rust-mode-hook 'eglot-ensure)
+  (add-hook 'js-mode-hook 'eglot-ensure)
   (add-hook 'typescript-mode-hook 'eglot-ensure)
   (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'go-mode-hook 'eglot-ensure)
-  (add-hook 'go-mode-hook #'eglot-format-buffer-on-save))
-(define-key eglot-mode-map (kbd "C-c l r") 'eglot-rename)
+  (add-hook 'go-mode-hook #'eglot-format-buffer-on-save)
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-ignored-server-capabilities
+   '(:documentHighlightProvider
+     :documentFormattingProvider
+     :documentRangeFormattingProvider
+     :documentOnTypeFormattingProvider
+     :colorProvider
+     :foldingRangeProvider))
+  (define-key eglot-mode-map (kbd "C-c l r") 'eglot-rename))
 
 (defun eglot-format-buffer-on-save ()
   (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
