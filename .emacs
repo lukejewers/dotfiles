@@ -15,6 +15,7 @@
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
 (setq ring-bell-function 'ignore)
+(setq warning-minimum-level :error)
 
 ;; keep customize settings in their own file
 (setq custom-file "~/.emacs.d/custom-vars.el")
@@ -67,6 +68,7 @@
 (setq-default make-backup-files nil
               auto-save-default nil
               create-lockfiles nil)
+(setq eldoc-echo-area-use-multiline-p nil)
 (global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-M-9") 'enlarge-window)
 (global-set-key (kbd "C-M-0") 'shrink-window)
@@ -239,7 +241,10 @@ the directory associated with the current buffer's file."
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (use-package eglot
-  :init (add-hook 'c-mode-hook 'eglot-ensure)
+  :init
+  (add-hook 'c-mode-hook 'eglot-ensure)
+  (add-hook 'c++-mode-hook 'eglot-ensure)
+  (add-hook 'rust-mode-hook 'eglot-ensure)
   (add-hook 'rust-mode-hook 'eglot-ensure)
   (add-hook 'js-mode-hook 'eglot-ensure)
   (add-hook 'typescript-mode-hook 'eglot-ensure)
@@ -248,13 +253,6 @@ the directory associated with the current buffer's file."
   (add-hook 'go-mode-hook #'eglot-format-buffer-on-save)
   :custom
   (eglot-autoshutdown t)
-  (eglot-ignored-server-capabilities
-   '(:documentHighlightProvider
-     :documentFormattingProvider
-     :documentRangeFormattingProvider
-     :documentOnTypeFormattingProvider
-     :colorProvider
-     :foldingRangeProvider))
   (define-key eglot-mode-map (kbd "C-c l r") 'eglot-rename))
 
 (defun eglot-format-buffer-on-save ()
