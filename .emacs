@@ -2,8 +2,9 @@
 ;; minimize garbage collection during startup
 (setq gc-cons-threshold most-positive-fixnum)
 
-(add-hook 'emacs-startup-hook(lambda () (message "Emacs loaded in %s with %d garbage collections."
-           (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done)))
+(add-hook 'emacs-startup-hook
+          (lambda () (message "Emacs loaded in %s with %d garbage collections."
+                              (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done)))
 
 ;;; disable ;;;
 (setq package-enable-at-startup nil)
@@ -118,10 +119,10 @@
   (setq ibuffer-show-empty-filter-groups nil))
 
 (use-package whitespace
-:init (add-hook 'before-save-hook #'whitespace-cleanup)
-:config (setq whitespace-line-column 80) ;; limit line length
-(setq whitespace-style
-      '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
+  :init (add-hook 'before-save-hook #'whitespace-cleanup)
+  :config (setq whitespace-line-column 80) ;; limit line length
+  (setq whitespace-style
+        '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
 
 ;;; text editing
 (use-package move-text)
@@ -173,7 +174,7 @@
 (use-package smartscan
   :ensure t
   :bind ("H-n" . smartscan-symbol-go-forward)
-        ("H-p" . smartscan-symbol-go-backward))
+  ("H-p" . smartscan-symbol-go-backward))
 
 (use-package paredit
   :init (autoload 'enable-paredit-mode "paredit" t)
@@ -185,7 +186,10 @@
 
 ;;;; terminals/shells ;;;;;
 (use-package vterm
-    :ensure t)
+  :ensure t
+  :bind (:map vterm-mode-map ("C-y" . vterm-yank))
+  :config
+  (setq vterm-max-scrollback 10000))
 
 (defun term-open (term-fn term-name)
   "Opens up a new terminal 1/3 screen size in
