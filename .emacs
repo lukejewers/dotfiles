@@ -7,16 +7,16 @@
                               (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done)))
 
 ;;; disable ;;;
-(setq package-enable-at-startup nil)
-(setq inhibit-startup-screen t)
-(setq inhibit-startup-message t)
-(setq ring-bell-function 'ignore)
+(setq package-enable-at-startup nil
+      inhibit-startup-screen t
+      inhibit-startup-message t
+      initial-scratch-message nil
+      ring-bell-function 'ignore
+      warning-minimum-level :error)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (blink-cursor-mode 0)
-(setq ring-bell-function 'ignore)
-(setq warning-minimum-level :error)
 
 ;; keep customize settings in their own file
 (setq custom-file "~/.emacs.d/custom-vars.el")
@@ -44,9 +44,9 @@
 (load-theme 'gruber-darker t)
 (setq custom-safe-themes t)
 (set-frame-font "Iosevka 18" nil t)
-(setq-default display-line-numbers 'relative)
-(setq-default frame-title-format '("%f"))
-(setq-default ns-use-proxy-icon nil)
+(setq-default display-line-numbers 'relative
+              frame-title-format '("%f")
+              ns-use-proxy-icon nil)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 
 (use-package minions
