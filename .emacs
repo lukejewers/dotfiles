@@ -141,12 +141,6 @@
 (global-set-key (kbd "C-|") 'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:") 'mc/skip-to-previous-like-this)
 
-(use-package iedit
-  :bind
-  (("C-;"  . iedit-mode)
-   :map iedit-mode-keymap
-   ("C-g" . iedit-mode)))
-
 (defun select-current-line ()
   "Select the current line"
   (interactive)
