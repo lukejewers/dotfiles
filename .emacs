@@ -10,7 +10,7 @@
 (setq package-enable-at-startup nil
       inhibit-startup-screen t
       inhibit-startup-message t
-      initial-scratch-message nil
+      initial-scratch-message ";; *scratch*"
       ring-bell-function 'ignore
       warning-minimum-level :error)
 (menu-bar-mode 0)
@@ -70,6 +70,8 @@
               auto-save-default nil
               create-lockfiles nil)
 (setq eldoc-echo-area-use-multiline-p nil)
+(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-O") 'other-frame)
 (global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-M-9") 'enlarge-window)
 (global-set-key (kbd "C-M-0") 'shrink-window)
@@ -81,6 +83,7 @@
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x f"))
 (global-unset-key (kbd "C-x C-c"))
+(global-unset-key (kbd "C-x o"))
 
 ;; allow hash to be entered
 (global-set-key (kbd "M-3")
@@ -96,8 +99,6 @@
   (exec-path-from-shell-initialize))
 
 (use-package org)
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
 
 (use-package dired
@@ -123,6 +124,10 @@
   :config (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style
         '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
+
+(use-package avy
+  :ensure t)
+(global-set-key (kbd "M-j") 'avy-goto-char-timer)
 
 ;;; text editing
 (use-package move-text)
@@ -227,7 +232,8 @@ the directory associated with the current buffer's file."
 (use-package magit
   :bind
   (("C-c m s" . magit-status)
-   ("C-c m l" . magit-log)))
+   ("C-c m l" . magit-log)
+   ("C-c m b" . magit-blame)))
 
 ;;;; languages ;;;;
 (use-package tree-sitter-langs :ensure t)
