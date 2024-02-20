@@ -183,33 +183,33 @@
   (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
   (add-hook 'clojure-mode-hook 'enable-paredit-mode))
 
-;;;; terminals/shells ;;;;;
+;;;; terminals & shells ;;;;;
 (use-package vterm
   :ensure t
   :bind (:map vterm-mode-map ("C-y" . vterm-yank))
   :config
   (setq vterm-max-scrollback 10000))
 
-(defun term-open (term-fn term-name)
-  "Opens up a new terminal 1/3 screen size in
-the directory associated with the current buffer's file."
-  (let* ((parent (if (buffer-file-name)
-                     (file-name-directory (buffer-file-name)) default-directory))
-         (height (/ (window-total-height) 3))
-         (dirname (car (last (split-string parent "/" t)))))
-    (split-window-vertically (- height))
-    (other-window 1)
-    (funcall term-fn "new")
-    (rename-buffer (concat "*" term-name ": " dirname "*"))))
+(add-to-list 'display-buffer-alist
+             '("*shell" (display-buffer-in-side-window)
+               (side . right)
+               (window-width . 0.4)))
+(global-set-key (kbd "C-`") 'shell)
 
-(defun shell-open () (interactive) (term-open 'shell "shell"))
-(global-set-key (kbd "C-x t s") 'shell-open)
+(add-to-list 'display-buffer-alist
+             '("*vterm" (display-buffer-in-side-window)
+               (side . right)
+               (window-width . 0.4)))
 
-(defun eshell-open () (interactive) (term-open 'eshell "eshell"))
-(global-set-key (kbd "C-x t e") 'eshell-open)
+(add-to-list 'display-buffer-alist
+             '("*eshell" (display-buffer-in-side-window)
+               (side . right)
+               (window-width . 0.4)))
 
-(defun vterm-open () (interactive) (term-open 'vterm "vterm"))
-(global-set-key (kbd "C-x t v") 'vterm-open)
+(add-to-list 'display-buffer-alist
+             '("*compilation" (display-buffer-in-side-window)
+               (side . right)
+               (window-width . 0.4)))
 
 ;;;; completion ;;;;
 (ido-mode 1)
