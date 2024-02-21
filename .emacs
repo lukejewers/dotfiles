@@ -194,12 +194,12 @@
              '("*shell" (display-buffer-in-side-window)
                (side . right)
                (window-width . 0.4)))
-(global-set-key (kbd "C-`") 'shell)
 
 (add-to-list 'display-buffer-alist
              '("*vterm" (display-buffer-in-side-window)
                (side . right)
                (window-width . 0.4)))
+(global-set-key (kbd "M-`") 'vterm)
 
 (add-to-list 'display-buffer-alist
              '("*eshell" (display-buffer-in-side-window)
@@ -210,6 +210,18 @@
              '("*compilation" (display-buffer-in-side-window)
                (side . right)
                (window-width . 0.4)))
+
+(defun toggle-shell (shell-str shell)
+  "Close the current buffer if it is open, otherwise open a new one!"
+  (interactive)
+  (if (string-equal shell-str major-mode)
+      (bury-buffer)
+    (funcall shell)))
+
+(defun shell-toggle () (interactive) (toggle-shell "shell-mode" 'shell))
+(global-set-key (kbd "C-`") 'shell-toggle)
+(defun eshell-toggle () (interactive) (toggle-shell "eshell-mode" 'eshell))
+(global-set-key (kbd "C-!") 'eshell-toggle)
 
 ;;;; completion ;;;;
 (ido-mode 1)
