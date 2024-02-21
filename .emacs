@@ -189,17 +189,12 @@
   :bind (:map vterm-mode-map ("C-y" . vterm-yank))
   :config
   (setq vterm-max-scrollback 10000))
+(global-set-key (kbd "M-`") 'vterm)
 
 (add-to-list 'display-buffer-alist
              '("*shell" (display-buffer-in-side-window)
                (side . right)
                (window-width . 0.4)))
-
-(add-to-list 'display-buffer-alist
-             '("*vterm" (display-buffer-in-side-window)
-               (side . right)
-               (window-width . 0.4)))
-(global-set-key (kbd "M-`") 'vterm)
 
 (add-to-list 'display-buffer-alist
              '("*eshell" (display-buffer-in-side-window)
