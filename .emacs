@@ -37,8 +37,8 @@
 (require 'use-package)
 (setq use-package-verbose t
       comp-async-report-warnings-errors nil
-      comp-deferred-compilation t)
-(setq package-install-upgrade-built-in t)
+      comp-deferred-compilation t
+      package-install-upgrade-built-in t)
 
 ;;;; appearance ;;;;
 (load-theme 'gruber-darker t)
@@ -61,15 +61,15 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
 (electric-pair-mode 1)
-(setq electric-pair-preserve-balance nil)
 (delete-selection-mode 1)
-(setq compilation-scroll-output 'first-error)
-(setq vc-follow-symlinks t)
-(setq-default indent-tabs-mode nil)
-(setq-default make-backup-files nil
+(setq-default electric-pair-preserve-balance nil
+              compilation-scroll-output 'first-error
+              vc-follow-symlinks t
+              eldoc-echo-area-use-multiline-p nil
+              indent-tabs-mode nil
+              make-backup-files nil
               auto-save-default nil
               create-lockfiles nil)
-(setq eldoc-echo-area-use-multiline-p nil)
 (global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-M-9") 'enlarge-window)
 (global-set-key (kbd "C-M-0") 'shrink-window)
@@ -195,11 +195,6 @@
 
 (add-to-list 'display-buffer-alist
              '("*eshell" (display-buffer-in-side-window)
-               (side . right)
-               (window-width . 0.4)))
-
-(add-to-list 'display-buffer-alist
-             '("*compilation" (display-buffer-in-side-window)
                (side . right)
                (window-width . 0.4)))
 
