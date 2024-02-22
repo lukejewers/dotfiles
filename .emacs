@@ -70,8 +70,6 @@
               auto-save-default nil
               create-lockfiles nil)
 (setq eldoc-echo-area-use-multiline-p nil)
-(global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "M-O") 'other-frame)
 (global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-M-9") 'enlarge-window)
 (global-set-key (kbd "C-M-0") 'shrink-window)
@@ -83,7 +81,6 @@
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x f"))
 (global-unset-key (kbd "C-x C-c"))
-(global-unset-key (kbd "C-x o"))
 
 ;; allow hash to be entered
 (global-set-key (kbd "M-3")
