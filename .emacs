@@ -244,6 +244,7 @@
 
 (use-package eglot
   :init
+  (fset #'jsonrpc--log-event #'ignore)
   (add-hook 'c-mode-hook 'eglot-ensure)
   (add-hook 'c++-mode-hook 'eglot-ensure)
   (add-hook 'python-mode-hook 'eglot-ensure)
@@ -253,6 +254,7 @@
   (add-hook 'js-mode-hook 'eglot-ensure)
   (add-hook 'typescript-mode-hook 'eglot-ensure)
   :custom
+  (setq eglot-events-buffer-size 0)
   (eglot-autoshutdown t)
   (define-key eglot-mode-map (kbd "C-c l r") 'eglot-rename)
   (define-key eglot-mode-map (kbd "C-c l f") 'eglot-format))
@@ -267,26 +269,11 @@
 (setq python-shell-completion-native-enable nil)
 (use-package poetry)
 
-(use-package typescript-mode
-  :after tree-sitter
-  :config
-  (define-derived-mode typescriptreact-mode typescript-mode
-    "TypeScript TSX")
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescriptreact-mode))
-  (add-to-list 'tree-sitter-major-mode-language-alist '(typescriptreact-mode . tsx))
-  (setq-default typescript-indent-level 2)
-  (add-hook 'typescript-mode-hook 'prettier-js-mode))
-
-(use-package scss-mode
-  :config (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode)))
-
 ;;; code formatting
 (setq c-default-style "linux"
       c-basic-offset 4)
 
 (use-package blacken)
-
-(use-package prettier-js)
 
 (use-package sqlformat
   :config (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
