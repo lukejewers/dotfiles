@@ -211,11 +211,11 @@
 
 ;;;; completion ;;;;
 (ido-mode 1)
-(setq ido-everywhere 1)
-(setq ido-enable-flex-matching t)
 (use-package ido-completing-read+)
 (ido-ubiquitous-mode 1)
-(setq ido-use-url-at-point nil)
+(setq ido-everywhere t
+      ido-enable-flex-matching t
+      ido-use-url-at-point nil)
 
 (use-package smex)
 (global-set-key (kbd "M-x") 'smex)
