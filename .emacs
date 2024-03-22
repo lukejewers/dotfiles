@@ -57,7 +57,7 @@
 (setq mac-left-control-modifier 'control
       mac-left-option-modifier 'super
       mac-right-control-modifier 'meta
-      mac-right-option-modifier 'hyper)
+      mac-right-option-modifier 'meta)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (show-paren-mode 1)
 (electric-pair-mode 1)
@@ -69,15 +69,14 @@
               indent-tabs-mode nil
               make-backup-files nil
               auto-save-default nil
-              create-lockfiles nil)
+              create-lockfiles nil
+              resize-mini-windows nil)
 (global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-M-9") 'enlarge-window)
 (global-set-key (kbd "C-M-0") 'shrink-window)
 (global-set-key (kbd "C-M--") 'shrink-window-horizontally)
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
-(global-set-key (kbd "H-f") 'forward-sexp)
-(global-set-key (kbd "H-b") 'backward-sexp)
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x f"))
 (global-unset-key (kbd "C-x C-c"))
