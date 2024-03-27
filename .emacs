@@ -28,7 +28,8 @@
                          ("elpa" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 (package-initialize)
-(unless package-archive-contents (package-refresh-contents))
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;;; initialize use-package
 (setq use-package-always-ensure t)
@@ -71,6 +72,7 @@
               auto-save-default nil
               create-lockfiles nil
               resize-mini-windows nil)
+(setq xref-search-program 'ripgrep) ;project-find-regexp
 (global-set-key (kbd "C-M-8") 'enlarge-window-horizontally)
 (global-set-key (kbd "C-M-9") 'enlarge-window)
 (global-set-key (kbd "C-M-0") 'shrink-window)
@@ -96,6 +98,19 @@
 
 (use-package org)
 (setq org-log-done t)
+
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/org")
+  (org-roam-completion-everywhere t)
+  :bind (("C-c o l" . org-roam-buffer-toggle)
+         ("C-c o f" . org-roam-node-find)
+         ("C-c o i" . org-roam-node-insert))
+  :config
+  (org-roam-setup))
 
 (use-package dired
   :ensure nil
@@ -166,11 +181,6 @@
     (kill-new (file-truename buffer-file-name))))
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
-(use-package smartscan
-  :ensure t
-  :bind ("H-n" . smartscan-symbol-go-forward)
-  ("H-p" . smartscan-symbol-go-backward))
-
 (use-package paredit
   :init (autoload 'enable-paredit-mode "paredit" t)
   (add-hook 'emacs-mode-hook 'enable-paredit-mode)
@@ -233,7 +243,8 @@
    ("C-c m b" . magit-blame)))
 
 ;;;; languages ;;;;
-(use-package tree-sitter-langs :ensure t)
+(use-package tree-sitter-langs
+  :ensure t)
 (use-package tree-sitter
   :ensure t
   :after tree-sitter-langs
@@ -252,17 +263,22 @@
   (add-hook 'rust-mode-hook 'eglot-ensure)
   (add-hook 'js-mode-hook 'eglot-ensure)
   (add-hook 'typescript-mode-hook 'eglot-ensure)
+  :bind (:map eglot-mode-map
+              ("C-c l f" . eglot-format)
+              ("C-c l r:" . eglot-rename))
   :custom
-  (setq eglot-events-buffer-size 0)
   (eglot-autoshutdown t)
-  (define-key eglot-mode-map (kbd "C-c l r") 'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c l f") 'eglot-format))
+  (eglot-events-buffer-size 0)
+  (eglot-sync-connect nil)
+  (eglot-ignored-server-capabilities '(:inlayHintProvider
+                                       :documentHighlightProvider)))
 
 (defun eglot-format-buffer-on-save ()
   (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
-(define-key flymake-mode-map (kbd "C-c l p") 'flymake-goto-prev-error)
-(define-key flymake-mode-map (kbd "C-c l n") 'flymake-goto-next-error)
+(use-package flymake
+  :bind (("C-c e n" . flymake-goto-next-error)
+         ("C-c e p" . flymake-goto-prev-error)))
 
 (setq python-shell-interpreter "ipython")
 (setq python-shell-completion-native-enable nil)
