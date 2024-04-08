@@ -45,7 +45,7 @@
 (load-theme 'gruber-darker t)
 (setq custom-safe-themes t)
 (set-frame-font "Iosevka 18" nil t)
-(setq-default display-line-numbers 'relative
+(setq-default display-line-numbers 'nil
               frame-title-format '("%f")
               ns-use-proxy-icon nil)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
