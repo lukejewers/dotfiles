@@ -288,9 +288,6 @@
 
 (use-package blacken)
 
-(use-package sqlformat
-  :config (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
-
 (use-package editorconfig
   :config
   (editorconfig-mode 1))
