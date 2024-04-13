@@ -253,14 +253,16 @@
 (use-package eglot
   :init
   (fset #'jsonrpc--log-event #'ignore)
-  (add-hook 'c-mode-hook 'eglot-ensure)
-  (add-hook 'c++-mode-hook 'eglot-ensure)
-  (add-hook 'python-mode-hook 'eglot-ensure)
-  (add-hook 'go-mode-hook 'eglot-ensure)
-  (add-hook 'go-mode-hook #'eglot-format-buffer-on-save)
-  (add-hook 'rust-mode-hook 'eglot-ensure)
-  (add-hook 'js-mode-hook 'eglot-ensure)
-  (add-hook 'typescript-mode-hook 'eglot-ensure)
+  :hook
+  (js-ts-mode . eglot-ensure)
+  (typescript-ts-mode . eglot-ensure)
+  (tsx-ts-mode . eglot-ensure)
+  (python-mode . eglot-ensure)
+  (go-ts-mode . eglot-ensure)
+  (go-ts-mode . eglot-format-buffer-on-save)
+  (c-ts-mode . eglot-ensure)
+  (rust-ts-mode . eglot-ensure)
+  (c++-ts-mode . eglot-ensure)
   :bind (:map eglot-mode-map
               ("C-c l f" . eglot-format)
               ("C-c l r" . eglot-rename))
