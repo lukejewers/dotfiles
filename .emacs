@@ -243,14 +243,12 @@
    ("C-c m b" . magit-blame)))
 
 ;;;; languages ;;;;
-(use-package tree-sitter-langs
-  :ensure t)
-(use-package tree-sitter
-  :ensure t
-  :after tree-sitter-langs
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
   :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 (use-package eglot
   :init
@@ -265,7 +263,7 @@
   (add-hook 'typescript-mode-hook 'eglot-ensure)
   :bind (:map eglot-mode-map
               ("C-c l f" . eglot-format)
-              ("C-c l r:" . eglot-rename))
+              ("C-c l r" . eglot-rename))
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
