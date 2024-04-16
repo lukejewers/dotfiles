@@ -93,9 +93,6 @@
 (setq grep-command "grep -rn "
       grep-use-null-device nil)
 
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
 (use-package org)
 (setq org-log-done t)
 
