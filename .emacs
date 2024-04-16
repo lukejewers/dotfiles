@@ -42,7 +42,10 @@
       package-install-upgrade-built-in t)
 
 ;;;; appearance ;;;;
-(load-theme 'gruber-darker t)
+;; theme
+(use-package gruber-darker-theme
+  :config (load-theme 'gruber-darker t))
+
 (setq custom-safe-themes t)
 (set-frame-font "Iosevka 18" nil t)
 (setq-default display-line-numbers 'nil
@@ -50,6 +53,7 @@
               ns-use-proxy-icon nil)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 
+;; mode line
 (use-package minions
   :config
   (minions-mode 1))
