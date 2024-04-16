@@ -122,6 +122,15 @@
 (put 'dired-find-alternate-file 'disabled nil)
 (require 'dired-x)
 
+(use-package dired-subtree
+  :ensure t
+  :bind (:map dired-mode-map
+              ("i" . dired-subtree-insert)
+              (";" . dired-subtree-remove)
+              ("<tab>" . dired-subtree-toggle)
+              ("<backtab>" . dired-subtree-cycle))
+  :config (setq dired-subtree-use-backgrounds nil))
+
 (use-package ibuffer
   :ensure nil
   :bind ("C-x C-b" . ibuffer)
