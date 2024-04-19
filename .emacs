@@ -212,11 +212,6 @@
                (side . right)
                (window-width . 0.4)))
 
-(add-to-list 'display-buffer-alist
-             '("*eshell" (display-buffer-in-side-window)
-               (side . right)
-               (window-width . 0.4)))
-
 (defun toggle-shell (shell-str shell)
   "Close the current buffer if it is open, otherwise open a new one!"
   (interactive)
@@ -226,8 +221,6 @@
 
 (defun shell-toggle () (interactive) (toggle-shell "shell-mode" 'shell))
 (global-set-key (kbd "C-`") 'shell-toggle)
-(defun eshell-toggle () (interactive) (toggle-shell "eshell-mode" 'eshell))
-(global-set-key (kbd "C-!") 'eshell-toggle)
 
 ;;;; completion ;;;;
 (ido-mode 1)
