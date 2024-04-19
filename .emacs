@@ -260,24 +260,21 @@
   (js-ts-mode . eglot-ensure)
   (typescript-ts-mode . eglot-ensure)
   (tsx-ts-mode . eglot-ensure)
-  (python-mode . eglot-ensure)
+  (python-ts-mode . eglot-ensure)
   (go-ts-mode . eglot-ensure)
-  (go-ts-mode . eglot-format-buffer-on-save)
   (c-ts-mode . eglot-ensure)
   (rust-ts-mode . eglot-ensure)
   (c++-ts-mode . eglot-ensure)
-  :bind (:map eglot-mode-map
-              ("C-c l f" . eglot-format)
-              ("C-c l r" . eglot-rename))
+  :bind
+  (:map eglot-mode-map
+        ("C-c l f" . eglot-format)
+        ("C-c l r" . eglot-rename))
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
   (eglot-sync-connect nil)
   (eglot-ignored-server-capabilities '(:inlayHintProvider
                                        :documentHighlightProvider)))
-
-(defun eglot-format-buffer-on-save ()
-  (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
 (use-package flymake
   :bind (("C-c e n" . flymake-goto-next-error)
