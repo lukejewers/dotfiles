@@ -265,6 +265,7 @@
   (c-ts-mode . eglot-ensure)
   (rust-ts-mode . eglot-ensure)
   (c++-ts-mode . eglot-ensure)
+  (lua-mode . eglot-ensure)
   :bind
   (:map eglot-mode-map
         ("C-c l f" . eglot-format)

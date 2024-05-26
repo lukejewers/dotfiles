@@ -1,3 +1,5 @@
+/* ~/Library/KeyBindings/DefaultKeyBinding.Dict
+
 {
     "~f"      = "moveWordForward:";              /* M-f */
     "~b"      = "moveWordBackward:";             /* M-b */

@@ -51,12 +51,10 @@ brew cleanup
 
 echo "Installing cask..."
 CASKS=(
-    alfred
     amethyst
     bitwarden
-    firefox
     google-chrome
-    slack
+    kitty
 )
 brew install --cask ${CASKS[@]}
 
@@ -90,9 +88,11 @@ brew install emacs-plus@29 --with-native-comp
 
 echo "Symlinking dotfiles..."
 mkdir -p ~/.emacs.d
-ln -s -f ~/dotfiles/.emacs ~/.emacs.d/init.el
 ln -s -f ~/dotfiles/.vimrc ~/.vimrc
 ln -s -f ~/dotfiles/.tmux.conf ~/.tmux.conf
+ln -s -f ~/dotfiles/amethyst.yml ~/.amethyst.yml
+ln -s -f ~/dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
+ln -s -f ~/dotfiles/.emacs ~/.emacs.d/init.el
 ln -s /opt/homebrew/opt/emacs-plus@29/Emacs.app /Applications
 
 echo "Configuring OSX..."
