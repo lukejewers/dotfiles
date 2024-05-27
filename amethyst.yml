@@ -42,11 +42,11 @@ decrease-main:
 
 focus-ccw:
   mod: mod1
-  key: n
+  key: "["
 
 focus-cw:
   mod: mod1
-  key: p
+  key: "]"
 
 focus-main:
   mod: ""
