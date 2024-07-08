@@ -100,6 +100,9 @@
 (setq grep-command "grep -rn "
       grep-use-null-device nil)
 
+(use-package wgrep
+  :ensure t)
+
 (use-package org)
 (setq org-log-done t)
 
@@ -282,7 +285,8 @@
 
 (use-package flymake
   :bind (("C-c e n" . flymake-goto-next-error)
-         ("C-c e p" . flymake-goto-prev-error)))
+         ("C-c e p" . flymake-goto-prev-error)
+         ("C-c e b" . flymake-show-buffer-diagnostics)))
 
 (setq python-shell-interpreter "ipython")
 (setq python-shell-completion-native-enable nil)
