@@ -86,6 +86,7 @@
 (global-set-key (kbd "C-M--") 'shrink-window-horizontally)
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
+(global-set-key (kbd "C-q") 'query-replace-regexp)
 (global-unset-key (kbd "C-z"))
 (global-unset-key (kbd "C-x f"))
 (global-unset-key (kbd "C-x C-c"))
