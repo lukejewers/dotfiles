@@ -126,8 +126,12 @@
   :config (setq dired-kill-when-opening-new-dired-buffer t)
   :bind (:map dired-mode-map
               ("-" . dired-up-directory)))
-(put 'dired-find-alternate-file 'disabled nil)
-(require 'dired-x)
+
+(use-package dired-ranger
+  :bind (:map dired-mode-map
+              ("W" . dired-ranger-copy)
+              ("X" . dired-ranger-move)
+              ("Y" . dired-ranger-paste)))
 
 (use-package dired-subtree
   :ensure t
