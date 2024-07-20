@@ -234,12 +234,17 @@
 (global-set-key (kbd "C-`") 'shell-toggle)
 
 ;;;; completion ;;;;
-(ido-mode 1)
-(use-package ido-completing-read+)
-(ido-ubiquitous-mode 1)
-(setq ido-everywhere t
-      ido-enable-flex-matching t
-      ido-use-url-at-point nil)
+(use-package ido
+  :config
+  (ido-mode 1)
+  (setq ido-everywhere t)
+  (setq ido-enable-flex-matching t)
+  (setq ido-use-url-at-point nil)
+  (setq ido-max-window-height 1))
+
+(use-package ido-completing-read+
+  :config
+  (ido-ubiquitous-mode 1))
 
 (use-package smex)
 (global-set-key (kbd "M-x") 'smex)
