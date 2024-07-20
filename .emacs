@@ -127,7 +127,7 @@
 (use-package dired
   :ensure nil
   :commands (dired)
-  :init (add-hook 'dired-mode-hook 'auto-revert-mode)
+  :hook (dired-mode . auto-revert-mode)
   :config (setq dired-kill-when-opening-new-dired-buffer t)
   :bind (:map dired-mode-map
               ("-" . dired-up-directory)))
@@ -156,7 +156,7 @@
   (setq ibuffer-show-empty-filter-groups nil))
 
 (use-package whitespace
-  :init (add-hook 'before-save-hook #'whitespace-cleanup)
+  :hook (before-save . whitespace-cleanup)
   :config (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style
         '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
@@ -207,20 +207,22 @@
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
 (use-package paredit
-  :init (autoload 'enable-paredit-mode "paredit" t)
-  (add-hook 'emacs-mode-hook 'enable-paredit-mode)
-  (add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
-  (add-hook 'lisp-mode-hook 'enable-paredit-mode)
-  (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-  (add-hook 'clojure-mode-hook 'enable-paredit-mode))
+  :ensure t
+  :hook
+  (emacs-lisp-mode . enable-paredit-mode)
+  (eval-expression-minibuffer-setup . enable-paredit-mode)
+  (lisp-mode . enable-paredit-mode)
+  (lisp-interaction-mode . enable-paredit-mode)
+  (clojure-mode . enable-paredit-mode))
 
 ;;;; terminals & shells ;;;;;
 (use-package vterm
   :ensure t
-  :bind (:map vterm-mode-map ("C-y" . vterm-yank))
+  :bind ("M-`" . vterm)
+        (:map vterm-mode-map
+              ("C-y" . vterm-yank))
   :config
   (setq vterm-max-scrollback 10000))
-(global-set-key (kbd "M-`") 'vterm)
 
 (add-to-list 'display-buffer-alist
              '("*shell" (display-buffer-in-side-window)
@@ -250,13 +252,13 @@
   :config
   (ido-ubiquitous-mode 1))
 
-(use-package smex)
-(global-set-key (kbd "M-x") 'smex)
+(use-package smex
+  :bind ("M-x" . smex))
 
 (use-package company
   :bind
-  (:map company-active-map ("<tab>" . company-complete-selection)))
-(add-hook 'after-init-hook 'global-company-mode)
+  (:map company-active-map ("<tab>" . company-complete-selection))
+  :hook (after-init . global-company-mode))
 
 ;;;; version control ;;;;
 (use-package magit
