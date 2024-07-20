@@ -174,7 +174,7 @@
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-'") 'mc/mark-all-like-this)
 (global-set-key (kbd "C-|") 'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:") 'mc/skip-to-previous-like-this)
 
@@ -183,7 +183,7 @@
   (interactive)
   (end-of-line)
   (set-mark (line-beginning-position)))
-;; (global-set-key (kbd "C-;") 'select-current-line)
+(global-set-key (kbd "C-;") 'select-current-line)
 
 (defun duplicate-line ()
   "Duplicate current line"
