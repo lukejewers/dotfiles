@@ -76,7 +76,14 @@
               auto-save-default nil
               create-lockfiles nil
               resize-mini-windows nil)
-(setq xref-search-program 'ripgrep) ;project-find-regexp
+(setq xref-search-program 'ripgrep) ; project-find-regexp
+
+;; global unset keys
+(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x f"))
+(global-unset-key (kbd "C-x C-c"))
+
+;; global set keys
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
 (global-set-key (kbd "<C-wheel-down>") 'ignore)
@@ -87,9 +94,6 @@
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
 (global-set-key (kbd "C-q") 'query-replace-regexp)
-(global-unset-key (kbd "C-z"))
-(global-unset-key (kbd "C-x f"))
-(global-unset-key (kbd "C-x C-c"))
 
 ;; allow hash to be entered
 (global-set-key (kbd "M-3")
@@ -104,8 +108,8 @@
 (use-package wgrep
   :ensure t)
 
-(use-package org)
-(setq org-log-done t)
+(use-package org
+  :config (setq org-log-done t))
 
 (use-package org-roam
   :ensure t
@@ -158,25 +162,25 @@
         '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
 
 (use-package avy
-  :ensure t)
-(global-set-key (kbd "M-j") 'avy-goto-char-timer)
+  :ensure t
+  :bind ("M-j" . avy-goto-char-timer))
 
 ;;; text editing
-(use-package move-text)
-(global-set-key (kbd "M-p") 'move-text-up)
-(global-set-key (kbd "M-n") 'move-text-down)
+(use-package move-text
+  :bind ("M-p" . 'move-text-up)
+        ("M-n" . 'move-text-down))
 
-(use-package expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
-(global-set-key (kbd "C--") 'er/contract-region)
+(use-package expand-region
+  :bind ("C-=" . er/expand-region)
+        ("C--" . er/contract-region))
 
 (use-package multiple-cursors
   :ensure t
-  :bind (("C-M-SPC" . set-rectangular-region-anchor)
+  :bind  ("C-M-SPC" . set-rectangular-region-anchor)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          ("C-'" . mc/mark-all-like-this)
-         ("C-c C-SPC" . mc/edit-lines)))
+         ("C-c C-SPC" . mc/edit-lines))
 
 (defun select-current-line ()
   "Select the current line"
