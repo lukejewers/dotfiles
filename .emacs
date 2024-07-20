@@ -278,7 +278,7 @@
   (tsx-ts-mode . eglot-ensure)
   (python-ts-mode . eglot-ensure)
   (go-ts-mode . eglot-ensure)
-  (c-ts-mode . eglot-ensure)
+  ;; (c-ts-mode . eglot-ensure)
   (rust-ts-mode . eglot-ensure)
   (c++-ts-mode . eglot-ensure)
   (lua-mode . eglot-ensure)
