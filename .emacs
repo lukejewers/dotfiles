@@ -170,13 +170,13 @@
 (global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C--") 'er/contract-region)
 
-(use-package multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-'") 'mc/mark-all-like-this)
-(global-set-key (kbd "C-|") 'mc/skip-to-next-like-this)
-(global-set-key (kbd "C-:") 'mc/skip-to-previous-like-this)
+(use-package multiple-cursors
+  :ensure t
+  :bind (("C-M-SPC" . set-rectangular-region-anchor)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-'" . mc/mark-all-like-this)
+         ("C-c C-SPC" . mc/edit-lines)))
 
 (defun select-current-line ()
   "Select the current line"
