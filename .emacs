@@ -304,7 +304,6 @@
 
 (setq python-shell-interpreter "ipython")
 (setq python-shell-completion-native-enable nil)
-(use-package poetry)
 
 ;;; code formatting
 (setq c-default-style "linux"
