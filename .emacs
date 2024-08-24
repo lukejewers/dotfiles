@@ -102,7 +102,7 @@
                    (insert "#")))
 
 (global-set-key (kbd "M-s g") 'grep)
-(setq grep-command "grep -rn "
+(setq grep-command "rg -nS --no-heading "
       grep-use-null-device nil)
 
 (use-package wgrep
