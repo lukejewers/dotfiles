@@ -1,9 +1,12 @@
+local apps = {
+    emacs = 'Emacs.app',
+    kitty = 'Kitty.app',
+    chrome = 'Google Chrome.app',
+    messages = 'Messages.app'
+}
 local hyper         = { "ctrl", "cmd" }
-local screen_states = { FULLSCREEN = 0, TWOPANE = 1 }
+local screen_states = { FULLSCREEN = 0, TWOPANE = 1, CENTRED = 2 }
 local screen_state  = screen_states.FULLSCREEN
-local emacs_app     = 'Emacs.app'
-local kitty_app     = 'Kitty.app'
-local chrome_app    = 'Google Chrome.app'
 
 hs.window.animationDuration = 0
 
@@ -16,32 +19,36 @@ local function call_app_fullscreen (key, app)
     end)
 end
 
-local function switch_layouts (key, screen_state_layout, app1, app2)
+-- Function to switch between layouts
+local function switch_layouts(key, target_state, app1, app2)
     hs.hotkey.bind(hyper, key, function()
-        if screen_state_layout == screen_states.TWOPANE then
-           screen_state = screen_state_layout
-           -- Right side of screen
-           hs.application.open(app2)
-           hs.window.focusedWindow():moveToUnit({0.5, 0, 0.5, 1})
-           -- Left side of screen
-           hs.application.open(app1)
-           hs.window.focusedWindow():moveToUnit({0, 0, 0.5, 1})
-        elseif screen_state_layout == screen_states.FULLSCREEN then
-           screen_state = screen_state_layout
-           screen_state = screen_states.FULLSCREEN
-           hs.window.focusedWindow():moveToUnit({0, 0, 1, 1})
+        screen_state = target_state
+        if target_state == screen_states.TWOPANE then
+            hs.application.open(app2)
+            hs.window.focusedWindow():moveToUnit({0.5, 0, 0.5, 1}) -- Right side
+            hs.application.open(app1)
+            hs.window.focusedWindow():moveToUnit({0, 0, 0.5, 1}) -- Left side
+        elseif target_state == screen_states.CENTRED then
+            hs.window.focusedWindow():moveToUnit({0.1, 0.1, 0.8, 0.8}) -- Centered (80% width and height)
+        else
+            hs.window.focusedWindow():moveToUnit({0, 0, 1, 1}) -- Fullscreen
         end
     end)
 end
 
+-- Reload Hammerspoon configuration
 hs.hotkey.bind(hyper, "r", hs.reload)
-hs.hotkey.bind(hyper, "c", hs.toggleConsole)
+-- hs.hotkey.bind(hyper, "c", hs.toggleConsole)
 
-call_app_fullscreen("j", emacs_app)
-call_app_fullscreen("k", kitty_app)
-call_app_fullscreen("l", chrome_app)
+-- Bind applications to hotkeys
+call_app_fullscreen("j", apps.emacs)
+call_app_fullscreen("k", apps.kitty)
+call_app_fullscreen("l", apps.chrome)
+call_app_fullscreen("m", apps.messages)
 
-switch_layouts("0", screen_states.FULLSCREEN)
-switch_layouts("1", screen_states.TWOPANE, emacs_app, kitty_app)
-switch_layouts("2", screen_states.TWOPANE, emacs_app, chrome_app)
-switch_layouts("3", screen_states.TWOPANE, kitty_app, chrome_app)
+-- Bind layout switching hotkeys
+switch_layouts("f", screen_states.FULLSCREEN)
+switch_layouts("c", screen_states.CENTRED)
+switch_layouts("1", screen_states.TWOPANE, apps.emacs, apps.kitty)
+switch_layouts("2", screen_states.TWOPANE, apps.emacs, apps.chrome)
+switch_layouts("3", screen_states.TWOPANE, apps.kitty, apps.chrome)
