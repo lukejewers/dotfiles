@@ -129,10 +129,12 @@
   :commands (dired)
   :hook (dired-mode . auto-revert-mode)
   :config (setq dired-kill-when-opening-new-dired-buffer t)
+          (put 'dired-find-alternate-file 'disabled nil)
   :bind (:map dired-mode-map
               ("-" . dired-up-directory)))
 
 (use-package dired-ranger
+  :ensure t
   :bind (:map dired-mode-map
               ("W" . dired-ranger-copy)
               ("X" . dired-ranger-move)
