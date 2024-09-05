@@ -169,7 +169,7 @@
 
 (use-package avy
   :ensure t
-  :init (setq avy-timeout-seconds 0.2)
+  :init (setq avy-timeout-seconds 0.3)
   :bind ("M-j" . avy-goto-char-timer))
 
 ;;; text editing
@@ -223,6 +223,9 @@
   (clojure-mode . enable-paredit-mode))
 
 ;;;; terminals & shells ;;;;;
+(use-package exec-path-from-shell
+   :config (exec-path-from-shell-initialize))
+
 (use-package vterm
   :ensure t
   :bind ("M-`" . vterm)
