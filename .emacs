@@ -157,6 +157,10 @@
   (setq ibuffer-expert t)
   (setq ibuffer-show-empty-filter-groups nil))
 
+(defun close-all-but-current-buffer ()
+  (interactive)
+    (mapc 'kill-buffer (cdr (buffer-list (current-buffer)))))
+
 (use-package whitespace
   :hook (before-save . whitespace-cleanup)
   :config (setq whitespace-line-column 80) ;; limit line length
@@ -165,6 +169,7 @@
 
 (use-package avy
   :ensure t
+  :init (setq avy-timeout-seconds 0.2)
   :bind ("M-j" . avy-goto-char-timer))
 
 ;;; text editing
