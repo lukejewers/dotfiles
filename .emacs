@@ -68,7 +68,6 @@
 (electric-pair-mode 1)
 (delete-selection-mode 1)
 (setq-default electric-pair-preserve-balance nil
-              compilation-scroll-output 'first-error
               vc-follow-symlinks t
               eldoc-echo-area-use-multiline-p nil
               indent-tabs-mode nil
@@ -76,6 +75,8 @@
               auto-save-default nil
               create-lockfiles nil
               resize-mini-windows nil)
+(setq compilation-scroll-output 'first-error
+      compilation-always-kill t)
 (setq xref-search-program 'ripgrep) ; project-find-regexp
 
 ;; global unset keys
