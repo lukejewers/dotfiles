@@ -77,6 +77,7 @@
               resize-mini-windows nil)
 (setq compilation-scroll-output 'first-error
       compilation-always-kill t)
+(setq set-mark-command-repeat-pop t)
 (setq xref-search-program 'ripgrep) ; project-find-regexp
 
 ;; global unset keys
@@ -136,6 +137,7 @@
 
 (use-package dired-ranger
   :ensure t
+  :after dired
   :bind (:map dired-mode-map
               ("W" . dired-ranger-copy)
               ("X" . dired-ranger-move)
@@ -143,6 +145,7 @@
 
 (use-package dired-subtree
   :ensure t
+  :after dired
   :bind (:map dired-mode-map
               ("i" . dired-subtree-insert)
               (";" . dired-subtree-remove)
