@@ -331,6 +331,13 @@
   :config
   (editorconfig-mode 1))
 
+(use-package sqlformat
+  :commands (sqlformat sqlformat-buffer sqlformat-region)
+  :hook (sql-mode . sqlformat-on-save-mode)
+  :init
+  (setq sqlformat-command 'pgformatter
+        sqlformat-args '("-s2" "-g" "-u1")))
+
 ;;; garbage collection ;;;
 (setq gc-cons-threshold (* 1024 1024 100))
 
