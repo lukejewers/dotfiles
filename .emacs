@@ -241,7 +241,7 @@
 (add-to-list 'display-buffer-alist
              '("*shell" (display-buffer-in-side-window)
                (side . right)
-               (window-width . 0.4)))
+               (window-width . 0.45)))
 
 (defun toggle-shell (shell-str shell)
   "Close the current buffer if it is open, otherwise open a new one!"
