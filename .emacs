@@ -176,10 +176,15 @@
   :init (setq avy-timeout-seconds 0.3)
   :bind ("M-j" . avy-goto-char-timer))
 
+(use-package transpose-frame
+  :ensure t
+  :bind ("C-x t f" . transpose-frame)
+  ("C-x t r" . rotate-frame))
+
 ;;; text editing
 (use-package move-text
   :bind ("M-p" . 'move-text-up)
-        ("M-n" . 'move-text-down))
+  ("M-n" . 'move-text-down))
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region)
