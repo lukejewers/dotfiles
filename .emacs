@@ -10,7 +10,6 @@
 (setq package-enable-at-startup nil
       inhibit-startup-screen t
       inhibit-startup-message t
-      initial-scratch-message ";; *scratch*"
       ring-bell-function 'ignore
       warning-minimum-level :error)
 (menu-bar-mode 0)
@@ -291,6 +290,7 @@
   :custom
   (treesit-auto-install 'prompt)
   :config
+  (setq treesit-font-lock-level 4)
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
