@@ -171,8 +171,7 @@
 
 (use-package avy
   :ensure t
-  :init (setq avy-timeout-seconds 0.3)
-  :bind ("M-j" . avy-goto-char-timer))
+  :bind ("M-j" . avy-goto-char-2))
 
 (use-package transpose-frame
   :ensure t
