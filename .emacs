@@ -68,7 +68,6 @@
 (delete-selection-mode 1)
 (setq-default electric-pair-preserve-balance nil
               vc-follow-symlinks t
-              eldoc-echo-area-use-multiline-p nil
               indent-tabs-mode nil
               make-backup-files nil
               auto-save-default nil
@@ -306,20 +305,43 @@
   (tsx-ts-mode . eglot-ensure)
   (python-ts-mode . eglot-ensure)
   (go-ts-mode . eglot-ensure)
-  ;; (c-ts-mode . eglot-ensure)
+  (c-ts-mode . eglot-ensure)
   (rust-ts-mode . eglot-ensure)
   (c++-ts-mode . eglot-ensure)
   (lua-mode . eglot-ensure)
-  :bind
-  (:map eglot-mode-map
-        ("C-c l f" . eglot-format)
-        ("C-c l r" . eglot-rename))
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
   (eglot-sync-connect nil)
-  (eglot-ignored-server-capabilities '(:inlayHintProvider
-                                       :documentHighlightProvider)))
+  (setq eldoc-echo-area-prefer-doc-buffer t
+        eldoc-echo-area-use-multiline-p nil)
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-events-buffer-size 0)
+  (eglot-extend-to-xref nil)
+  (eglot-ignored-server-capabilities
+   '(;; :completionProvider
+     ;; :signatureHelpProvider
+     ;; :definitionProvider
+     ;; :typeDefinitionProvider
+     ;; :implementationProvider
+     ;; :declarationProvider
+     ;; :referencesProvider
+     ;; :hoverProvider ;; useful for documentation
+     :documentHighlightProvider
+     :documentSymbolProvider
+     :workspaceSymbolProvider
+     :codeActionProvider
+     :codeLensProvider
+     :documentFormattingProvider
+     :documentRangeFormattingProvider
+     :documentOnTypeFormattingProvider
+     :renameProvider
+     :documentLinkProvider
+     :colorProvider
+     :foldingRangeProvider
+     :executeCommandProvider
+     :inlayHintProvider)))
 
 (use-package flymake
   :bind (("C-c e n" . flymake-goto-next-error)
