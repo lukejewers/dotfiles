@@ -101,7 +101,7 @@
                    (interactive)
                    (insert "#")))
 
-(global-set-key (kbd "M-s g") 'grep)
+(global-set-key (kbd "M-s r") 'grep)
 (setq grep-command "rg -nS --no-heading "
       grep-use-null-device nil)
 
