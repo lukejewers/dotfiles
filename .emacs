@@ -93,8 +93,12 @@
 (global-set-key (kbd "C-M--") 'shrink-window-horizontally)
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
-(global-set-key (kbd "C-q") 'query-replace-regexp)
+(global-set-key (kbd "C-q") 'query-replace)
 (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#"))) ;; allow hash to be entered
+(global-set-key (kbd "s-f") 'forward-sexp)
+(global-set-key (kbd "s-b") 'backward-sexp)
+(global-set-key (kbd "s-n") 'forward-list)
+(global-set-key (kbd "s-p") 'backward-list)
 (global-set-key (kbd "M-s r") 'grep)
 (setq grep-command "rg -nS --no-heading "
       grep-use-null-device nil)
