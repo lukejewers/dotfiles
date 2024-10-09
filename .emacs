@@ -274,10 +274,34 @@
 (use-package smex
   :bind ("M-x" . smex))
 
-(use-package company
+(use-package marginalia
+  :init
+  (marginalia-mode)
+  :custom
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right))
+
+(use-package corfu
+  :init
+  (global-corfu-mode)
   :bind
-  (:map company-active-map ("<tab>" . company-complete-selection))
-  :hook (after-init . global-company-mode))
+  (:map corfu-map ("TAB" . corfu-complete))
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.25)
+  (corfu-quit-no-match t))
+
+(use-package cape
+  :demand t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  (add-to-list 'completion-at-point-functions #'cape-dict)
+  (add-to-list 'completion-at-point-functions #'cape-file))
+
+(use-package savehist
+  :init
+  (savehist-mode))
 
 ;;;; version control ;;;;
 (use-package magit
