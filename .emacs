@@ -343,15 +343,7 @@
   (eglot-events-buffer-size 0)
   (eglot-extend-to-xref nil)
   (eglot-ignored-server-capabilities
-   '(;; :completionProvider
-     ;; :signatureHelpProvider
-     ;; :definitionProvider
-     ;; :typeDefinitionProvider
-     ;; :implementationProvider
-     ;; :declarationProvider
-     ;; :referencesProvider
-     ;; :hoverProvider ;; useful for documentation
-     :documentHighlightProvider
+   '(:documentHighlightProvider
      :documentSymbolProvider
      :workspaceSymbolProvider
      :codeActionProvider
@@ -367,9 +359,7 @@
      :inlayHintProvider)))
 
 (use-package flymake
-  :bind (("C-c e n" . flymake-goto-next-error)
-         ("C-c e p" . flymake-goto-prev-error)
-         ("C-c e b" . flymake-show-buffer-diagnostics)))
+  :bind (("M-g f" . flymake-show-buffer-diagnostics)))
 
 (setq python-shell-interpreter "ipython")
 (setq python-shell-completion-native-enable nil)
