@@ -94,17 +94,20 @@
 (global-set-key (kbd "C-c c") 'compile)
 (global-set-key (kbd "C-c r") 'recompile)
 (global-set-key (kbd "C-q") 'query-replace-regexp)
-
-;; allow hash to be entered
-(global-set-key (kbd "M-3")
-                '(lambda ()
-                   (interactive)
-                   (insert "#")))
-
+(global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#"))) ;; allow hash to be entered
 (global-set-key (kbd "M-s r") 'grep)
 (setq grep-command "rg -nS --no-heading "
       grep-use-null-device nil)
 
+;;; follow newly opened windows
+(global-set-key (kbd "C-x 2") (lambda () (interactive) (split-window-vertically) (other-window 1)))
+(global-set-key (kbd "C-x 3") (lambda () (interactive) (split-window-horizontally) (other-window 1)))
+(add-hook 'compilation-finish-functions 'switch-to-buffer-other-window 'compilation)
+(add-hook 'occur-hook '(lambda () (switch-to-buffer-other-window "*Occur*")))
+(setq help-window-select t)
+(setq completion-auto-select t)
+
+;; utils
 (use-package wgrep
   :ensure t)
 
@@ -221,15 +224,6 @@
   (when buffer-file-name
     (kill-new (file-truename buffer-file-name))))
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
-
-(use-package paredit
-  :ensure t
-  :hook
-  (emacs-lisp-mode . enable-paredit-mode)
-  (eval-expression-minibuffer-setup . enable-paredit-mode)
-  (lisp-mode . enable-paredit-mode)
-  (lisp-interaction-mode . enable-paredit-mode)
-  (clojure-mode . enable-paredit-mode))
 
 ;;;; terminals & shells ;;;;;
 (use-package exec-path-from-shell
