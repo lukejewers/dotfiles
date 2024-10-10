@@ -99,6 +99,7 @@
 (global-set-key (kbd "s-b") 'backward-sexp)
 (global-set-key (kbd "s-n") 'forward-list)
 (global-set-key (kbd "s-p") 'backward-list)
+(global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "M-s r") 'grep)
 (setq grep-command "rg -nS --no-heading "
       grep-use-null-device nil)
