@@ -77,6 +77,11 @@
       compilation-always-kill t)
 (setq set-mark-command-repeat-pop t)
 (setq xref-search-program 'ripgrep) ; project-find-regexp
+(setq project-switch-commands '((project-find-file "Find file" "f")
+                                (project-find-dir "Find dir" "d")
+                                (project-dired "Dired" "D")
+                                (project-find-regexp "g")
+                                (magit-project-status "Magit" "m")))
 
 ;; global unset keys
 (global-unset-key (kbd "C-z"))
