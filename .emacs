@@ -324,8 +324,6 @@
   (global-treesit-auto-mode))
 
 (use-package eglot
-  :init
-  (fset #'jsonrpc--log-event #'ignore)
   :hook
   (js-ts-mode . eglot-ensure)
   (typescript-ts-mode . eglot-ensure)
@@ -337,6 +335,8 @@
   (c++-ts-mode . eglot-ensure)
   (lua-mode . eglot-ensure)
   :custom
+  (fset #'jsonrpc--log-event #'ignore)
+  (setq jsonrpc-event-hook nil)
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
   (eglot-sync-connect nil)
