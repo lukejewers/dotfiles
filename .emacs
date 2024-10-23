@@ -384,6 +384,14 @@
   :ensure t
   :defer t)
 
+(use-package py-isort
+  :ensure t
+  :defer t)
+
+(use-package pyvenv
+  :ensure t
+  :defer t)
+
 (use-package editorconfig
   :ensure t
   :defer t
