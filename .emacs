@@ -8,6 +8,7 @@
   (create-lockfiles nil)
   (delete-by-moving-to-trash t)
   (inhibit-startup-screen t)
+  (treesit-font-lock-level 4)
   (inhibit-startup-message t)
   (make-backup-files nil)
   (ring-bell-function 'ignore)
@@ -90,14 +91,14 @@
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'display-buffer-alist
                '("*shell" (display-buffer-in-side-window)
-				 (side . right)
-				 (window-width . 0.45)))
+                 (side . right)
+                 (window-width . 0.45)))
   (add-hook 'emacs-startup-hook
-			(lambda ()
+            (lambda ()
               (setq gc-cons-threshold (* 16 1024 1024))))
   (add-hook 'emacs-startup-hook
-			(lambda () (message "Emacs loaded in %s with %d garbage collections."
-								(format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
+            (lambda () (message "Emacs loaded in %s with %d garbage collections."
+                                (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
 
 (use-package gruber-darker-theme
   :ensure t
@@ -124,7 +125,6 @@
   :commands (dired)
   :hook (dired-mode . auto-revert-mode)
   :config (dired-kill-when-opening-new-dired-buffer t)
-  (put 'dired-find-alternate-file 'disabled nil)
   :bind (:map dired-mode-map
               ("-" . dired-up-directory)))
 
@@ -321,7 +321,6 @@
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (treesit-font-lock-level 4)
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
