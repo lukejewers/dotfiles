@@ -54,7 +54,6 @@
     (scroll-bar-mode -1))
   (global-auto-revert-mode 1)
   (indent-tabs-mode -1)
-  (recentf-mode 1)
   (show-paren-mode 1)
   (electric-pair-mode 1)
   (modify-coding-system-alist 'file "" 'utf-8)
@@ -106,7 +105,6 @@
 
 (use-package minions
   :ensure t
-  :defer t
   :config
   (minions-mode 1))
 
@@ -124,7 +122,9 @@
   :defer t
   :commands (dired)
   :hook (dired-mode . auto-revert-mode)
-  :config (dired-kill-when-opening-new-dired-buffer t)
+  :config
+  (setq dired-kill-when-opening-new-dired-buffer t)
+  (put 'dired-find-alternate-file 'disabled nil)
   :bind (:map dired-mode-map
               ("-" . dired-up-directory)))
 
@@ -317,7 +317,6 @@
 
 (use-package treesit-auto
   :ensure t
-  :defer t
   :custom
   (treesit-auto-install 'prompt)
   :config
