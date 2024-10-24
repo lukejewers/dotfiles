@@ -105,8 +105,7 @@
 
 (use-package minions
   :ensure t
-  :config
-  (minions-mode 1))
+  :config (minions-mode 1))
 
 (use-package wgrep
   :ensure t
@@ -151,8 +150,7 @@
   :defer t
   :bind
   ("C-x C-b" . ibuffer)
-  :hook
-  (ibuffer-mode . hl-line-mode)
+  :hook (ibuffer-mode . hl-line-mode)
   :config
   (ibuffer-expert t)
   (ibuffer-show-empty-filter-groups nil))
@@ -178,19 +176,22 @@
 (use-package move-text
   :defer t
   :ensure t
-  :bind ("M-p" . 'move-text-up)
+  :bind
+  ("M-p" . 'move-text-up)
   ("M-n" . 'move-text-down))
 
 (use-package expand-region
   :ensure t
   :defer t
-  :bind ("C-=" . er/expand-region)
+  :bind
+  ("C-=" . er/expand-region)
   ("C--" . er/contract-region))
 
 (use-package multiple-cursors
   :ensure t
   :defer t
-  :bind  ("C-M-SPC" . set-rectangular-region-anchor)
+  :bind
+  ("C-M-SPC" . set-rectangular-region-anchor)
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this)
   ("C-'" . mc/mark-all-like-this)
@@ -241,8 +242,7 @@
 (use-package ido
   :ensure nil
   :defer t
-  :init
-  (ido-mode 1)
+  :init (ido-mode 1)
   :custom
   (ido-everywhere t)
   (ido-enable-flex-matching t)
@@ -252,8 +252,7 @@
 (use-package ido-completing-read+
   :ensure t
   :defer t
-  :config
-  (ido-ubiquitous-mode 1))
+  :config (ido-ubiquitous-mode 1))
 
 (use-package smex
   :ensure t
@@ -263,8 +262,7 @@
 (use-package marginalia
   :ensure t
   :defer t
-  :init
-  (marginalia-mode)
+  :init (marginalia-mode)
   :custom
   (marginalia-max-relative-age 0)
   (marginalia-align 'right))
@@ -272,8 +270,7 @@
 (use-package corfu
   :ensure t
   :defer t
-  :init
-  (global-corfu-mode)
+  :init (global-corfu-mode)
   :bind
   (:map corfu-map ("TAB" . corfu-complete))
   :custom
@@ -293,8 +290,7 @@
 (use-package savehist
   :ensure t
   :defer t
-  :init
-  (savehist-mode))
+  :init (savehist-mode))
 
 (use-package magit
   :ensure t
@@ -306,8 +302,7 @@
 
 (use-package treesit-auto
   :ensure t
-  :custom
-  (treesit-auto-install 'prompt)
+  :custom (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
@@ -356,8 +351,7 @@
 (use-package flymake
   :ensure nil
   :defer t
-  :bind
-  ("M-g f" . flymake-show-buffer-diagnostics))
+  :bind ("M-g f" . flymake-show-buffer-diagnostics))
 
 (use-package apheleia
   :ensure t
@@ -369,8 +363,7 @@
 (use-package editorconfig
   :ensure t
   :defer t
-  :config
-  (editorconfig-mode 1))
+  :config (editorconfig-mode 1))
 
 (use-package python
   :ensure nil
@@ -382,5 +375,4 @@
 
 (use-package pet
   :ensure t
-  :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10))
+  :config (add-hook 'python-base-mode-hook 'pet-mode -10))
