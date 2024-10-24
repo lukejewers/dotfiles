@@ -369,13 +369,11 @@
   (python-shell-interpreter "ipython")
   (python-shell-completion-native-enable nil))
 
-(use-package blacken
+(use-package apheleia
   :ensure t
-  :defer t)
-
-(use-package py-isort
-  :ensure t
-  :defer t)
+  :config
+  (apheleia-global-mode t)
+  (add-to-list 'apheleia-mode-alist '(python-ts-mode . (ruff ruff-isort))))
 
 (use-package pyvenv
   :ensure t
