@@ -230,15 +230,6 @@
   :defer t
   :config (exec-path-from-shell-initialize))
 
-(use-package vterm
-  :ensure t
-  :defer t
-  :bind ("M-`" . vterm)
-  (:map vterm-mode-map
-        ("C-y" . vterm-yank))
-  :config
-  (vterm-max-scrollback 10000))
-
 (defun toggle-shell (shell-str shell)
   "Close the current buffer if it is open, otherwise open a new one!"
   (interactive)
