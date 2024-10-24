@@ -361,6 +361,19 @@
   :bind
   ("M-g f" . flymake-show-buffer-diagnostics))
 
+(use-package apheleia
+  :ensure t
+  :config
+  (apheleia-global-mode t)
+  (add-to-list 'apheleia-mode-alist '(python-ts-mode . (ruff ruff-isort)))
+  (add-to-list 'apheleia-mode-alist '(sql-mode . pgformatter)))
+
+(use-package editorconfig
+  :ensure t
+  :defer t
+  :config
+  (editorconfig-mode 1))
+
 (use-package python
   :ensure nil
   :defer t
@@ -369,27 +382,7 @@
   (python-shell-interpreter "ipython")
   (python-shell-completion-native-enable nil))
 
-(use-package apheleia
+(use-package pet
   :ensure t
   :config
-  (apheleia-global-mode t)
-  (add-to-list 'apheleia-mode-alist '(python-ts-mode . (ruff ruff-isort))))
-
-(use-package pyvenv
-  :ensure t
-  :defer t)
-
-(use-package editorconfig
-  :ensure t
-  :defer t
-  :config
-  (editorconfig-mode 1))
-
-(use-package sqlformat
-  :ensure t
-  :defer t
-  :commands (sqlformat sqlformat-buffer sqlformat-region)
-  :hook (sql-mode . sqlformat-on-save-mode)
-  :init
-  (setq sqlformat-command 'pgformatter
-        sqlformat-args '("-s2" "-g" "-u1")))
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
