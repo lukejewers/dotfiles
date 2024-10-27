@@ -43,8 +43,8 @@
                              (project-dired "Dired" "D")
                              (project-find-regexp "g")
                              (magit-project-status "Magit" "m")))
-  (c-default-style "linux")
   (c-basic-offset 4)
+  (indent-tabs-mode nil)
   :init
   (setq gc-cons-threshold most-positive-fixnum)
   (set-frame-font "Iosevka 18" nil t)
@@ -53,7 +53,6 @@
   (when scroll-bar-mode
     (scroll-bar-mode -1))
   (global-auto-revert-mode 1)
-  (indent-tabs-mode -1)
   (show-paren-mode 1)
   (electric-pair-mode 1)
   (modify-coding-system-alist 'file "" 'utf-8)
@@ -355,9 +354,9 @@
 
 (use-package apheleia
   :ensure t
+  :bind ("C-c f" . apheleia-format-buffer)
   :config
-  (apheleia-global-mode t)
-  (add-to-list 'apheleia-mode-alist '(python-ts-mode . (ruff ruff-isort)))
+  (add-to-list 'apheleia-mode-alist '(python-ts-mode . (isort black)))
   (add-to-list 'apheleia-mode-alist '(sql-mode . pgformatter)))
 
 (use-package editorconfig
