@@ -354,10 +354,11 @@
 
 (use-package apheleia
   :ensure t
-  :bind ("C-c f" . apheleia-format-buffer)
+  :bind ("C-x f" . apheleia-format-buffer)
   :config
+  (setf (alist-get 'pg_format apheleia-formatters) '("pg_format" "-s2" "-g" "-u1"))
   (add-to-list 'apheleia-mode-alist '(python-ts-mode . (isort black)))
-  (add-to-list 'apheleia-mode-alist '(sql-mode . pgformatter)))
+  (add-to-list 'apheleia-mode-alist '(sql-mode . pg_format)))
 
 (use-package editorconfig
   :ensure t
