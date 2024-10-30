@@ -45,6 +45,7 @@
                              (magit-project-status "Magit" "m")))
   (c-basic-offset 4)
   (indent-tabs-mode nil)
+  (smerge-command-prefix "C-c v")
   :init
   (setq gc-cons-threshold most-positive-fixnum)
   (set-frame-font "Iosevka 18" nil t)
@@ -362,7 +363,7 @@
 (use-package flymake
   :ensure nil
   :defer t
-  :bind ("M-g f" . flymake-show-buffer-diagnostics))
+  :bind ("M-g e" . flymake-show-buffer-diagnostics))
 
 (use-package apheleia
   :ensure t
