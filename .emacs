@@ -172,6 +172,22 @@
   (whitespace-style
    '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
 
+(use-package fzf
+  :ensure t
+  :defer t
+  :bind ("C-z" . fzf)
+  :config
+  (setq fzf/args "-x --print-query --no-hscroll --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
+        fzf/executable "fzf"
+        fzf/git-grep-args "-i --line-number %s"
+        fzf/grep-command "rg --no-heading -nH"
+        fzf/position-bottom t
+        fzf/window-height 10)
+  (advice-add 'fzf :around
+              (lambda (orig-fun &rest args)
+                (let ((default-directory "~/"))
+                  (apply orig-fun args)))))
+
 (use-package avy
   :ensure t
   :defer t
