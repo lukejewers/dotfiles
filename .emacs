@@ -305,6 +305,12 @@
    ("C-c m l" . magit-log)
    ("C-c m b" . magit-blame)))
 
+(use-package magit-todos
+  :ensure t
+  :defer t
+  :after magit
+  :config (magit-todos-mode 1))
+
 (use-package treesit-auto
   :ensure t
   :custom (treesit-auto-install 'prompt)
