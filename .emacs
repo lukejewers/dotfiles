@@ -91,6 +91,10 @@
                '("*shell" (display-buffer-in-side-window)
                  (side . right)
                  (window-width . 0.45)))
+  (add-to-list 'display-buffer-alist
+               '("*eshell" (display-buffer-in-side-window)
+                 (side . right)
+                 (window-width . 0.45)))
   (add-hook 'emacs-startup-hook
             (lambda ()
               (setq gc-cons-threshold (* 16 1024 1024))))
@@ -236,7 +240,9 @@
     (funcall shell)))
 
 (defun shell-toggle () (interactive) (toggle-shell "shell-mode" 'shell))
+(defun eshell-toggle () (interactive) (toggle-shell "eshell-mode" 'eshell))
 (global-set-key (kbd "C-`") 'shell-toggle)
+(global-set-key (kbd "M-`") 'eshell-toggle)
 
 (use-package ido
   :ensure nil
