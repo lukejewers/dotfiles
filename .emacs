@@ -1,6 +1,7 @@
 (use-package emacs
   :ensure nil
   :custom
+  (use-package-compute-statistics t)
   (comp-async-report-warnings-errors nil)
   (comp-deferred-compilation t)
   (package-install-upgrade-built-in t)
@@ -273,7 +274,7 @@
 
 (use-package ido-completing-read+
   :ensure t
-  :defer t
+  :after ido
   :config (ido-ubiquitous-mode 1))
 
 (use-package smex
@@ -404,4 +405,5 @@
 
 (use-package pet
   :ensure t
+  :defer t
   :config (add-hook 'python-base-mode-hook 'pet-mode -10))
