@@ -176,7 +176,7 @@
 (use-package fzf
   :ensure t
   :defer t
-  :bind ("C-z" . fzf)
+  :bind ("M-s z" . fzf)
   :config
   (setq fzf/args "-x --print-query --no-hscroll --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
         fzf/executable "fzf"
