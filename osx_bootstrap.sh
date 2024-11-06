@@ -5,7 +5,7 @@ echo "starting bootstrapping"
 # Check for Homebrew, install if don't have it
 if test ! $(which brew); then
     echo "Installing homebrew..."
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # add brew to PATH
@@ -28,7 +28,7 @@ PACKAGES=(
     postgresql
     tmux
     typescript
-	typescript-language-server
+    typescript-language-server
     wget
 )
 
@@ -42,6 +42,8 @@ echo "Installing cask..."
 CASKS=(
     google-chrome
     kitty
+    doll
+    raycast
 )
 brew install --cask ${CASKS[@]}
 
