@@ -92,10 +92,6 @@
                '("*shell" (display-buffer-in-side-window)
                  (side . right)
                  (window-width . 0.45)))
-  (add-to-list 'display-buffer-alist
-               '("*eshell" (display-buffer-in-side-window)
-                 (side . right)
-                 (window-width . 0.45)))
   (add-hook 'emacs-startup-hook
             (lambda ()
               (setq gc-cons-threshold (* 16 1024 1024))))
@@ -246,22 +242,15 @@
     (kill-new (file-truename buffer-file-name))))
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
-(use-package exec-path-from-shell
-  :ensure t
-  :defer t
-  :config (exec-path-from-shell-initialize))
-
 (defun toggle-shell (shell-str shell)
-  "Close the current buffer if it is open, otherwise open a new one!"
+  "Close the current shell buffer if it is open, otherwise open a new one!"
   (interactive)
   (if (string-equal shell-str major-mode)
       (bury-buffer)
     (funcall shell)))
 
 (defun shell-toggle () (interactive) (toggle-shell "shell-mode" 'shell))
-(defun eshell-toggle () (interactive) (toggle-shell "eshell-mode" 'eshell))
 (global-set-key (kbd "C-`") 'shell-toggle)
-(global-set-key (kbd "M-`") 'eshell-toggle)
 
 (use-package ido
   :ensure nil
