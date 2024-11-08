@@ -52,8 +52,7 @@
   (set-frame-font "Iosevka 18" nil t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (when scroll-bar-mode
-    (scroll-bar-mode -1))
+  (when scroll-bar-mode (scroll-bar-mode -1))
   (global-auto-revert-mode 1)
   (show-paren-mode 1)
   (electric-pair-mode 1)
@@ -103,6 +102,12 @@
   (add-hook 'emacs-startup-hook
             (lambda () (message "Emacs loaded in %s with %d garbage collections."
                                 (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
+
+(defun recompile-emacs-packages ()
+  "Prune eln cache and native recompile everything on `package-user-dir'."
+  (interactive)
+  (native-compile-prune-cache)
+  (native-compile-async package-user-dir 'recursively))
 
 (use-package gruber-darker-theme
   :ensure t
@@ -159,10 +164,6 @@
   :config
   (ibuffer-expert t)
   (ibuffer-show-empty-filter-groups nil))
-
-(defun close-all-but-current-buffer ()
-  (interactive)
-  (mapc 'kill-buffer (cdr (buffer-list (current-buffer)))))
 
 (use-package whitespace
   :ensure t
