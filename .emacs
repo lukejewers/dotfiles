@@ -63,6 +63,7 @@
   (global-unset-key (kbd "C-z"))
   (global-unset-key (kbd "C-x f"))
   (global-unset-key (kbd "C-x C-c"))
+  (global-unset-key (kbd "M-o"))
   (global-set-key (kbd "<pinch>") 'ignore)
   (global-set-key (kbd "<C-wheel-up>") 'ignore)
   (global-set-key (kbd "<C-wheel-down>") 'ignore)
@@ -390,4 +391,5 @@
 (use-package pet
   :ensure t
   :defer t
-  :config (add-hook 'python-base-mode-hook 'pet-mode -10))
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10))
