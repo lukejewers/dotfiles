@@ -20,11 +20,12 @@ brew install bash
 
 PACKAGES=(
     curl
+    deno
     gcc
     git
     go
-    npm
     node
+    npm
     postgresql
     tmux
     typescript
@@ -40,9 +41,10 @@ brew cleanup
 
 echo "Installing cask..."
 CASKS=(
-    google-chrome
-    kitty
     doll
+    google-chrome
+    hammerspoon
+    kitty
     raycast
 )
 brew install --cask ${CASKS[@]}
@@ -76,6 +78,7 @@ ln -s -f ~/dotfiles/.vimrc ~/.vimrc
 ln -s -f ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s -f ~/dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
 ln -s -f ~/dotfiles/.emacs ~/.emacs.d/init.el
+ln -s -f ~/dotfiles/DefaultKeybinding.dict ~/Library/KeyBindings/DefaultKeyBinding.Dict
 ln -s /opt/homebrew/opt/emacs-plus@29/Emacs.app /Applications
 
 echo "Configuring OSX..."
