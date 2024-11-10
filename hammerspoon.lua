@@ -10,10 +10,12 @@ local screen_state  = screen_states.FULLSCREEN
 
 hs.window.animationDuration = 0
 
-local function call_app_fullscreen (key, app)
+local function call_app (key, app)
     hs.hotkey.bind(hyper, key, function()
         hs.application.open(app)
-        if screen_state == screen_states.FULLSCREEN then
+        if app == apps.messages then
+           hs.window.focusedWindow():moveToUnit({0.2, 0.2, 0.6, 0.6}) -- Centered (70% width and height)
+        elseif screen_state == screen_states.FULLSCREEN then
            hs.window.focusedWindow():maximize()
         end
     end)
@@ -41,10 +43,10 @@ hs.hotkey.bind(hyper, "r", hs.reload)
 -- hs.hotkey.bind(hyper, "c", hs.toggleConsole)
 
 -- Bind applications to hotkeys
-call_app_fullscreen("j", apps.emacs)
-call_app_fullscreen("k", apps.kitty)
-call_app_fullscreen("l", apps.chrome)
-call_app_fullscreen("m", apps.messages)
+call_app("j", apps.emacs)
+call_app("k", apps.kitty)
+call_app("l", apps.chrome)
+call_app("m", apps.messages)
 
 -- Bind layout switching hotkeys
 switch_layouts("f", screen_states.FULLSCREEN)
