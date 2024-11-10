@@ -1,8 +1,9 @@
 local apps = {
+    chrome = 'Google Chrome.app',
+    dictionary = 'Dictionary.app',
     emacs = 'Emacs.app',
     kitty = 'Kitty.app',
-    chrome = 'Google Chrome.app',
-    messages = 'Messages.app'
+    messages = 'Messages.app',
 }
 local hyper         = { "ctrl", "cmd" }
 local screen_states = { FULLSCREEN = 0, TWOPANE = 1, CENTRED = 2 }
@@ -13,8 +14,8 @@ hs.window.animationDuration = 0
 local function call_app (key, app)
     hs.hotkey.bind(hyper, key, function()
         hs.application.open(app)
-        if app == apps.messages then
-           hs.window.focusedWindow():moveToUnit({0.2, 0.2, 0.6, 0.6}) -- Centered (70% width and height)
+        if app == apps.messages or app == apps.dictionary then
+           hs.window.focusedWindow():moveToUnit({0.17, 0.17, 0.67, 0.67}) -- Centered (70% width and height)
         elseif screen_state == screen_states.FULLSCREEN then
            hs.window.focusedWindow():maximize()
         end
@@ -47,6 +48,7 @@ call_app("j", apps.emacs)
 call_app("k", apps.kitty)
 call_app("l", apps.chrome)
 call_app("m", apps.messages)
+call_app("d", apps.dictionary)
 
 -- Bind layout switching hotkeys
 switch_layouts("f", screen_states.FULLSCREEN)
