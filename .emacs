@@ -71,6 +71,7 @@
   (global-set-key (kbd "C-M-9") 'enlarge-window)
   (global-set-key (kbd "C-M-0") 'shrink-window)
   (global-set-key (kbd "C-M--") 'shrink-window-horizontally)
+  (global-set-key (kbd "C-x f") 'find-file-at-point)
   (global-set-key (kbd "C-c c") 'compile)
   (global-set-key (kbd "C-c r") 'recompile)
   (global-set-key (kbd "C-q") 'query-replace)
@@ -93,6 +94,7 @@
                '("*shell" (display-buffer-in-side-window)
                  (side . right)
                  (window-width . 0.45)))
+  (add-to-list 'display-buffer-alist '("Flymake diagnostics" nil (post-command-select-window . t)))
   (add-hook 'emacs-startup-hook
             (lambda ()
               (setq gc-cons-threshold (* 16 1024 1024))))
@@ -369,7 +371,7 @@
 
 (use-package apheleia
   :ensure t
-  :bind ("C-x f" . apheleia-format-buffer)
+  :bind ("C-c f" . apheleia-format-buffer)
   :config
   (setf (alist-get 'pg_format apheleia-formatters) '("pg_format" "-s2" "-g" "-u1"))
   (add-to-list 'apheleia-mode-alist '(python-ts-mode . (isort black)))
