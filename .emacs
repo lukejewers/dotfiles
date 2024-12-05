@@ -26,6 +26,7 @@
   (warning-minimum-level :emergency)
   (compilation-scroll-output 'first-error)
   (compilation-always-kill t)
+  (compilation-ask-about save nil)
   (frame-title-format '("%f"))
   (ns-use-proxy-icon nil)
   (mac-left-control-modifier 'control)
@@ -64,6 +65,7 @@
   (global-unset-key (kbd "C-x f"))
   (global-unset-key (kbd "C-x C-c"))
   (global-unset-key (kbd "M-o"))
+  (global-unset-key (kbd "C-x m"))
   (global-set-key (kbd "<pinch>") 'ignore)
   (global-set-key (kbd "<C-wheel-up>") 'ignore)
   (global-set-key (kbd "<C-wheel-down>") 'ignore)
@@ -344,6 +346,7 @@
   (eglot-sync-connect nil)
   (eldoc-echo-area-prefer-doc-buffer t)
   (eldoc-echo-area-use-multiline-p nil)
+  (go-ts-mode-indent-offset tab-width)
   :custom
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
