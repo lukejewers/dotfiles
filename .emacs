@@ -86,7 +86,6 @@
   (global-set-key (kbd "M-s r") 'grep)
   (global-set-key (kbd "C-x 2") (lambda () (interactive) (split-window-vertically) (other-window 1)))
   (global-set-key (kbd "C-x 3") (lambda () (interactive) (split-window-horizontally) (other-window 1)))
-  (add-hook 'compilation-finish-functions 'switch-to-buffer-other-window 'compilation)
   (add-hook 'occur-hook '(lambda () (switch-to-buffer-other-window "*Occur*")))
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/elpa/"))
@@ -96,7 +95,6 @@
                '("*shell" (display-buffer-in-side-window)
                  (side . right)
                  (window-width . 0.45)))
-  (add-to-list 'display-buffer-alist '("Flymake diagnostics" nil (post-command-select-window . t)))
   (add-hook 'emacs-startup-hook
             (lambda ()
               (setq gc-cons-threshold (* 16 1024 1024))))
