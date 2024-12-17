@@ -164,6 +164,10 @@
   (ibuffer-expert t)
   (ibuffer-show-empty-filter-groups nil))
 
+(use-package transpose-frame
+  :ensure t
+  :defer t)
+
 (use-package whitespace
   :ensure t
   :defer t
