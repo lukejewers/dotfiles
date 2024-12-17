@@ -1,5 +1,5 @@
 " Vim sets
-syntax on 
+syntax on
 filetype plugin indent on
 set noerrorbells
 set mouse=a
@@ -12,7 +12,7 @@ set guioptions-=T
 set smartindent
 set wrap
 set linebreak
-set number 
+set number
 set relativenumber
 set ignorecase
 set smartcase
@@ -24,7 +24,7 @@ set nocursorline
 set ttyfast
 set incsearch
 set wildmenu wildmode=longest:full,full
-colorscheme elflord 
+colorscheme habamax
 
 " Leader
 let mapleader = " "
