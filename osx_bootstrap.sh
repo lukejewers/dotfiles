@@ -5,12 +5,12 @@ echo "starting bootstrapping"
 # Check for Homebrew, install if don't have it
 if test ! $(which brew); then
     echo "Installing homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)'
 fi
 
 # add brew to PATH
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/Luke/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
+eval '$(/opt/homebrew/bin/brew shellenv)'
 
 # Update homebrew recipes
 brew update
@@ -29,7 +29,6 @@ PACKAGES=(
     postgresql
     tmux
     typescript
-    typescript-language-server
     wget
 )
 
@@ -44,7 +43,7 @@ CASKS=(
     doll
     google-chrome
     hammerspoon
-    kitty
+    ghostty
     raycast
 )
 brew install --cask ${CASKS[@]}
@@ -71,25 +70,19 @@ sudo pip install ${PYTHON_PACKAGES[@]}
 echo "Installing emacs..."
 brew tap d12frosted/emacs-plus
 brew install emacs-plus@29 --with-native-comp
+ln -s /opt/homebrew/opt/emacs-plus@29/Emacs.app /Applications
 
 echo "Symlinking dotfiles..."
-mkdir -p ~/.emacs.d
-ln -s -f ~/dotfiles/.vimrc ~/.vimrc
-ln -s -f ~/dotfiles/.tmux.conf ~/.tmux.conf
-ln -s -f ~/dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
-ln -s -f ~/dotfiles/.emacs ~/.emacs.d/init.el
-ln -s -f ~/dotfiles/DefaultKeybinding.dict ~/Library/KeyBindings/DefaultKeyBinding.Dict
-ln -s /opt/homebrew/opt/emacs-plus@29/Emacs.app /Applications
+./sym.sh
 
 echo "Configuring OSX..."
 # Set fast key repeat rate
 defaults write -g InitialKeyRepeat -int 15
 defaults write -g KeyRepeat -int 2
-
 # Show filename extensions by default
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 # Update terminal prompt
-echo 'PS1="%n%f %~ $ "' >> ~/.zshrc
+echo 'PS1="%n@%m%f %~ $ "' >> ~/.zshrc
 
 echo "Bootstrapping complete"

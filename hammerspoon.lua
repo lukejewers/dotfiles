@@ -2,7 +2,7 @@ local apps = {
     chrome = 'Google Chrome',
     dictionary = 'Dictionary',
     emacs = 'Emacs',
-    kitty = 'kitty',
+    ghostty = 'Ghostty',
     messages = 'Messages',
 }
 local hyper         = { "ctrl", "cmd" }
@@ -52,7 +52,7 @@ hs.hotkey.bind(hyper, "r", hs.reload)
 
 -- Bind applications to hotkeys
 call_app("j", apps.emacs)
-call_app("k", apps.kitty)
+call_app("k", apps.ghostty)
 call_app("l", apps.chrome)
 call_app("m", apps.messages)
 call_app("d", apps.dictionary)
@@ -60,6 +60,6 @@ call_app("d", apps.dictionary)
 -- Bind layout switching hotkeys
 switch_layouts("f", screen_states.FULLSCREEN)
 switch_layouts("c", screen_states.CENTRED)
-switch_layouts("1", screen_states.TWOPANE, apps.emacs, apps.kitty)
+switch_layouts("1", screen_states.TWOPANE, apps.emacs, apps.ghostty)
 switch_layouts("2", screen_states.TWOPANE, apps.emacs, apps.chrome)
-switch_layouts("3", screen_states.TWOPANE, apps.kitty, apps.chrome)
+switch_layouts("3", screen_states.TWOPANE, apps.ghostty, apps.chrome)
