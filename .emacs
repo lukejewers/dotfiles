@@ -400,3 +400,10 @@
   :defer t
   :config
   (add-hook 'python-base-mode-hook 'pet-mode -10))
+
+(use-package dape
+  :hook
+  (after-init . dape-breakpoint-load)
+  :config
+  (dape-breakpoint-global-mode)
+  (setq dape-buffer-window-arrangement 'right))
