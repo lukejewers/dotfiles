@@ -50,7 +50,7 @@
   (smerge-command-prefix "C-c v")
   :init
   (setq gc-cons-threshold most-positive-fixnum)
-  (set-frame-font "Iosevka 18" nil t)
+  (set-frame-font "Iosevka 19" nil t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (when scroll-bar-mode (scroll-bar-mode -1))
@@ -304,7 +304,6 @@
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-abbrev)
-  (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-file))
 
 (use-package savehist
