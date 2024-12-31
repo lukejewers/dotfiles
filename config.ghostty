@@ -1,7 +1,7 @@
 # font
 font-family                = Iosevka
 font-style                 = Regular
-font-size                  = 18
+font-size                  = 19
 font-thicken               = true
 font-feature               =-calt
 font-feature               =-liga
@@ -9,6 +9,10 @@ font-feature               =-dlig
 
 # keyboard
 macos-option-as-alt        = true
+
+# clipboard
+clipboard-read             = allow
+clipboard-write            = allow
 
 # cursor
 cursor-style               = block
