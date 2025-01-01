@@ -64,8 +64,8 @@ call_app("m", apps.messages)
 call_app("d", apps.dictionary)
 
 -- Bind layout switching hotkeys
-switch_layouts("f", screen_states.FULLSCREEN)
 switch_layouts("c", screen_states.CENTRED)
+switch_layouts("0", screen_states.FULLSCREEN)
 switch_layouts("1", screen_states.TWOPANE, apps.emacs, apps.ghostty)
 switch_layouts("2", screen_states.TWOPANE, apps.emacs, apps.chrome)
 switch_layouts("3", screen_states.TWOPANE, apps.ghostty, apps.chrome)
