@@ -52,8 +52,8 @@ local function switch_layouts(key, target_state, app1, app2)
 end
 
 -- Reload Hammerspoon configuration
-hs.hotkey.bind(hyper, "r", hs.reload)
-hs.hotkey.bind(hyper, "o", hs.toggleConsole)
+-- hs.hotkey.bind(hyper, "r", hs.reload)
+-- hs.hotkey.bind(hyper, "o", hs.toggleConsole)
 
 -- Bind applications to hotkeys
 call_app("j", apps.emacs)
