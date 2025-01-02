@@ -1,6 +1,5 @@
 local apps = {
     chrome = 'Google Chrome',
-    dictionary = 'Dictionary',
     emacs = 'Emacs',
     ghostty = 'Ghostty',
     kindle = 'Kindle',
@@ -20,12 +19,12 @@ end
 local function call_app(key, app)
     hs.hotkey.bind(hyper, key, function()
         local focusedApp = hs.application.frontmostApplication()
-        if focusedApp and (focusedApp:title() == apps.messages or focusedApp:title() == apps.dictionary) then
+        if focusedApp and (focusedApp:title() == apps.messages) then
             focusedApp:hide()
         else
             open_and_activate(app)
             local window = hs.window.focusedWindow()
-            if app == apps.messages or app == apps.dictionary then
+            if app == apps.messages then
                 window:moveToUnit({0.17, 0.17, 0.67, 0.67})
             elseif screen_state == screen_states.FULLSCREEN then
                 window:maximize()
@@ -58,10 +57,9 @@ end
 -- Bind applications to hotkeys
 call_app("j", apps.emacs)
 call_app("k", apps.ghostty)
-call_app("e", apps.kindle)
+call_app("i", apps.kindle)
 call_app("l", apps.chrome)
 call_app("m", apps.messages)
-call_app("d", apps.dictionary)
 
 -- Bind layout switching hotkeys
 switch_layouts("9", screen_states.CENTRED)
