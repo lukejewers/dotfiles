@@ -38,13 +38,12 @@ brew install ${PACKAGES[@]}
 echo "Cleaning up..."
 brew cleanup
 
-echo "Installing cask..."
+echo "Installing casks..."
 CASKS=(
     doll
     google-chrome
     hammerspoon
     ghostty
-    raycast
 )
 brew install --cask ${CASKS[@]}
 
