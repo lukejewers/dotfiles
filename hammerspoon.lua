@@ -51,7 +51,7 @@ local function switch_layouts(key, target_state, app1, app2)
     end)
 end
 
--- Reload Hammerspoon configuration
+-- Debug info
 -- hs.hotkey.bind(hyper, "r", hs.reload)
 -- hs.hotkey.bind(hyper, "o", hs.toggleConsole)
 
