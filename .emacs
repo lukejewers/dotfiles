@@ -87,20 +87,14 @@
   (global-set-key (kbd "C-x 2") (lambda () (interactive) (split-window-vertically) (other-window 1)))
   (global-set-key (kbd "C-x 3") (lambda () (interactive) (split-window-horizontally) (other-window 1)))
   (add-hook 'occur-hook '(lambda () (switch-to-buffer-other-window "*Occur*")))
+  (add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/elpa/"))
   (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'display-buffer-alist
-               '("*shell" (display-buffer-in-side-window)
-                 (side . right)
-                 (window-width . 0.45)))
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (setq gc-cons-threshold (* 16 1024 1024))))
-  (add-hook 'emacs-startup-hook
-            (lambda () (message "Emacs loaded in %s with %d garbage collections."
-                                (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
+  (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45)))
+  (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
+  (add-hook 'emacs-startup-hook (lambda () (message "Emacs loaded in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
 
 (defun recompile-emacs-packages ()
   "Prune eln cache and native recompile everything on `package-user-dir'."
