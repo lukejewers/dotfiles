@@ -1,7 +1,7 @@
 # font
 font-family                = Iosevka
 font-style                 = Regular
-font-size                  = 19
+font-size                  = 20
 font-thicken               = true
 font-feature               =-calt
 font-feature               =-liga
