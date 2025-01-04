@@ -50,7 +50,7 @@
   (smerge-command-prefix "C-c v")
   :init
   (setq gc-cons-threshold most-positive-fixnum)
-  (set-frame-font "Iosevka 19" nil t)
+  (set-frame-font "Iosevka 20" nil t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (when scroll-bar-mode (scroll-bar-mode -1))
