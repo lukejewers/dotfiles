@@ -400,3 +400,13 @@
   :config
   (dape-breakpoint-global-mode)
   (setq dape-buffer-window-arrangement 'right))
+
+(use-package gptel
+  :config
+  (setq gptel-model 'claude-3-5-sonnet-20241022
+        gptel-backend (gptel-make-anthropic "Claude"
+                      :stream t
+                      :host "api.anthropic.com"
+                      :key (auth-source-pick-first-password
+                            :host "api.anthropic.com"
+                            :login "apikey"))))
