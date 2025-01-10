@@ -253,6 +253,13 @@
 (defun shell-toggle () (interactive) (toggle-shell "shell-mode" 'shell))
 (global-set-key (kbd "C-`") 'shell-toggle)
 
+(defun spawn-shell (name)
+  "Invoke shell test"
+  (interactive "MName of shell buffer to create: ")
+  (pop-to-buffer (get-buffer-create (generate-new-buffer-name name)))
+  (shell (current-buffer)))
+(global-set-key (kbd "C-z s") 'spawn-shell)
+
 (use-package ido
   :ensure nil
   :defer t
