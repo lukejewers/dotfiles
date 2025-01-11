@@ -87,6 +87,7 @@
   (global-set-key (kbd "C-x 2") (lambda () (interactive) (split-window-vertically) (other-window 1)))
   (global-set-key (kbd "C-x 3") (lambda () (interactive) (split-window-horizontally) (other-window 1)))
   (add-hook 'occur-hook '(lambda () (switch-to-buffer-other-window "*Occur*")))
+  (add-hook 'org-mode-hook 'toggle-truncate-lines)
   (add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/elpa/"))
