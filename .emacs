@@ -410,11 +410,19 @@
   (setq dape-buffer-window-arrangement 'right))
 
 (use-package gptel
+  :bind ("C-z c" . gptel-make-claude-window)
   :config
   (setq gptel-model 'claude-3-5-sonnet-20241022
+        gptel-default-mode 'org-mode
         gptel-backend (gptel-make-anthropic "Claude"
                       :stream t
                       :host "api.anthropic.com"
                       :key (auth-source-pick-first-password
                             :host "api.anthropic.com"
                             :login "apikey"))))
+
+(defun gptel-make-claude-window ()
+  (interactive)
+  (split-window-right)
+  (gptel "*Claude*")
+  (switch-to-buffer-other-window "*Claude*"))
