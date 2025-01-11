@@ -257,11 +257,17 @@
 (global-set-key (kbd "C-`") 'shell-toggle)
 
 (defun spawn-shell (name)
-  "Invoke shell test"
   (interactive "sNew shell buffer name: ")
   (pop-to-buffer (get-buffer-create (generate-new-buffer-name name)))
   (shell (current-buffer)))
 (global-set-key (kbd "C-z s") 'spawn-shell)
+
+(defun create-eshell-split ()
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (eshell 'new))
+(global-set-key (kbd "C-z e") 'create-eshell-split)
 
 (use-package vterm
   :ensure t
