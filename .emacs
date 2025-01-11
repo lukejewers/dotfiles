@@ -257,10 +257,22 @@
 
 (defun spawn-shell (name)
   "Invoke shell test"
-  (interactive "MName of shell buffer to create: ")
+  (interactive "sNew shell buffer name: ")
   (pop-to-buffer (get-buffer-create (generate-new-buffer-name name)))
   (shell (current-buffer)))
 (global-set-key (kbd "C-z s") 'spawn-shell)
+
+(use-package vterm
+  :ensure t
+  :bind (:map vterm-mode-map
+              ("C-z" . nil))
+  :bind ("C-z v" . spawn-vterm))
+
+(defun spawn-vterm (name)
+  (interactive "sNew vterm buffer name: ")
+  (pop-to-buffer (generate-new-buffer-name name))
+  (vterm-mode)
+  (delete-other-windows))
 
 (use-package ido
   :ensure nil
