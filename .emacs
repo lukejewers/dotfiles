@@ -85,17 +85,22 @@
    ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1))))
   :config
-  (setq custom-file (locate-user-emacs-file "~/.emacs.d/custom-vars.el"))
-  (load custom-file 'noerror 'nomessage)
-  (add-hook 'occur-hook '(lambda () (switch-to-buffer-other-window "*Occur*")))
-  (add-hook 'org-mode-hook 'toggle-truncate-lines)
-  (add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
+  ;; Custom file handling
+  (setq custom-file (expand-file-name "custom-vars.el" user-emacs-directory))
+  (load custom-file :noerror :nomessage)
+  ;; Package archives
   (dolist (archive '(("melpa" . "https://melpa.org/packages/")
-                   ("elpa" . "https://elpa.gnu.org/packages/")
-                   ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-  (add-to-list 'package-archives archive))
+                     ("elpa" . "https://elpa.gnu.org/packages/")
+                     ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+    (add-to-list 'package-archives archive))
+  ;; Mode-specific settings
+  (add-hook 'occur-hook (lambda () (switch-to-buffer-other-window "*Occur*")))
+  (add-hook 'org-mode-hook #'toggle-truncate-lines)
+  (add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
+  ;; Frame and buffer settings
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45)))
+  ;; startup
   (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
   (add-hook 'emacs-startup-hook (lambda () (message "Emacs loaded in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
 
