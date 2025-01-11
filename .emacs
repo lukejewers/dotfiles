@@ -270,9 +270,9 @@
 
 (defun spawn-vterm (name)
   (interactive "sNew vterm buffer name: ")
-  (pop-to-buffer (generate-new-buffer-name name))
-  (vterm-mode)
-  (delete-other-windows))
+  (let ((buffer (vterm name)))
+    (pop-to-buffer buffer)
+    (delete-other-windows)))
 
 (use-package ido
   :ensure nil
