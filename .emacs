@@ -160,7 +160,8 @@
 
 (use-package transpose-frame
   :ensure t
-  :defer t)
+  :defer t
+  :bind ("C-z t" . transpose-frame))
 
 (use-package whitespace
   :ensure t
