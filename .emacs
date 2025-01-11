@@ -190,7 +190,7 @@
 (use-package avy
   :ensure t
   :defer t
-  :bind ("M-j" . avy-goto-char-2))
+  :bind ("M-j" . avy-goto-word-or-subword-1))
 
 (use-package move-text
   :defer t
