@@ -161,10 +161,7 @@
   :defer t
   :bind
   ("C-x C-b" . ibuffer)
-  :hook (ibuffer-mode . hl-line-mode)
-  :config
-  (ibuffer-expert t)
-  (ibuffer-show-empty-filter-groups nil))
+  :hook (ibuffer-mode . hl-line-mode))
 
 (use-package transpose-frame
   :ensure t
