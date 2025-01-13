@@ -278,7 +278,8 @@
   :ensure t
   :bind (:map vterm-mode-map
               ("C-z" . nil))
-  :bind ("C-z v" . spawn-vterm))
+  :bind ("C-z v" . spawn-vterm)
+  :custom (vterm-always-compile-module t))
 
 (defun spawn-vterm (name)
   (interactive "sNew vterm buffer name: ")
