@@ -263,13 +263,14 @@
   (interactive "sNew shell buffer name: ")
   (pop-to-buffer (get-buffer-create (generate-new-buffer-name name)))
   (shell (current-buffer)))
-(global-set-key (kbd "C-z s") 'spawn-shell)
 
 (defun create-eshell-split ()
   (interactive)
-  (split-window-right)
-  (other-window 1)
-  (eshell 'new))
+  (let ((buf-name (read-string "Buffer name: ")))
+    (split-window-right)
+    (other-window 1)
+    (eshell 'new)
+    (rename-buffer buf-name)))
 (global-set-key (kbd "C-z e") 'create-eshell-split)
 
 (use-package vterm
