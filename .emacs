@@ -49,6 +49,7 @@
   (indent-tabs-mode nil)
   (smerge-command-prefix "C-c v")
   :init
+  (auth-source-pass-enable)
   (setq gc-cons-threshold most-positive-fixnum)
   (set-frame-font "Iosevka 20" nil t)
   (tool-bar-mode -1)
@@ -441,9 +442,7 @@
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
                         :host "api.anthropic.com"
-                        :key (auth-source-pick-first-password
-                              :host "api.anthropic.com"
-                              :login "apikey"))))
+                        :key (auth-source-pass-get 'secret "api.anthropic.com/apikey"))))
 
 (defun gptel-make-claude-window ()
   (interactive)
