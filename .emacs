@@ -251,41 +251,23 @@
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
 (defun toggle-shell (shell-str shell)
-  "Close the current shell buffer if it is open, otherwise open a new one!"
+  "Close the current buffer if it is open, otherwise open a new one!"
   (interactive)
   (if (string-equal shell-str major-mode)
       (bury-buffer)
-    (funcall shell)))
-
-(defun shell-toggle () (interactive) (toggle-shell "shell-mode" 'shell))
-(global-set-key (kbd "C-`") 'shell-toggle)
-
-(defun spawn-shell (name)
-  (interactive "sNew shell buffer name: ")
-  (pop-to-buffer (get-buffer-create (generate-new-buffer-name name)))
-  (shell (current-buffer)))
-
-(defun create-eshell-split ()
-  (interactive)
-  (let ((buf-name (read-string "Buffer name: ")))
-    (split-window-right)
-    (other-window 1)
-    (eshell 'new)
-    (rename-buffer buf-name)))
-(global-set-key (kbd "C-z e") 'create-eshell-split)
+    (let ((display-buffer-alist
+           '((".*" (display-buffer-in-side-window)
+              (side . right)
+              (window-width . 65)))))
+      (funcall shell))))
+(global-set-key (kbd "C-z e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
+(global-set-key (kbd "C-z v") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 
 (use-package vterm
   :ensure t
   :bind (:map vterm-mode-map
               ("C-z" . nil))
-  :bind ("C-z v" . spawn-vterm)
   :custom (vterm-always-compile-module t))
-
-(defun spawn-vterm (name)
-  (interactive "sNew vterm buffer name: ")
-  (let ((buffer (vterm name)))
-    (pop-to-buffer buffer)
-    (delete-other-windows)))
 
 (use-package ido
   :ensure nil
