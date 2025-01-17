@@ -60,31 +60,31 @@
   (electric-pair-mode 1)
   (modify-coding-system-alist 'file "" 'utf-8)
   :bind
-  (("C-z" . nil)
-   ("C-x f" . nil)
-   ("C-x C-c" . nil)
-   ("M-o" . nil)
-   ("C-x m" . nil)
-   ("<pinch>" . ignore)
+  (("<C-wheel-down>" . ignore)
    ("<C-wheel-up>" . ignore)
-   ("<C-wheel-down>" . ignore)
+   ("<pinch>" . ignore)
+   ("C-x C-c" . nil)
+   ("C-x f" . nil)
+   ("C-x m" . nil)
+   ("C-z" . nil)
+   ("M-o" . nil)
+   ("C-M--" . shrink-window-horizontally)
+   ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
-   ("C-M-0" . shrink-window)
-   ("C-M--" . shrink-window-horizontally)
-   ("C-x f" . find-file-at-point)
    ("C-c c" . compile)
    ("C-c r" . recompile)
    ("C-q" . query-replace)
+   ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
+   ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1)))
+   ("C-x f" . find-file-at-point)
    ("M-3" . (lambda () (interactive) (insert "#")))
-   ("s-f" . forward-sexp)
-   ("s-b" . backward-sexp)
-   ("s-n" . forward-list)
-   ("s-p" . backward-list)
    ("M-o" . other-window)
    ("M-s r" . grep)
-   ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
-   ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1))))
+   ("s-b" . backward-sexp)
+   ("s-f" . forward-sexp)
+   ("s-n" . forward-list)
+   ("s-p" . backward-list))
   :config
   ;; Custom file handling
   (setq custom-file (expand-file-name "custom-vars.el" user-emacs-directory))
@@ -167,7 +167,7 @@
 (use-package transpose-frame
   :ensure t
   :defer t
-  :bind ("C-z t" . transpose-frame))
+  :bind ("C-z C-t" . transpose-frame))
 
 (use-package whitespace
   :ensure t
@@ -181,7 +181,7 @@
 (use-package fzf
   :ensure t
   :defer t
-  :bind ("C-z z" . fzf)
+  :bind ("C-z C-z" . fzf)
   :config
   (setq fzf/args "-x --print-query --no-hscroll --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
         fzf/executable "fzf"
@@ -251,17 +251,15 @@
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
 (defun toggle-shell (shell-str shell)
-  "Close the current buffer if it is open, otherwise open a new one!"
   (interactive)
   (if (string-equal shell-str major-mode)
-      (bury-buffer)
+      (quit-window)
     (let ((display-buffer-alist
-           '((".*" (display-buffer-in-side-window)
-              (side . right)
-              (window-width . 65)))))
+           '((".*" (display-buffer-pop-up-window)
+              (window-width . 0.45)))))
       (funcall shell))))
-(global-set-key (kbd "C-z e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
-(global-set-key (kbd "C-z v") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
+(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
+(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 
 (use-package vterm
   :ensure t
@@ -418,7 +416,7 @@
   (setq dape-buffer-window-arrangement 'right))
 
 (use-package gptel
-  :bind ("C-z c" . gptel-make-claude-window)
+  :bind ("C-z C-c" . gptel-make-claude-window)
   :config
   (setq gptel-model 'claude-3-5-sonnet-20241022
         gptel-default-mode 'org-mode
@@ -429,6 +427,15 @@
 
 (defun gptel-make-claude-window ()
   (interactive)
-  (split-window-right)
-  (gptel "*Claude*")
-  (switch-to-buffer-other-window "*Claude*"))
+  (let ((claude-window (get-buffer-window "*Claude*")))
+    (if claude-window
+        (if (eq (selected-window) claude-window)
+            (delete-windows-on "*Claude*")
+          (select-window claude-window))
+      (progn
+        (gptel "*Claude*")
+        (display-buffer "*Claude*"
+                       `(display-buffer-in-side-window
+                         (side . right)
+                         (window-width . ,(/ (frame-width) 2))))
+        (select-window (get-buffer-window "*Claude*"))))))
