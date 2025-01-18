@@ -41,9 +41,10 @@ brew cleanup
 echo "Installing casks..."
 CASKS=(
     doll
+    firefox
+    ghostty
     google-chrome
     hammerspoon
-    ghostty
 )
 brew install --cask ${CASKS[@]}
 
