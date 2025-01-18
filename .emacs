@@ -186,7 +186,7 @@
 (use-package fzf
   :ensure t
   :defer t
-  :bind ("C-z C-z" . fzf)
+  :bind ("C-z C-f" . fzf)
   :config
   (setq fzf/args "-x --print-query --no-hscroll --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
         fzf/executable "fzf"
@@ -264,7 +264,7 @@
               (window-width . 0.45)))))
       (funcall shell))))
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
-(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
+(global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 
 (use-package vterm
   :ensure t
