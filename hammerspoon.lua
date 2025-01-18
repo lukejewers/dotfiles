@@ -1,7 +1,7 @@
 local apps = {
-    chrome = 'Google Chrome',
     emacs = 'Emacs',
     finder = 'Finder',
+    firefox = 'Firefox',
     ghostty = 'Ghostty',
     kindle = 'Kindle',
     messages = 'Messages',
@@ -61,7 +61,7 @@ call_app("f", apps.finder)
 call_app("i", apps.kindle)
 call_app("j", apps.emacs)
 call_app("k", apps.ghostty)
-call_app("l", apps.chrome)
+call_app("l", apps.firefox)
 call_app("m", apps.messages)
 call_app("s", apps.settings)
 
