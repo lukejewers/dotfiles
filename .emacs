@@ -440,7 +440,7 @@
       (progn
         (gptel "*Claude*")
         (display-buffer "*Claude*"
-                       `(display-buffer-in-side-window
-                         (side . right)
-                         (window-width . ,(/ (frame-width) 2))))
+                       '((display-buffer-pop-up-window)
+                         (window-parameters . ((split-window . t)
+                                            (window-width . 0.5)))))
         (select-window (get-buffer-window "*Claude*"))))))
