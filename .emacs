@@ -1,5 +1,6 @@
 (use-package exec-path-from-shell
   :ensure t
+  :demand t
   :if (memq window-system '(mac ns x))
   :init
   (exec-path-from-shell-initialize))
@@ -103,8 +104,6 @@
     (add-to-list 'package-archives archive))
   ;; Mode-specific settings
   (add-hook 'occur-hook (lambda () (switch-to-buffer-other-window "*Occur*")))
-  (add-hook 'org-mode-hook #'toggle-truncate-lines)
-  (add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
   (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o"))))
   ;; Frame and buffer settings
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
@@ -121,6 +120,7 @@
 
 (use-package gruber-darker-theme
   :ensure t
+  :demand t
   :config (load-theme 'gruber-darker t))
 
 (use-package minions
@@ -133,8 +133,11 @@
 
 (use-package org
   :ensure nil
-  :defer t
-  :custom (org-log-done t))
+  :custom
+  (org-log-done t)
+  :hook
+  (org-mode . visual-line-mode-1)
+  (org-mode . (lambda () (setq tab-width 8))))
 
 (use-package dired
   :ensure nil
