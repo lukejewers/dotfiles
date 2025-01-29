@@ -1,6 +1,5 @@
 (use-package exec-path-from-shell
   :ensure t
-  :demand t
   :if (memq window-system '(mac ns x))
   :init
   (exec-path-from-shell-initialize))
