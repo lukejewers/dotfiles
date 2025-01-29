@@ -307,10 +307,7 @@
 
 (use-package corfu
   :ensure t
-  :defer t
   :config (global-corfu-mode)
-  :bind
-  (:map corfu-map ("TAB" . corfu-complete))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.25)
@@ -320,6 +317,9 @@
   :ensure t
   :defer t
   :config
+  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-abbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
