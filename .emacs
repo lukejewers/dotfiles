@@ -277,7 +277,7 @@
 (use-package ido
   :ensure nil
   :defer t
-  :init (ido-mode 1)
+  :config (ido-mode 1)
   :custom
   (ido-everywhere t)
   (ido-enable-flex-matching t)
@@ -297,7 +297,7 @@
 (use-package marginalia
   :ensure t
   :defer t
-  :init (marginalia-mode)
+  :config (marginalia-mode)
   :custom
   (marginalia-max-relative-age 0)
   (marginalia-align 'right))
@@ -305,7 +305,7 @@
 (use-package corfu
   :ensure t
   :defer t
-  :init (global-corfu-mode)
+  :config (global-corfu-mode)
   :bind
   (:map corfu-map ("TAB" . corfu-complete))
   :custom
@@ -316,7 +316,7 @@
 (use-package cape
   :ensure t
   :defer t
-  :init
+  :config
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-abbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
@@ -324,7 +324,7 @@
 (use-package savehist
   :ensure t
   :defer t
-  :init (savehist-mode))
+  :config (savehist-mode))
 
 (use-package magit
   :ensure t
