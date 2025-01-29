@@ -64,6 +64,7 @@
   (show-paren-mode 1)
   (electric-pair-mode 1)
   (modify-coding-system-alist 'file "" 'utf-8)
+  (put 'narrow-to-region 'disabled nil)
   :bind
   (("<C-wheel-down>" . ignore)
    ("<C-wheel-up>" . ignore)
@@ -103,6 +104,7 @@
   (add-hook 'occur-hook (lambda () (switch-to-buffer-other-window "*Occur*")))
   (add-hook 'org-mode-hook #'toggle-truncate-lines)
   (add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
+  (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o"))))
   ;; Frame and buffer settings
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45)))
@@ -330,7 +332,9 @@
   :bind
   (("C-c m s" . magit-status)
    ("C-c m l" . magit-log)
-   ("C-c m b" . magit-blame)))
+   ("C-c m b" . magit-blame))
+  :custom
+  (magit-process-finish-apply-ansi-colors t))
 
 (use-package treesit-auto
   :ensure t
