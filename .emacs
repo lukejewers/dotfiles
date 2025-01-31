@@ -135,7 +135,7 @@
   :custom
   (org-log-done t)
   :hook
-  (org-mode . visual-line-mode-1)
+  (org-mode . visual-line-mode)
   (org-mode . (lambda () (setq tab-width 8))))
 
 (use-package dired
