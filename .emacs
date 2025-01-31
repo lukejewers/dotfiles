@@ -306,6 +306,8 @@
 (use-package flx
   :ensure t
   :init
+  (unless (package-installed-p 'flx-rs)
+    (package-vc-install "https://github.com/jcs-elpa/flx-rs"))
   (flx-rs-load-dyn)
   :config
   (advice-add 'flx-score :override #'flx-rs-score))
@@ -471,7 +473,7 @@
       (progn
         (gptel "*Claude*")
         (display-buffer "*Claude*"
-                       '((display-buffer-pop-up-window)
-                         (window-parameters . ((split-window . t)
-                                            (window-width . 0.5)))))
+                        '((display-buffer-pop-up-window)
+                          (window-parameters . ((split-window . t)
+                                                (window-width . 0.5)))))
         (select-window (get-buffer-window "*Claude*"))))))
