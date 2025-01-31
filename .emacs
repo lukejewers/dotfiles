@@ -279,8 +279,9 @@
 
 (use-package ido
   :ensure nil
-  :defer t
-  :config (ido-mode 1)
+  :demand t
+  :config
+  (ido-mode 1)
   :custom
   (ido-everywhere t)
   (ido-enable-flex-matching t)
@@ -290,7 +291,21 @@
 (use-package ido-completing-read+
   :ensure t
   :after ido
-  :config (ido-ubiquitous-mode 1))
+  :config
+  (ido-ubiquitous-mode 1))
+
+(use-package flx
+  :ensure t
+  :init
+  (flx-rs-load-dyn)
+  :config
+  (advice-add 'flx-score :override #'flx-rs-score))
+
+(use-package flx-ido
+  :ensure t
+  :after (ido flx)
+  :config
+  (flx-ido-mode 1))
 
 (use-package smex
   :ensure t
