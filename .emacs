@@ -49,7 +49,8 @@
   (project-switch-commands '((project-find-file "Find file" "f")
                              (project-find-dir "Find dir" "d")
                              (project-dired "Dired" "D")
-                             (project-find-regexp "g")
+                             (project-vterm "t")
+                             (project-find-regexp "Vterm" "g")
                              (magit-project-status "Magit" "m")))
   (c-basic-offset 4)
   (indent-tabs-mode nil)
@@ -275,7 +276,15 @@
   :ensure t
   :bind (:map vterm-mode-map
               ("C-z" . nil))
-  :custom (vterm-always-compile-module t))
+  :custom (vterm-always-compile-module t)
+  :config
+  (define-key project-prefix-map "t" #'project-vterm))
+
+(defun project-vterm ()
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (project-name (file-name-nondirectory (directory-file-name default-directory))))
+    (vterm (format "*vterm-%s*" project-name))))
 
 (use-package ido
   :ensure nil
