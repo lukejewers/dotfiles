@@ -283,8 +283,11 @@
 (defun project-vterm ()
   (interactive)
   (let* ((default-directory (project-root (project-current t)))
-         (project-name (file-name-nondirectory (directory-file-name default-directory))))
-    (vterm (format "*vterm-%s*" project-name))))
+         (project-name (file-name-nondirectory (directory-file-name default-directory)))
+         (buffer-name (format "*vterm-%s*" project-name)))
+    (if (get-buffer buffer-name)
+        (switch-to-buffer buffer-name)
+      (vterm buffer-name))))
 
 (use-package ido
   :ensure nil
