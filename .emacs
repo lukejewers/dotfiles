@@ -306,21 +306,6 @@
   :config
   (ido-ubiquitous-mode 1))
 
-(use-package flx
-  :ensure t
-  :init
-  (unless (package-installed-p 'flx-rs)
-    (package-vc-install "https://github.com/jcs-elpa/flx-rs"))
-  (flx-rs-load-dyn)
-  :config
-  (advice-add 'flx-score :override #'flx-rs-score))
-
-(use-package flx-ido
-  :ensure t
-  :after (ido flx)
-  :config
-  (flx-ido-mode 1))
-
 (use-package smex
   :ensure t
   :defer t
