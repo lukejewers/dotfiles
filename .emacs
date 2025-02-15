@@ -278,7 +278,11 @@
               ("C-z" . nil))
   :custom (vterm-always-compile-module t)
   :config
-  (define-key project-prefix-map "t" #'project-vterm))
+  (define-key project-prefix-map "t" #'project-vterm)
+  (defun vterm-mode-line-color ()
+    (let ((color (if vterm-copy-mode "DarkGoldenrod" "#282828")))
+      (set-face-background 'mode-line color)))
+  (add-hook 'vterm-copy-mode-hook #'vterm-mode-line-color))
 
 (defun project-vterm ()
   (interactive)
