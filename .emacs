@@ -129,7 +129,8 @@
 
 (use-package wgrep
   :ensure t
-  :defer t)
+  :defer t
+  :config (setq wgrep-auto-save-buffer t))
 
 (use-package org
   :ensure nil
