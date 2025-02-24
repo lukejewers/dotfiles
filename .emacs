@@ -312,10 +312,10 @@
   :config
   (ido-ubiquitous-mode 1))
 
-(use-package smex
+(use-package amx
   :ensure t
-  :defer t
-  :bind ("M-x" . smex))
+  :config
+  (amx-mode 1))
 
 (use-package marginalia
   :ensure t
