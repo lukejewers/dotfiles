@@ -327,10 +327,10 @@
 
 (use-package corfu
   :ensure t
-  :config (global-corfu-mode)
+  :init (global-corfu-mode)
+  :bind ("M-TAB" . completion-at-point)
   :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0.25)
+  (corfu-auto nil) ;; disable auto popup
   (corfu-quit-no-match t))
 
 (use-package cape
@@ -339,7 +339,6 @@
   :config
   (add-to-list 'completion-at-point-functions #'cape-symbol)
   (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-abbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
