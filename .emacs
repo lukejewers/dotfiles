@@ -337,11 +337,13 @@
   :ensure t
   :defer t
   :config
-  (add-to-list 'completion-at-point-functions #'cape-symbol)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file))
+  (setq completion-at-point-functions
+        (list (cape-capf-super
+               #'cape-file
+               #'cape-dabbrev
+               #'cape-keyword
+               #'cape-symbol
+               #'cape-abbrev))))
 
 (use-package savehist
   :ensure t
