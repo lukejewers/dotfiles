@@ -451,7 +451,7 @@
 (use-package gptel
   :bind ("C-z C-c" . gptel-make-claude-window)
   :config
-  (setq gptel-model 'claude-3-5-sonnet-20241022
+  (setq gptel-model 'claude-3-7-sonnet-20250219
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
