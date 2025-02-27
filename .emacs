@@ -286,6 +286,14 @@
       (set-face-background 'mode-line color)))
   (add-hook 'vterm-copy-mode-hook #'vterm-mode-line-color))
 
+(defun vterm-new ()
+  "Create a new vterm buffer."
+  (interactive)
+  (let ((buffer (generate-new-buffer "*vterm*")))
+    (with-current-buffer buffer
+      (vterm-mode))
+    (switch-to-buffer buffer)))
+
 (defun project-vterm ()
   (interactive)
   (let* ((default-directory (project-root (project-current t)))
