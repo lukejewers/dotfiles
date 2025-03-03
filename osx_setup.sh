@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Update terminal prompt
+echo 'PS1="%n@%m%f %~ $ "' >> ~/.zshrc
+
+echo "Configuring OSX..."
+# Set fast key repeat rate
+defaults write -g InitialKeyRepeat -int 15
+defaults write -g KeyRepeat -int 2
+# Show filename extensions by default
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+# Disable the "Are you sure you want to open this application?" dialog
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+# Disable auto-correct
+defaults write NSGlobalDomain NSAutomaticSpellCheckingEnabled -bool false
+# Enable tap to click (Trackpad)
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+# Show hidden files in Finder
+defaults write com.apple.finder AppleShowAllFiles -bool true
+# Save screenshots to a specific location (e.g., Desktop)
+mkdir -p "${HOME}/Screenshots"
+defaults write com.apple.screencapture location -string "${HOME}/Screenshots"
+# Set Dock to auto-hide
+defaults write com.apple.dock autohide -bool true
+# Make Dock appear faster when auto-hidden
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0.5
+# Kill affected applications to apply changes
+for app in "Finder" "Dock" "SystemUIServer"; do
+    killall "${app}" &> /dev/null
+done
+
+echo "Configuration complete."

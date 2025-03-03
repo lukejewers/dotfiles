@@ -8,3 +8,4 @@ ln -s -f ~/.dotfiles/.tmux.conf ~/.tmux.conf
 ln -s -f ~/.dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
 mkdir -p ~/.emacs.d && ln -s -f ~/.dotfiles/.emacs ~/.emacs.d/init.el
 ln -s -f ~/.dotfiles/DefaultKeybinding.dict ~/Library/KeyBindings/DefaultKeyBinding.Dict
+ln -s /opt/homebrew/opt/emacs-plus@30/Emacs.app /Applications
