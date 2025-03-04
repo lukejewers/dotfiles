@@ -65,6 +65,7 @@
   (global-auto-revert-mode 1)
   (show-paren-mode 1)
   (electric-pair-mode 1)
+  (savehist-mode 1)
   (global-completion-preview-mode 1)
   (modify-coding-system-alist 'file "" 'utf-8)
   (put 'narrow-to-region 'disabled nil)
@@ -352,11 +353,6 @@
                #'cape-keyword
                #'cape-symbol
                #'cape-abbrev))))
-
-(use-package savehist
-  :ensure t
-  :defer t
-  :config (savehist-mode))
 
 (use-package magit
   :ensure t
