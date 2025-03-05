@@ -334,14 +334,6 @@
   (marginalia-max-relative-age 0)
   (marginalia-align 'right))
 
-(use-package corfu
-  :ensure t
-  :init (global-corfu-mode)
-  :bind ("M-TAB" . completion-at-point)
-  :custom
-  (corfu-auto nil) ;; disable auto popup
-  (corfu-quit-no-match t))
-
 (use-package cape
   :ensure t
   :defer t
