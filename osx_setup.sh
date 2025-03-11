@@ -21,9 +21,10 @@ defaults write com.apple.finder AppleShowAllFiles -bool true
 # Save screenshots to a specific location (e.g., Desktop)
 mkdir -p "${HOME}/Screenshots"
 defaults write com.apple.screencapture location -string "${HOME}/Screenshots"
-# Set Dock to auto-hide
+# Set dock & menubar to auto-hide
 defaults write com.apple.dock autohide -bool true
-# Make Dock appear faster when auto-hidden
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
+# Make dock appear faster when auto-hidden
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.5
 # Kill affected applications to apply changes
