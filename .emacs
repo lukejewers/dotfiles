@@ -305,6 +305,13 @@
         (switch-to-buffer buffer-name)
       (vterm buffer-name))))
 
+(use-package eshell-atuin
+  :ensure t
+  :after eshell
+  :hook (eshell-mode . eshell-atuin-mode)
+  :bind (:map eshell-mode-map
+         ("C-r" . eshell-atuin-history)))
+
 (use-package ido
   :ensure nil
   :demand t
