@@ -432,11 +432,12 @@
   (python-shell-interpreter "ipython")
   (python-shell-completion-native-enable nil))
 
-(use-package pet
+(use-package pyvenv
   :ensure t
-  :defer t
+  :init
+  (setenv "WORKON_HOME" "~/.pyenv/versions")
   :config
-  (add-hook 'python-base-mode-hook 'pet-mode -10))
+  (pyvenv-mode 1))
 
 (use-package dape
   :hook
