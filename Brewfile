@@ -5,7 +5,6 @@ tap "homebrew/cask-fonts"
 tap "d12frosted/emacs-plus"
 
 # packages
-brew "atuin"
 brew "bash"
 brew "colima"
 brew "curl"
