@@ -51,7 +51,8 @@
                              (project-dired "Dired" "D")
                              (project-vterm "t")
                              (project-find-regexp "Vterm" "g")
-                             (magit-project-status "Magit" "m")))
+                             (magit-project-status "Magit" "m")
+                             (project-fzf "FZF" "z")))
   (c-basic-offset 4)
   (indent-tabs-mode nil)
   (smerge-command-prefix "C-c v")
@@ -76,6 +77,7 @@
    ("C-x C-c" . nil)
    ("C-x f" . nil)
    ("C-x m" . nil)
+   ("C-x p z" . project-fzf)
    ("C-z" . nil)
    ("M-o" . nil)
    ("C-M--" . shrink-window-horizontally)
@@ -195,7 +197,7 @@
 (use-package fzf
   :ensure t
   :defer t
-  :bind ("C-z C-f" . fzf)
+  :bind ("C-z C-f" . fzf-home)
   :config
   (setq fzf/args "-x --print-query --no-hscroll --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
         fzf/executable "fzf"
@@ -203,10 +205,18 @@
         fzf/grep-command "rg --no-heading -nH"
         fzf/position-bottom t
         fzf/window-height 10)
-  (advice-add 'fzf :around
-              (lambda (orig-fun &rest args)
-                (let ((default-directory "~/"))
-                  (apply orig-fun args)))))
+
+  (defun fzf-home ()
+    "Run fzf from home directory."
+    (interactive)
+    (let ((default-directory "~/"))
+      (fzf))))
+
+(defun project-fzf ()
+  "Run fzf in the project root."
+  (interactive)
+  (let ((default-directory (project-root (project-current t))))
+    (fzf)))
 
 (use-package avy
   :ensure t
