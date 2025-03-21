@@ -387,6 +387,12 @@
   :custom
   (magit-process-finish-apply-ansi-colors t))
 
+(use-package verb
+  :ensure t
+  :config
+  (define-key global-map (kbd "C-c v") verb-command-map)
+  :hook (org-mode . verb-mode))
+
 (use-package treesit-auto
   :ensure t
   :custom (treesit-auto-install 'prompt)
