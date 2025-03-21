@@ -77,6 +77,8 @@
    ("C-x C-c" . nil)
    ("C-x f" . nil)
    ("C-x m" . nil)
+   ("C-x p a" . project-ripgrep)
+   ("C-x p h" . project-home)
    ("C-x p z" . project-fzf)
    ("C-z" . nil)
    ("M-o" . nil)
@@ -136,6 +138,12 @@
   :defer t
   :config (setq wgrep-auto-save-buffer t))
 
+(defun project-ripgrep (&optional dir)
+  "Run ripgrep in the current project using the grep interface."
+  (interactive (list (project-root (project-current t))))
+  (let ((default-directory (or dir default-directory)))
+    (call-interactively 'grep)))
+
 (use-package org
   :ensure nil
   :custom
@@ -152,6 +160,12 @@
   :config
   (setq dired-kill-when-opening-new-dired-buffer t)
   (put 'dired-find-alternate-file 'disabled nil))
+
+(defun project-home()
+  "Open dired in the root directory of the current project."
+  (interactive)
+  (let ((root (project-root (project-current t))))
+    (dired root)))
 
 (use-package dired-ranger
   :ensure t
