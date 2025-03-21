@@ -213,7 +213,7 @@
   :defer t
   :bind ("C-z C-f" . fzf-home)
   :config
-  (setq fzf/args "-x --print-query --no-hscroll --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
+  (setq fzf/args "-x --print-query --no-hscroll --color=pointer:#ffdd33 --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
         fzf/executable "fzf"
         fzf/git-grep-args "-i --line-number %s"
         fzf/grep-command "rg --no-heading -nH"
