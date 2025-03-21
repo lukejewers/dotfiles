@@ -268,6 +268,12 @@
   (set-mark (line-beginning-position)))
 (global-set-key (kbd "C-;") 'select-current-line)
 
+(defun copy-word-at-point ()
+  "Copy the word at point to the kill ring."
+  (interactive)
+  (kill-new (thing-at-point 'word t)))
+(global-set-key (kbd "C-c C-w") 'copy-word-at-point)
+
 (defun duplicate-line ()
   "Duplicate current line"
   (interactive)
