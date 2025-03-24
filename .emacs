@@ -43,6 +43,7 @@
   (help-window-select t)
   (completion-auto-select t)
   (set-mark-command-repeat-pop t)
+  (isearch-lazy-count t)
   (xref-search-program 'ripgrep) ; project-find-regexp
   (grep-command "rg -nS --no-heading ")
   (grep-use-null-device nil)
