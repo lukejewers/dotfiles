@@ -51,9 +51,10 @@
                              (project-find-dir "Find dir" "d")
                              (project-dired "Dired" "D")
                              (project-vterm "t")
+                             (project-home "Home" "h")
+                             (project-fzf "fzf", "z")
                              (project-find-regexp "Vterm" "g")
-                             (magit-project-status "Magit" "m")
-                             (project-fzf "FZF" "z")))
+                             (magit-project-status "Magit" "m")))
   (c-basic-offset 4)
   (indent-tabs-mode nil)
   (smerge-command-prefix "C-c v")
@@ -68,6 +69,7 @@
   (show-paren-mode 1)
   (electric-pair-mode 1)
   (savehist-mode 1)
+  (blink-cursor-mode -1)
   (global-completion-preview-mode 1)
   (modify-coding-system-alist 'file "" 'utf-8)
   (put 'narrow-to-region 'disabled nil)
@@ -214,7 +216,7 @@
   :defer t
   :bind ("C-z C-f" . fzf-home)
   :config
-  (setq fzf/args "-x --print-query --no-hscroll --color=pointer:#ffdd33 --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
+  (setq fzf/args "-x --print-query --no-hscroll --color=fg:#e4e4ef,bg:#181818,hl:#ffdd33,fg+:#f6f6f6,bg+:#282828,hl+:#ffdd33,info:#96a6c8,prompt:#96a6c8,pointer:#ffdd33,marker:#73c936,spinner:#96a6c8,header:#73c936 --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
         fzf/executable "fzf"
         fzf/git-grep-args "-i --line-number %s"
         fzf/grep-command "rg --no-heading -nH"
@@ -313,6 +315,8 @@
               ("C-z" . nil))
   :custom (vterm-always-compile-module t)
   :config
+  (setq vterm-timer-delay 0.01)
+  (setq vterm-max-scrollback 10000)
   (define-key project-prefix-map "t" #'project-vterm)
   (defun vterm-mode-line-color ()
     (let ((color (if vterm-copy-mode "DarkGoldenrod" "#282828")))
@@ -419,13 +423,15 @@
   (jsonrpc-event-hook nil)
   (eglot-autoshutdown t)
   (eglot-events-buffer-size 0)
+  (eglot-stderr-buffer-size 10000)
+  (eglot-strict-mode nil)
   (eglot-sync-connect nil)
   (eldoc-echo-area-prefer-doc-buffer t)
   (eldoc-echo-area-use-multiline-p nil)
   (go-ts-mode-indent-offset tab-width)
-  :custom
   (eglot-autoshutdown t)
-  (eglot-events-buffer-size 0)
+  (eglot-connect-timeout 30)
+  (eglot-autoreconnect nil)
   (eglot-extend-to-xref nil)
   (eglot-ignored-server-capabilities
    '(:documentHighlightProvider
