@@ -490,26 +490,36 @@
   (setq dape-buffer-window-arrangement 'right))
 
 (use-package gptel
-  :bind ("C-z C-c" . gptel-make-claude-window)
+  :bind ("C-z C-c" . gptel-make-window)
   :config
-  (setq gptel-model 'claude-3-7-sonnet-20250219
-        gptel-default-mode 'org-mode
-        gptel-backend (gptel-make-anthropic "Claude"
-                        :stream t
-                        :host "api.anthropic.com"
-                        :key (auth-source-pass-get 'secret "api.anthropic.com/apikey"))))
+  (defvar gptel-api-key-cache nil)
+  (setq gptel-default-mode 'org-mode
+        gptel-model "deepseek/deepseek-chat-v3-0324"
+        gptel--system-message
+        "You are an expert coding assistant. Please provide correct, idiomatic code with concise explanations."
+        gptel-backend
+        (gptel-make-openai "OpenRouter"
+          :host "openrouter.ai"
+          :endpoint "/api/v1/chat/completions"
+          :stream t
+          :key (lambda ()
+                 (or gptel-api-key-cache
+                     (setq gptel-api-key-cache
+                           (auth-source-pass-get 'secret "openrouter.ai/apikey"))))
+          :models '("anthropic/claude-3.7-sonnet"
+                    "deepseek/deepseek-chat-v3-0324"))))
 
-(defun gptel-make-claude-window ()
+(defun gptel-make-window ()
   (interactive)
-  (let ((claude-window (get-buffer-window "*Claude*")))
-    (if claude-window
-        (if (eq (selected-window) claude-window)
-            (delete-windows-on "*Claude*")
-          (select-window claude-window))
+  (let ((open-router-window (get-buffer-window "*OpenRouter*")))
+    (if open-router-window
+        (if (eq (selected-window) open-router-window)
+            (delete-windows-on "*OpenRouter*")
+          (select-window open-router-window))
       (progn
-        (gptel "*Claude*")
-        (display-buffer "*Claude*"
+        (gptel "*OpenRouter*")
+        (display-buffer "*OpenRouter*"
                         '((display-buffer-pop-up-window)
                           (window-parameters . ((split-window . t)
                                                 (window-width . 0.5)))))
-        (select-window (get-buffer-window "*Claude*"))))))
+        (select-window (get-buffer-window "*OpenRouter*"))))))
