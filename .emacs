@@ -80,7 +80,6 @@
    ("C-x C-c" . nil)
    ("C-x f" . nil)
    ("C-x m" . nil)
-   ("C-x p a" . project-ripgrep)
    ("C-x p h" . project-home)
    ("C-x p z" . project-fzf)
    ("C-z" . nil)
@@ -97,7 +96,6 @@
    ("C-x f" . find-file-at-point)
    ("M-3" . (lambda () (interactive) (insert "#")))
    ("M-o" . other-window)
-   ("M-s r" . grep)
    ("s-b" . backward-sexp)
    ("s-f" . forward-sexp)
    ("s-n" . forward-list)
@@ -136,16 +134,30 @@
   :ensure t
   :config (minions-mode 1))
 
+(use-package rg
+  :ensure t
+  :defer t
+  :bind
+  ("C-c s s"   . rg)
+  ("C-c s d"   . rg-current-dir-all-files)
+  ("C-c s p"   . rg-project-all-files)
+  ("C-c s ."   . rg-dwim)
+  ("C-c s m"   . rg-menu)
+  :config
+  (defun rg-project-all-files (search-term)
+    "Run ripgrep in project root searching all files."
+    (interactive "sSearch term: ")
+    (rg search-term "*" (project-root (project-current))))
+  (defun rg-current-dir-all-files (search-term)
+    "Run ripgrep in the current directory, searching all files."
+    (interactive "sSearch term: ")
+    (rg search-term "*" default-directory))
+  (add-to-list 'rg-finish-functions (lambda (buffer _) (pop-to-buffer buffer))))
+
 (use-package wgrep
   :ensure t
   :defer t
   :config (setq wgrep-auto-save-buffer t))
-
-(defun project-ripgrep (&optional dir)
-  "Run ripgrep in the current project using the grep interface."
-  (interactive (list (project-root (project-current t))))
-  (let ((default-directory (or dir default-directory)))
-    (call-interactively 'grep)))
 
 (use-package org
   :ensure nil
