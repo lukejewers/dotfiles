@@ -119,12 +119,6 @@
   (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
   (add-hook 'emacs-startup-hook (lambda () (message "Emacs loaded in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
 
-(defun recompile-emacs-packages ()
-  "Prune eln cache and native recompile everything on `package-user-dir'."
-  (interactive)
-  (native-compile-prune-cache)
-  (native-compile-async package-user-dir 'recursively))
-
 (use-package gruber-darker-theme
   :ensure t
   :demand t
