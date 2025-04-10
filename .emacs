@@ -378,14 +378,12 @@
 
 (use-package cape
   :ensure t
-  :defer t
-  :config
+  :init
   (setq completion-at-point-functions
         (list (cape-capf-super
                #'cape-file
                #'cape-dabbrev
                #'cape-keyword
-               #'cape-symbol
                #'cape-abbrev))))
 
 (use-package magit
