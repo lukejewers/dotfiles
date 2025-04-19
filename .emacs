@@ -377,13 +377,14 @@
 
 (use-package cape
   :ensure t
-  :init
-  (setq completion-at-point-functions
-        (list (cape-capf-super
-               #'cape-file
-               #'cape-dabbrev
-               #'cape-keyword
-               #'cape-abbrev))))
+  :config
+  (add-to-list 'completion-at-point-functions
+               (cape-capf-super
+                #'cape-file
+                #'cape-dabbrev
+                #'cape-keyword
+                #'cape-abbrev)
+               t))
 
 (use-package magit
   :ensure t
