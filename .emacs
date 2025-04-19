@@ -121,7 +121,7 @@
 (use-package gruber-darker-theme
   :ensure t
   :demand t
-  :config (load-theme 'gruber-darker t))
+  :config (load-theme 'gruber-darker))
 
 (use-package minions
   :ensure t
@@ -497,7 +497,7 @@
   :config
   (defvar gptel-api-key-cache nil)
   (setq gptel-default-mode 'org-mode
-        gptel-model "deepseek/deepseek-chat-v3-0324"
+        gptel-model "google/gemini-2.5-pro-preview-03-25"
         gptel--system-message
         "You are an expert coding assistant. Please provide correct, idiomatic code with concise explanations."
         gptel-backend
@@ -509,7 +509,9 @@
                  (or gptel-api-key-cache
                      (setq gptel-api-key-cache
                            (auth-source-pass-get 'secret "openrouter.ai/apikey"))))
-          :models '("anthropic/claude-3.7-sonnet"
+          :models '("openai/o4-mini"
+                    "google/gemini-2.5-pro-preview-03-25"
+                    "anthropic/claude-3.7-sonnet"
                     "deepseek/deepseek-chat-v3-0324"))))
 
 (defun gptel-make-window ()
