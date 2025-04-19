@@ -409,18 +409,9 @@
   (global-treesit-auto-mode))
 
 (use-package eglot
-  :ensure t
+  :ensure nil
   :defer t
-  :hook
-  (js-ts-mode . eglot-ensure)
-  (typescript-ts-mode . eglot-ensure)
-  (tsx-ts-mode . eglot-ensure)
-  (python-ts-mode . eglot-ensure)
-  (go-ts-mode . eglot-ensure)
-  (c-ts-mode . eglot-ensure)
-  (rust-ts-mode . eglot-ensure)
-  (c++-ts-mode . eglot-ensure)
-  (lua-mode . eglot-ensure)
+  :hook (prog-mode . eglot-ensure)
   :custom
   (fset #'jsonrpc--log-event #'ignore)
   (jsonrpc-event-hook nil)
