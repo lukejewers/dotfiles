@@ -412,7 +412,6 @@
 (use-package eglot
   :ensure nil
   :defer t
-  :hook (prog-mode . eglot-ensure)
   :custom
   (fset #'jsonrpc--log-event #'ignore)
   (jsonrpc-event-hook nil)
