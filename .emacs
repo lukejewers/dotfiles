@@ -1,3 +1,22 @@
+(require 'treesit)
+
+(defcustom my-required-treesit-languages
+  '(python go c cpp rust javascript typescript css html yaml json toml)
+  "A list of Tree-sitter language symbols to check for installation on startup."
+  :type '(repeat symbol)
+  :group 'treesit)
+
+(defun check-startup-treesit-grammars ()
+  "Check if required Tree-sitter grammars are installed and report missing ones."
+  (when (treesit-available-p)
+    (let ((missing (seq-filter (lambda (lang) (not (treesit-language-available-p lang)))
+                               my-required-treesit-languages)))
+      (when missing
+        (warn "Missing required Tree-sitter grammars: %s\nRun 'M-x treesit-install-language-grammar' to install them."
+              (mapconcat #'symbol-name missing ", "))))))
+
+(add-hook 'emacs-startup-hook #'check-startup-treesit-grammars)
+
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns x))
@@ -401,13 +420,6 @@
   :config
   (define-key global-map (kbd "C-c v") verb-command-map)
   :hook (org-mode . verb-mode))
-
-(use-package treesit-auto
-  :ensure t
-  :custom (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
 
 (use-package eglot
   :ensure nil
