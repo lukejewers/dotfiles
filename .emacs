@@ -421,6 +421,12 @@
   (define-key global-map (kbd "C-c v") verb-command-map)
   :hook (org-mode . verb-mode))
 
+(use-package dumb-jump
+  :ensure t
+  :config
+  (setq dumb-jump-force-searcher 'rg)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
 (use-package eglot
   :ensure nil
   :defer t
