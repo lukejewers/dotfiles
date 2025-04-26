@@ -1,21 +1,14 @@
-(require 'treesit)
+(unless (bound-and-true-p package--initialized)
+  (package-initialize))
 
-(defcustom my-required-treesit-languages
-  '(python go c cpp rust javascript typescript css html yaml json toml)
-  "A list of Tree-sitter language symbols to check for installation on startup."
-  :type '(repeat symbol)
-  :group 'treesit)
+(unless package-archive-contents
+  (package-refresh-contents))
 
-(defun check-startup-treesit-grammars ()
-  "Check if required Tree-sitter grammars are installed and report missing ones."
-  (when (treesit-available-p)
-    (let ((missing (seq-filter (lambda (lang) (not (treesit-language-available-p lang)))
-                               my-required-treesit-languages)))
-      (when missing
-        (warn "Missing required Tree-sitter grammars: %s\nRun 'M-x treesit-install-language-grammar' to install them."
-              (mapconcat #'symbol-name missing ", "))))))
-
-(add-hook 'emacs-startup-hook #'check-startup-treesit-grammars)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-when-compile
+  (require 'use-package))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -33,11 +26,8 @@
   (auto-save-default nil)
   (create-lockfiles nil)
   (delete-by-moving-to-trash t)
-  (inhibit-startup-screen t)
   (treesit-font-lock-level 4)
-  (inhibit-startup-message t)
   (make-backup-files nil)
-  (ring-bell-function 'ignore)
   (custom-safe-themes t)
   (tab-always-indent 'complete)
   (electric-pair-preserve-balance nil)
@@ -45,24 +35,16 @@
   (resize-mini-windows nil)
   (tab-width 4)
   (display-line-numbers 'nil)
-  (use-dialog-box nil)
   (delete-selection-mode 1)
-  (use-short-answers t)
-  (warning-minimum-level :emergency)
   (compilation-scroll-output 'first-error)
   (compilation-always-kill t)
   (compilation-ask-about save nil)
-  (frame-title-format '("%f"))
-  (ns-use-proxy-icon nil)
-  (mac-left-control-modifier 'control)
-  (mac-right-control-modifier 'meta)
-  (mac-command-modifier 'super)
   (lazy-highlight-initial-delay 0)
   (help-window-select t)
   (completion-auto-select t)
   (set-mark-command-repeat-pop t)
   (isearch-lazy-count t)
-  (xref-search-program 'ripgrep) ; project-find-regexp
+  (xref-search-program 'ripgrep)
   (grep-command "rg -nS --no-heading ")
   (grep-use-null-device nil)
   (project-switch-commands '((project-find-file "Find file" "f")
@@ -76,20 +58,17 @@
   (c-basic-offset 4)
   (indent-tabs-mode nil)
   (smerge-command-prefix "C-c v")
+  (python-indent-guess-indent-offset-verbose nil)
+  (python-shell-interpreter "ipython")
+  (python-shell-completion-native-enable nil)
   :init
   (auth-source-pass-enable)
-  (setq gc-cons-threshold most-positive-fixnum)
-  (set-frame-font "Iosevka 20" nil t)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (when scroll-bar-mode (scroll-bar-mode -1))
   (global-auto-revert-mode 1)
   (show-paren-mode 1)
   (electric-pair-mode 1)
   (savehist-mode 1)
-  (blink-cursor-mode -1)
+  (set-frame-font "Iosevka 20" nil t)
   (global-completion-preview-mode 1)
-  (modify-coding-system-alist 'file "" 'utf-8)
   (put 'narrow-to-region 'disabled nil)
   :bind
   (("<C-wheel-down>" . ignore)
@@ -119,23 +98,9 @@
    ("s-n" . forward-list)
    ("s-p" . backward-list))
   :config
-  ;; Custom file handling
-  (setq custom-file (expand-file-name "custom-vars.el" user-emacs-directory))
-  (load custom-file :noerror :nomessage)
-  ;; Package archives
-  (dolist (archive '(("melpa" . "https://melpa.org/packages/")
-                     ("elpa" . "https://elpa.gnu.org/packages/")
-                     ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-    (add-to-list 'package-archives archive))
-  ;; Mode-specific settings
   (add-hook 'occur-hook (lambda () (switch-to-buffer-other-window "*Occur*")))
   (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o"))))
-  ;; Frame and buffer settings
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45)))
-  ;; startup
-  (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
-  (add-hook 'emacs-startup-hook (lambda () (message "Emacs loaded in %s with %d garbage collections." (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time))) gcs-done))))
+  (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45))))
 
 (use-package gruber-darker-theme
   :ensure t
@@ -231,7 +196,7 @@
   :defer t
   :hook (before-save . whitespace-cleanup)
   :custom
-  (whitespace-line-column 80) ;; limit line length
+  (whitespace-line-column 80)
   (whitespace-style
    '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
 
@@ -334,6 +299,7 @@
 (global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 
 (use-package vterm
+  :defer t
   :ensure t
   :bind (:map vterm-mode-map
               ("C-z" . nil))
@@ -386,13 +352,12 @@
   :config
   (amx-mode 1))
 
-(use-package marginalia
+(use-package treesit-auto
   :ensure t
-  :defer t
-  :config (marginalia-mode)
-  :custom
-  (marginalia-max-relative-age 0)
-  (marginalia-align 'right))
+  :custom (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 (use-package cape
   :ensure t
@@ -412,59 +377,13 @@
   (("C-c m s" . magit-status)
    ("C-c m l" . magit-log)
    ("C-c m b" . magit-blame))
-  :custom
-  (magit-process-finish-apply-ansi-colors t))
-
-(use-package verb
-  :ensure t
-  :config
-  (define-key global-map (kbd "C-c v") verb-command-map)
-  :hook (org-mode . verb-mode))
+  :custom (magit-process-finish-apply-ansi-colors t))
 
 (use-package dumb-jump
   :ensure t
   :config
   (setq dumb-jump-force-searcher 'rg)
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
-(use-package eglot
-  :ensure nil
-  :defer t
-  :custom
-  (fset #'jsonrpc--log-event #'ignore)
-  (jsonrpc-event-hook nil)
-  (eglot-autoshutdown t)
-  (eglot-events-buffer-size 0)
-  (eglot-stderr-buffer-size 10000)
-  (eglot-strict-mode nil)
-  (eglot-sync-connect nil)
-  (eldoc-echo-area-prefer-doc-buffer t)
-  (eldoc-echo-area-use-multiline-p nil)
-  (go-ts-mode-indent-offset tab-width)
-  (eglot-autoshutdown t)
-  (eglot-connect-timeout 30)
-  (eglot-autoreconnect nil)
-  (eglot-extend-to-xref nil)
-  (eglot-ignored-server-capabilities
-   '(:documentHighlightProvider
-     :documentSymbolProvider
-     :workspaceSymbolProvider
-     :codeActionProvider
-     :codeLensProvider
-     :documentFormattingProvider
-     :documentRangeFormattingProvider
-     :documentOnTypeFormattingProvider
-     :renameProvider
-     :documentLinkProvider
-     :colorProvider
-     :foldingRangeProvider
-     :executeCommandProvider
-     :inlayHintProvider)))
-
-(use-package flymake
-  :ensure nil
-  :defer t
-  :bind ("M-g e" . flymake-show-buffer-diagnostics))
 
 (use-package apheleia
   :ensure t
@@ -479,61 +398,15 @@
   :defer t
   :config (editorconfig-mode 1))
 
-(use-package python
-  :ensure nil
-  :defer t
-  :custom
-  (python-indent-guess-indent-offset-verbose nil)
-  (python-shell-interpreter "ipython")
-  (python-shell-completion-native-enable nil))
-
 (use-package pyvenv
   :ensure t
-  :init
-  (setenv "WORKON_HOME" "~/.pyenv/versions")
-  :config
-  (pyvenv-mode 1))
+  :init (setenv "WORKON_HOME" "~/.pyenv/versions"))
 
 (use-package dape
+  :ensure t
+  :defer t
   :hook
   (after-init . dape-breakpoint-load)
   :config
   (dape-breakpoint-global-mode)
   (setq dape-buffer-window-arrangement 'right))
-
-(use-package gptel
-  :bind ("C-z C-c" . gptel-make-window)
-  :config
-  (defvar gptel-api-key-cache nil)
-  (setq gptel-default-mode 'org-mode
-        gptel-model "google/gemini-2.5-pro-preview-03-25"
-        gptel--system-message
-        "You are an expert coding assistant. Please provide correct, idiomatic code with concise explanations."
-        gptel-backend
-        (gptel-make-openai "OpenRouter"
-          :host "openrouter.ai"
-          :endpoint "/api/v1/chat/completions"
-          :stream t
-          :key (lambda ()
-                 (or gptel-api-key-cache
-                     (setq gptel-api-key-cache
-                           (auth-source-pass-get 'secret "openrouter.ai/apikey"))))
-          :models '("openai/o4-mini"
-                    "google/gemini-2.5-pro-preview-03-25"
-                    "anthropic/claude-3.7-sonnet"
-                    "deepseek/deepseek-chat-v3-0324"))))
-
-(defun gptel-make-window ()
-  (interactive)
-  (let ((open-router-window (get-buffer-window "*OpenRouter*")))
-    (if open-router-window
-        (if (eq (selected-window) open-router-window)
-            (delete-windows-on "*OpenRouter*")
-          (select-window open-router-window))
-      (progn
-        (gptel "*OpenRouter*")
-        (display-buffer "*OpenRouter*"
-                        '((display-buffer-pop-up-window)
-                          (window-parameters . ((split-window . t)
-                                                (window-width . 0.5)))))
-        (select-window (get-buffer-window "*OpenRouter*"))))))
