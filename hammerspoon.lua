@@ -4,7 +4,6 @@ local apps = {
     firefox = 'Firefox',
     ghostty = 'Ghostty',
     kindle = 'Kindle',
-    raycast = 'Raycast',
     messages = 'Messages',
     settings = 'System Settings',
 }
@@ -64,12 +63,6 @@ call_app("j", apps.emacs)
 call_app("l", apps.firefox)
 call_app("m", apps.messages)
 call_app("s", apps.settings)
-
-hs.hotkey.bind({"cmd"}, "space", function()
-    open_and_activate(apps.raycast)
-    local window = hs.window.focusedWindow()
-    window:moveToUnit({0.3, 0.3, 0.4, 0.4})
-end)
 
 -- Bind layout switching hotkeys
 switch_layouts("9", screen_states.CENTRED)
