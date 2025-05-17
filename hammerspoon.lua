@@ -6,6 +6,14 @@ local apps = {
     messages = 'Messages',
     settings = 'System Settings',
 }
+
+local popup_apps = {
+    [apps.messages] = true,
+    [apps.finder]   = true,
+    [apps.settings] = true,
+    [apps.ghostty]  = true,
+}
+
 local hyper         = { "ctrl", "cmd" }
 local screen_states = { FULLSCREEN = 0, TWOPANE = 1, CENTRED = 2 }
 local screen_state  = screen_states.FULLSCREEN
@@ -17,15 +25,19 @@ local function open_and_activate(app)
     hs.application.get(app):activate()
 end
 
+local function is_popup_app(app)
+    return popup_apps[app] or false
+end
+
 local function call_app(key, app)
     hs.hotkey.bind(hyper, key, function()
         local focusedApp = hs.application.frontmostApplication()
-        if focusedApp and (focusedApp:title() == apps.messages or focusedApp:title() == apps.finder or focusedApp:title() == apps.settings or focusedApp:title() == apps.ghostty) then
+        if focusedApp and is_popup_app(focusedApp:title()) then
             focusedApp:hide()
         else
             open_and_activate(app)
             local window = hs.window.focusedWindow()
-            if app == apps.messages or app == apps.finder or app == apps.settings or app == apps.ghostty then
+            if is_popup_app(app) then
                 window:moveToUnit({0.17, 0.17, 0.67, 0.67})
             elseif screen_state == screen_states.FULLSCREEN then
                 window:maximize()
