@@ -37,9 +37,7 @@
   (tab-width 4)
   (display-line-numbers 'nil)
   (delete-selection-mode 1)
-  (compilation-scroll-output 'first-error)
-  (compilation-always-kill t)
-  (compilation-ask-about save nil)
+  (history-length 500)
   (lazy-highlight-initial-delay 0)
   (help-window-select t)
   (completion-auto-select t)
@@ -86,8 +84,6 @@
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
-   ("C-c c" . compile)
-   ("C-c r" . recompile)
    ("C-q" . query-replace)
    ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1)))
@@ -111,6 +107,27 @@
 (use-package minions
   :ensure t
   :config (minions-mode 1))
+
+(use-package compile
+  :ensure nil
+  :custom
+  (compilation-scroll-output 'first-error)
+  (compilation-always-kill t)
+  (compilation-ask-about save nil)
+  :bind
+  ("C-c c" . compile)
+  ("C-c r" . recompile)
+  :init
+  (defun compile-completing-read-history ()
+    "Insert compile command from history using `completing-read'."
+    (interactive)
+    (let ((enable-recursive-minibuffers t))
+      (let ((command (completing-read "Compile history: " compile-history)))
+        (when command
+          (delete-minibuffer-contents)
+          (insert command)))))
+  :config
+  (define-key minibuffer-local-map (kbd "M-r") 'compile-completing-read-history))
 
 (use-package rg
   :ensure t
@@ -335,12 +352,12 @@
   :ensure nil
   :defer t
   :init
-  (defun eshell-history-ido ()
+  (defun eshell-completing-read-history ()
     "Present Eshell history using Ido for selection when M-r is pressed in Eshell."
     (interactive)
     (let* ((history (ring-elements eshell-history-ring))
            (selected-command (when history
-                               (ido-completing-read "Eshell history: " history nil t))))
+                               (completing-read "Eshell history: " history nil t))))
       (when selected-command
         (insert selected-command))))
   :config
@@ -348,7 +365,7 @@
         eshell-history-file-name "~/.zsh_history"
         eshell-history-size 10000)
   (keymap-unset eshell-hist-mode-map "M-r" t)
-  (define-key eshell-mode-map (kbd "M-r") 'eshell-history-ido))
+  (define-key eshell-mode-map (kbd "M-r") 'eshell-completing-read-history))
 
 (use-package ido
   :ensure nil
