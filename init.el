@@ -331,6 +331,25 @@
         (switch-to-buffer buffer-name)
       (vterm buffer-name))))
 
+(use-package em-hist
+  :ensure nil
+  :defer t
+  :init
+  (defun eshell-history-ido ()
+    "Present Eshell history using Ido for selection when M-r is pressed in Eshell."
+    (interactive)
+    (let* ((history (ring-elements eshell-history-ring))
+           (selected-command (when history
+                               (ido-completing-read "Eshell history: " history nil t))))
+      (when selected-command
+        (insert selected-command))))
+  :config
+  (setq eshell-hist-ignoredups t
+        eshell-history-file-name "~/.zsh_history"
+        eshell-history-size 10000)
+  (keymap-unset eshell-hist-mode-map "M-r" t)
+  (define-key eshell-mode-map (kbd "M-r") 'eshell-history-ido))
+
 (use-package ido
   :ensure nil
   :demand t
