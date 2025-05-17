@@ -3,7 +3,6 @@ local apps = {
     finder = 'Finder',
     firefox = 'Firefox',
     ghostty = 'Ghostty',
-    kindle = 'Kindle',
     messages = 'Messages',
     settings = 'System Settings',
 }
@@ -21,12 +20,12 @@ end
 local function call_app(key, app)
     hs.hotkey.bind(hyper, key, function()
         local focusedApp = hs.application.frontmostApplication()
-        if focusedApp and (focusedApp:title() == apps.messages or focusedApp:title() == apps.finder or focusedApp:title() == apps.settings) then
+        if focusedApp and (focusedApp:title() == apps.messages or focusedApp:title() == apps.finder or focusedApp:title() == apps.settings or focusedApp:title() == apps.ghostty) then
             focusedApp:hide()
         else
             open_and_activate(app)
             local window = hs.window.focusedWindow()
-            if app == apps.messages or app == apps.finder or app == apps.settings then
+            if app == apps.messages or app == apps.finder or app == apps.settings or app == apps.ghostty then
                 window:moveToUnit({0.17, 0.17, 0.67, 0.67})
             elseif screen_state == screen_states.FULLSCREEN then
                 window:maximize()
@@ -58,11 +57,11 @@ end
 
 -- Bind applications to hotkeys
 call_app("f", apps.finder)
-call_app("i", apps.kindle)
 call_app("j", apps.emacs)
 call_app("l", apps.firefox)
 call_app("m", apps.messages)
 call_app("s", apps.settings)
+call_app("t", apps.ghostty)
 
 -- Bind layout switching hotkeys
 switch_layouts("9", screen_states.CENTRED)
