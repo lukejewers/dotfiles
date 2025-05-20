@@ -52,7 +52,7 @@
                              (project-vterm "t")
                              (project-home "Home" "h")
                              (project-fzf "fzf", "z")
-                             (project-find-regexp "Vterm" "g")
+                             (project-find-regexp "g")
                              (magit-project-status "Magit" "m")))
   (c-basic-offset 4)
   (indent-tabs-mode nil)
@@ -314,7 +314,7 @@
       (funcall shell))))
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
 (global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" 'shell)))
-(global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
+(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 
 (use-package vterm
   :defer t
