@@ -78,4 +78,4 @@ call_app("t", apps.ghostty)
 -- Bind layout switching hotkeys
 switch_layouts("9", screen_states.CENTRED)
 switch_layouts("0", screen_states.FULLSCREEN)
-switch_layouts("8", screen_states.TWOPANE, apps.emacs, apps.chrome)
+switch_layouts("8", screen_states.TWOPANE, apps.emacs, apps.firefox)
