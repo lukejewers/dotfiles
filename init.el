@@ -314,7 +314,7 @@
       (funcall shell))))
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
 (global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" 'shell)))
-(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
+(global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 
 (use-package vterm
   :defer t
