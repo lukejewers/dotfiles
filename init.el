@@ -20,7 +20,7 @@
   :ensure nil
   :custom
   (use-package-compute-statistics t)
-  (truncate-lines t)
+  (truncate-lines nil)
   (comp-async-report-warnings-errors nil)
   (comp-deferred-compilation t)
   (package-install-upgrade-built-in t)
