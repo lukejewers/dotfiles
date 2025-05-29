@@ -304,6 +304,12 @@
     (kill-new (file-truename buffer-file-name))))
 (global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
 
+(use-package hide-mode-line
+  :ensure t
+  :hook
+  (eshell-mode . hide-mode-line-mode)
+  (vterm-mode . hide-mode-line-mode))
+
 (defun toggle-shell (shell-str shell)
   (interactive)
   (if (string-equal shell-str major-mode)
