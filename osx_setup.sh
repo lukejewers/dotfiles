@@ -16,6 +16,8 @@ defaults write NSGlobalDomain NSAutomaticSpellCheckingEnabled -bool false
 # Enable tap to click (Trackpad)
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+# Allow C-M-d
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dict><key>enabled</key><false/></dict>'
 # Show hidden files in Finder
 defaults write com.apple.finder AppleShowAllFiles -bool true
 # Save screenshots to a specific location (e.g., Desktop)
