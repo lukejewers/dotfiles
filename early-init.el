@@ -12,9 +12,11 @@
 (setq frame-title-format '("%f")       ; Use buffer file name in title
       frame-resize-pixelwise t
       frame-inhibit-implied-resize t
+      ns-pop-up-frames nil
       ns-use-proxy-icon nil)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))  ; Maximized but not fullscreen
+(add-to-list 'default-frame-alist '(background-color . "#181818"))
 
 ;; basic Settings
 (setq inhibit-startup-screen t
@@ -35,6 +37,7 @@
 ;; input handling
 (setq mac-left-control-modifier 'control
       mac-right-control-modifier 'meta
+      mac-option-modifier 'none
       mac-command-modifier 'super)
 
 ;; avoid initial flash of light theme
