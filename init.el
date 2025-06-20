@@ -80,6 +80,7 @@
    ("C-x p z" . project-fzf)
    ("C-z" . nil)
    ("M-o" . nil)
+   ("C-M-l" . mode-line-other-buffer)
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
