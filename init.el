@@ -434,3 +434,7 @@
   :config
   (dape-breakpoint-global-mode)
   (setq dape-buffer-window-arrangement 'right))
+
+(use-package emacos
+  :ensure nil
+  :load-path "firstparty/emacos")
