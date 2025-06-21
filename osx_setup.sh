@@ -34,4 +34,22 @@ for app in "Finder" "Dock" "SystemUIServer"; do
     killall "${app}" &> /dev/null
 done
 
+echo "Cloning dotfiles..."
+if [ ! -d "$HOME/.dotfiles" ]; then
+  git clone https://github.com/lukejewers/dotfiles.git "$HOME/.dotfiles"
+fi
+
+echo "Setting symlinks..."
+mkdir -p ~/.emacs.d
+mkdir -p ~/.config/ghostty
+mkdir -p ~/.hammerspoon
+
+ln -s -f ~/.dotfiles/.vimrc ~/.vimrc
+ln -s -f ~/.dotfiles/DefaultKeybinding.dict ~/Library/KeyBindings/DefaultKeyBinding.Dict
+ln -s -f ~/.dotfiles/config.ghostty ~/.config/ghostty/config
+ln -s -f ~/.dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
+ln -s -f ~/.dotfiles/init.el ~/.emacs.d/init.el
+
+ln -s /opt/homebrew/opt/emacs-plus@30/Emacs.app /Applications
+
 echo "Configuration complete."

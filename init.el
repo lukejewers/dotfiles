@@ -1,3 +1,83 @@
+;; Startup metrics
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+;; ==============================
+;; Early Initialization Settings
+;; ==============================
+
+;; Increase startup speed
+(setq gc-cons-threshold (* 1024 1024 100)  ; 100 MiB
+      gc-cons-percentage 0.6
+      package-enable-at-startup nil)
+
+;; Frame Appearance and Behavior
+(setq frame-title-format '("%f")       ; Use buffer file name in title
+      frame-resize-pixelwise t
+      frame-inhibit-implied-resize t
+      ns-pop-up-frames nil
+      ns-use-proxy-icon nil)
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))  ; Maximized but not fullscreen
+(add-to-list 'default-frame-alist '(background-color . "#181818"))
+
+;; Basic Settings
+(setq inhibit-startup-screen t
+      inhibit-startup-message t
+      ring-bell-function 'ignore
+      custom-safe-themes t
+      use-dialog-box nil
+      use-short-answers t
+      inhibit-compacting-font-caches t
+      vc-handled-backends '(Git))
+
+;; Default to UTF-8 for all file operations
+(prefer-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+(setq locale-coding-system 'utf-8)
+
+;; Input handling
+(setq mac-left-control-modifier 'control
+      mac-right-control-modifier 'meta
+      mac-option-modifier 'none
+      mac-command-modifier 'super)
+
+;; Avoid initial flash of light theme
+(defun avoid-initial-flash-of-light ()
+  "Avoid flash of light when starting Emacs."
+  (set-face-attribute 'default nil :background "#181818" :foreground "#e4e4ef")
+  (setq mode-line-format nil))
+(avoid-initial-flash-of-light)
+
+;; Disable UI elements for faster startup and cleaner look
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+(when (fboundp 'tooltip-mode) (tooltip-mode -1))
+(when (fboundp 'blink-cursor-mode) (blink-cursor-mode -1))
+
+;; Warning levels
+(setq warning-minimum-level :error)
+(setq warning-suppress-types '((lexical-binding)))
+
+;; Package archives
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+;; Custom file
+(setq custom-file (expand-file-name "custom-vars.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file :noerror :nomessage))
+
+;; ==============================
+;; Package Initialization
+;; ==============================
+
 (unless (bound-and-true-p package--initialized)
   (package-initialize))
 
@@ -7,14 +87,18 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
 (eval-when-compile
   (require 'use-package))
+
+;; ==============================
+;; Main Configuration
+;; ==============================
 
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns x))
-  :init
-  (exec-path-from-shell-initialize))
+  :init (exec-path-from-shell-initialize))
 
 (use-package emacs
   :ensure nil
@@ -100,6 +184,7 @@
   (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o"))))
   (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45))))
 
+;; Theme and UI
 (use-package gruber-darker-theme
   :ensure t
   :demand t
@@ -109,6 +194,7 @@
   :ensure t
   :config (minions-mode 1))
 
+;; Compilation
 (use-package compile
   :ensure nil
   :custom
@@ -130,6 +216,7 @@
   :config
   (define-key minibuffer-local-map (kbd "M-r") 'compile-completing-read-history))
 
+;; Search tools
 (use-package rg
   :ensure t
   :defer t
@@ -155,14 +242,15 @@
   :defer t
   :config (setq wgrep-auto-save-buffer t))
 
+;; Org mode
 (use-package org
   :ensure nil
-  :custom
-  (org-log-done t)
+  :custom (org-log-done t)
   :hook
   (org-mode . visual-line-mode)
   (org-mode . (lambda () (setq tab-width 8))))
 
+;; File management
 (use-package dired
   :ensure nil
   :defer t
@@ -198,18 +286,20 @@
               ("<backtab>" . dired-subtree-cycle))
   :custom (dired-subtree-use-backgrounds nil))
 
+;; Buffer management
 (use-package ibuffer
   :ensure t
   :defer t
-  :bind
-  ("C-x C-b" . ibuffer)
+  :bind ("C-x C-b" . ibuffer)
   :hook (ibuffer-mode . hl-line-mode))
 
+;; Window management
 (use-package transpose-frame
   :ensure t
   :defer t
   :bind ("C-z C-t" . transpose-frame))
 
+;; Code quality
 (use-package whitespace
   :ensure t
   :defer t
@@ -219,6 +309,7 @@
   (whitespace-style
    '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
 
+;; Fuzzy search
 (use-package fzf
   :ensure t
   :defer t
@@ -243,6 +334,7 @@
   (let ((default-directory (project-root (project-current t))))
     (fzf)))
 
+;; Navigation and editing
 (use-package avy
   :ensure t
   :defer t
@@ -272,6 +364,136 @@
   ("C-'" . mc/mark-all-like-this)
   ("C-c C-SPC" . mc/edit-lines))
 
+;; Terminal emulation
+(use-package vterm
+  :defer t
+  :ensure t
+  :bind (:map vterm-mode-map
+              ("C-z" . nil))
+  :custom (vterm-always-compile-module t)
+  :config
+  (setq vterm-timer-delay 0.01)
+  (setq vterm-max-scrollback 10000)
+  (define-key project-prefix-map "t" #'project-vterm)
+  (defun vterm-mode-line-color ()
+    (let ((color (if vterm-copy-mode "DarkGoldenrod" "#282828")))
+      (set-face-background 'mode-line color)))
+  (add-hook 'vterm-copy-mode-hook #'vterm-mode-line-color))
+
+(defun vterm-new ()
+  "Create a new vterm buffer."
+  (interactive)
+  (let ((buffer (generate-new-buffer "*vterm*")))
+    (with-current-buffer buffer
+      (vterm-mode))
+    (switch-to-buffer buffer)))
+
+(defun project-vterm ()
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (project-name (file-name-nondirectory (directory-file-name default-directory)))
+         (buffer-name (format "*vterm-%s*" project-name)))
+    (if (get-buffer buffer-name)
+        (switch-to-buffer buffer-name)
+      (vterm buffer-name))))
+
+;; Shell history
+(use-package em-hist
+  :ensure nil
+  :defer t
+  :init
+  (defun eshell-completing-read-history ()
+    "Present Eshell history using Ido for selection when M-r is pressed in Eshell."
+    (interactive)
+    (let* ((history (ring-elements eshell-history-ring))
+           (selected-command (when history
+                               (completing-read "Eshell history: " history nil t))))
+      (when selected-command
+        (insert selected-command))))
+  :config
+  (setq eshell-hist-ignoredups t
+        eshell-history-file-name "~/.zsh_history"
+        eshell-history-size 10000)
+  (keymap-unset eshell-hist-mode-map "M-r" t)
+  (define-key eshell-mode-map (kbd "M-r") 'eshell-completing-read-history))
+
+;; Completion frameworks
+(use-package ido
+  :ensure nil
+  :demand t
+  :config (ido-mode 1)
+  :custom
+  (ido-everywhere t)
+  (ido-enable-flex-matching t)
+  (ido-use-url-at-point nil)
+  (ido-max-window-height 1))
+
+(use-package ido-completing-read+
+  :ensure t
+  :after ido
+  :config (ido-ubiquitous-mode 1))
+
+(use-package amx
+  :ensure t
+  :config (amx-mode 1))
+
+;; Language support
+(use-package treesit-auto
+  :ensure t
+  :custom (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+(use-package cape
+  :ensure t
+  :config
+  (add-to-list 'completion-at-point-functions
+               (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
+
+;; Version control
+(use-package magit
+  :ensure t
+  :defer t
+  :bind
+  (("C-c m s" . magit-status)
+   ("C-c m l" . magit-log)
+   ("C-c m b" . magit-blame))
+  :custom (magit-process-finish-apply-ansi-colors t))
+
+(use-package dumb-jump
+  :ensure t
+  :config
+  (setq dumb-jump-force-searcher 'rg)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+;; Editor consistency
+(use-package editorconfig
+  :ensure t
+  :defer t
+  :config (editorconfig-mode 1))
+
+;; Python environment
+(use-package pyvenv
+  :ensure t
+  :defer t
+  :init (setenv "WORKON_HOME" "~/.pyenv/versions"))
+
+;; Debugging
+(use-package dape
+  :ensure t
+  :defer t
+  :hook (after-init . dape-breakpoint-load)
+  :config
+  (dape-breakpoint-global-mode)
+  (setq dape-buffer-window-arrangement 'right))
+
+;; macOS integration
+(use-package emacos
+  :ensure nil
+  :load-path "firstparty/emacos")
+
+;; Custom functions
 (defun select-current-line ()
   "Select the current line"
   (interactive)
@@ -316,125 +538,4 @@
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
 (global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 
-(use-package vterm
-  :defer t
-  :ensure t
-  :bind (:map vterm-mode-map
-              ("C-z" . nil))
-  :custom (vterm-always-compile-module t)
-  :config
-  (setq vterm-timer-delay 0.01)
-  (setq vterm-max-scrollback 10000)
-  (define-key project-prefix-map "t" #'project-vterm)
-  (defun vterm-mode-line-color ()
-    (let ((color (if vterm-copy-mode "DarkGoldenrod" "#282828")))
-      (set-face-background 'mode-line color)))
-  (add-hook 'vterm-copy-mode-hook #'vterm-mode-line-color))
-
-(defun vterm-new ()
-  "Create a new vterm buffer."
-  (interactive)
-  (let ((buffer (generate-new-buffer "*vterm*")))
-    (with-current-buffer buffer
-      (vterm-mode))
-    (switch-to-buffer buffer)))
-
-(defun project-vterm ()
-  (interactive)
-  (let* ((default-directory (project-root (project-current t)))
-         (project-name (file-name-nondirectory (directory-file-name default-directory)))
-         (buffer-name (format "*vterm-%s*" project-name)))
-    (if (get-buffer buffer-name)
-        (switch-to-buffer buffer-name)
-      (vterm buffer-name))))
-
-(use-package em-hist
-  :ensure nil
-  :defer t
-  :init
-  (defun eshell-completing-read-history ()
-    "Present Eshell history using Ido for selection when M-r is pressed in Eshell."
-    (interactive)
-    (let* ((history (ring-elements eshell-history-ring))
-           (selected-command (when history
-                               (completing-read "Eshell history: " history nil t))))
-      (when selected-command
-        (insert selected-command))))
-  :config
-  (setq eshell-hist-ignoredups t
-        eshell-history-file-name "~/.zsh_history"
-        eshell-history-size 10000)
-  (keymap-unset eshell-hist-mode-map "M-r" t)
-  (define-key eshell-mode-map (kbd "M-r") 'eshell-completing-read-history))
-
-(use-package ido
-  :ensure nil
-  :demand t
-  :config
-  (ido-mode 1)
-  :custom
-  (ido-everywhere t)
-  (ido-enable-flex-matching t)
-  (ido-use-url-at-point nil)
-  (ido-max-window-height 1))
-
-(use-package ido-completing-read+
-  :ensure t
-  :after ido
-  :config
-  (ido-ubiquitous-mode 1))
-
-(use-package amx
-  :ensure t
-  :config
-  (amx-mode 1))
-
-(use-package treesit-auto
-  :ensure t
-  :custom (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-
-(use-package cape
-  :ensure t
-  :config
-  (add-to-list 'completion-at-point-functions
-               (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
-
-(use-package magit
-  :ensure t
-  :defer t
-  :bind
-  (("C-c m s" . magit-status)
-   ("C-c m l" . magit-log)
-   ("C-c m b" . magit-blame))
-  :custom (magit-process-finish-apply-ansi-colors t))
-
-(use-package dumb-jump
-  :ensure t
-  :config
-  (setq dumb-jump-force-searcher 'rg)
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
-(use-package editorconfig
-  :ensure t
-  :defer t
-  :config (editorconfig-mode 1))
-
-(use-package pyvenv
-  :ensure t
-  :init (setenv "WORKON_HOME" "~/.pyenv/versions"))
-
-(use-package dape
-  :ensure t
-  :defer t
-  :hook
-  (after-init . dape-breakpoint-load)
-  :config
-  (dape-breakpoint-global-mode)
-  (setq dape-buffer-window-arrangement 'right))
-
-(use-package emacos
-  :ensure nil
-  :load-path "firstparty/emacos")
+(provide 'init)

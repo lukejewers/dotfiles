@@ -63,10 +63,6 @@ local function switch_layouts(key, target_state, app1, app2)
     end)
 end
 
--- Debug info
--- hs.hotkey.bind(hyper, "r", hs.reload)
--- hs.hotkey.bind(hyper, "o", hs.toggleConsole)
-
 -- Bind applications to hotkeys
 call_app("f", apps.finder)
 call_app("j", apps.emacs)
@@ -79,3 +75,7 @@ call_app("t", apps.ghostty)
 switch_layouts("9", screen_states.CENTRED)
 switch_layouts("0", screen_states.FULLSCREEN)
 switch_layouts("8", screen_states.TWOPANE, apps.emacs, apps.firefox)
+
+-- Debug info
+-- hs.hotkey.bind(hyper, "r", hs.reload)
+-- hs.hotkey.bind(hyper, "o", hs.toggleConsole)
