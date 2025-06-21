@@ -36,7 +36,6 @@ cask "firefox"
 cask "ghostty"
 cask "google-chrome"
 cask "hammerspoon"
-cask "karabiner-elements"
 
 # fonts
 cask "font-iosevka"
