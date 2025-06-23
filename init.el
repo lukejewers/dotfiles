@@ -180,6 +180,7 @@
    ("s-n" . forward-list)
    ("s-p" . backward-list))
   :config
+  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
   (add-hook 'occur-hook (lambda () (switch-to-buffer-other-window "*Occur*")))
   (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o"))))
   (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45))))
@@ -396,6 +397,19 @@
     (if (get-buffer buffer-name)
         (switch-to-buffer buffer-name)
       (vterm buffer-name))))
+
+(use-package eshell
+  :init
+  (setq eshell-save-history-on-exit nil)
+  :config
+  (defun eshell-append-history ()
+    "Call `eshell-write-history' with the `append' parameter set to `t'."
+    (when eshell-history-ring
+      (let ((newest-cmd-ring (make-ring 1)))
+        (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
+        (let ((eshell-history-ring newest-cmd-ring))
+          (eshell-write-history eshell-history-file-name t)))))
+  (add-hook 'eshell-pre-command-hook #'eshell-append-history))
 
 ;; Shell history
 (use-package em-hist
