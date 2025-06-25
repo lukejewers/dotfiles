@@ -1,7 +1,21 @@
 #!/usr/bin/env bash
 
 # Update terminal prompt
-echo 'PS1="%n@%m%f %~ $ "' >> ~/.zshrc
+echo 'PS1="%~ %f$ "' >> ~/.zshrc
+
+echo '' >> ~/.zshrc
+echo '# Zsh History Configuration' >> ~/.zshrc
+echo 'HISTFILE=~/.zsh_history' >> ~/.zshrc
+echo 'SAVEHIST=10000' >> ~/.zshrc
+echo 'HISTSIZE=10000' >> ~/.zshrc
+echo '' >> ~/.zshrc
+echo 'setopt SHARE_HISTORY' >> ~/.zshrc
+echo 'setopt HIST_EXPAND' >> ~/.zshrc
+echo 'setopt HIST_IGNORE_ALL_DUPS' >> ~/.zshrc
+echo 'setopt HIST_FIND_NO_DUPS' >> ~/.zshrc
+
+echo '' >> ~/.zshrc
+echo 'export CLICOLOR=1' >> ~/.zshrc
 
 echo "Configuring OSX..."
 # Set fast key repeat rate
@@ -25,7 +39,6 @@ mkdir -p "${HOME}/Screenshots"
 defaults write com.apple.screencapture location -string "${HOME}/Screenshots"
 # Set dock & menubar to auto-hide
 defaults write com.apple.dock autohide -bool true
-defaults write NSGlobalDomain _HIHideMenuBar -bool true
 # Make dock appear faster when auto-hidden
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.5
@@ -50,6 +63,6 @@ ln -s -f ~/.dotfiles/config.ghostty ~/.config/ghostty/config
 ln -s -f ~/.dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
 ln -s -f ~/.dotfiles/init.el ~/.emacs.d/init.el
 
-ln -s /opt/homebrew/opt/emacs-plus@30/Emacs.app /Applications
+[ -e /opt/homebrew/opt/emacs-plus@31/Emacs.app ] && ln -sf /opt/homebrew/opt/emacs-plus@31/Emacs.app /Applications
 
 echo "Configuration complete."

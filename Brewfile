@@ -8,9 +8,11 @@ tap "d12frosted/emacs-plus"
 brew "bash"
 brew "colima"
 brew "curl"
+brew "cmake"
+brew "libtool"
 brew "deno"
 brew "docker"
-brew "emacs-plus@30", args: ["with-native-comp"]
+brew "emacs-plus@31", args: ["with-savchenkovaleriy-big-sur-curvy-3d-icon"]
 brew "ffmpeg"
 brew "fzf"
 brew "gcc"
