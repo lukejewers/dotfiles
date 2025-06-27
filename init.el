@@ -15,7 +15,7 @@
       package-enable-at-startup nil)
 
 ;; Frame Appearance and Behavior
-(setq frame-title-format '("%f")       ; Use buffer file name in title
+(setq frame-title-format '("%f")
       frame-resize-pixelwise t
       frame-inhibit-implied-resize t
       ns-pop-up-frames nil
@@ -144,6 +144,7 @@
   (python-indent-guess-indent-offset-verbose nil)
   (python-shell-interpreter "ipython")
   (python-shell-completion-native-enable nil)
+  (comint-process-echoes t)
   :init
   (auth-source-pass-enable)
   (global-auto-revert-mode 1)
@@ -185,7 +186,6 @@
   (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o"))))
   (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45))))
 
-;; Theme and UI
 (use-package gruber-darker-theme
   :ensure t
   :demand t
@@ -195,7 +195,6 @@
   :ensure t
   :config (minions-mode 1))
 
-;; Compilation
 (use-package compile
   :ensure nil
   :custom
@@ -217,7 +216,6 @@
   :config
   (define-key minibuffer-local-map (kbd "M-r") 'compile-completing-read-history))
 
-;; Search tools
 (use-package rg
   :ensure t
   :defer t
@@ -243,15 +241,15 @@
   :defer t
   :config (setq wgrep-auto-save-buffer t))
 
-;; Org mode
 (use-package org
   :ensure nil
-  :custom (org-log-done t)
+  :custom
+  (org-log-done t)
+  (org-directory "~/.me/org")
   :hook
   (org-mode . visual-line-mode)
   (org-mode . (lambda () (setq tab-width 8))))
 
-;; File management
 (use-package dired
   :ensure nil
   :defer t
@@ -260,12 +258,6 @@
   :config
   (setq dired-kill-when-opening-new-dired-buffer t)
   (put 'dired-find-alternate-file 'disabled nil))
-
-(defun project-home()
-  "Open dired in the root directory of the current project."
-  (interactive)
-  (let ((root (project-root (project-current t))))
-    (dired root)))
 
 (use-package dired-ranger
   :ensure t
@@ -276,31 +268,24 @@
               ("X" . dired-ranger-move)
               ("Y" . dired-ranger-paste)))
 
-(use-package dired-subtree
-  :ensure t
-  :defer t
-  :after dired
-  :bind (:map dired-mode-map
-              ("i" . dired-subtree-insert)
-              (";" . dired-subtree-remove)
-              ("<tab>" . dired-subtree-toggle)
-              ("<backtab>" . dired-subtree-cycle))
-  :custom (dired-subtree-use-backgrounds nil))
 
-;; Buffer management
+(defun project-home()
+  "Open dired in the root directory of the current project."
+  (interactive)
+  (let ((root (project-root (project-current t))))
+    (dired root)))
+
 (use-package ibuffer
   :ensure t
   :defer t
   :bind ("C-x C-b" . ibuffer)
   :hook (ibuffer-mode . hl-line-mode))
 
-;; Window management
 (use-package transpose-frame
   :ensure t
   :defer t
   :bind ("C-z C-t" . transpose-frame))
 
-;; Code quality
 (use-package whitespace
   :ensure t
   :defer t
@@ -310,7 +295,6 @@
   (whitespace-style
    '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
 
-;; Fuzzy search
 (use-package fzf
   :ensure t
   :defer t
@@ -335,7 +319,6 @@
   (let ((default-directory (project-root (project-current t))))
     (fzf)))
 
-;; Navigation and editing
 (use-package avy
   :ensure t
   :defer t
@@ -365,7 +348,6 @@
   ("C-'" . mc/mark-all-like-this)
   ("C-c C-SPC" . mc/edit-lines))
 
-;; Terminal emulation
 (use-package vterm
   :defer t
   :ensure t
@@ -411,13 +393,12 @@
           (eshell-write-history eshell-history-file-name t)))))
   (add-hook 'eshell-pre-command-hook #'eshell-append-history))
 
-;; Shell history
 (use-package em-hist
   :ensure nil
   :defer t
   :init
   (defun eshell-completing-read-history ()
-    "Present Eshell history using Ido for selection when M-r is pressed in Eshell."
+    "History selection via completing-read when M-r is pressed."
     (interactive)
     (let* ((history (ring-elements eshell-history-ring))
            (selected-command (when history
@@ -431,7 +412,6 @@
   (keymap-unset eshell-hist-mode-map "M-r" t)
   (define-key eshell-mode-map (kbd "M-r") 'eshell-completing-read-history))
 
-;; Completion frameworks
 (use-package ido
   :ensure nil
   :demand t
@@ -451,7 +431,6 @@
   :ensure t
   :config (amx-mode 1))
 
-;; Language support
 (use-package treesit-auto
   :ensure t
   :custom (treesit-auto-install 'prompt)
@@ -465,7 +444,6 @@
   (add-to-list 'completion-at-point-functions
                (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
 
-;; Version control
 (use-package magit
   :ensure t
   :defer t
@@ -481,45 +459,32 @@
   (setq dumb-jump-force-searcher 'rg)
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
-;; Editor consistency
 (use-package editorconfig
   :ensure t
   :defer t
   :config (editorconfig-mode 1))
 
-;; Python environment
 (use-package pyvenv
   :ensure t
-  :defer t
-  :init (setenv "WORKON_HOME" "~/.pyenv/versions"))
+  :defer t)
 
-;; Debugging
 (use-package dape
   :ensure t
   :defer t
   :hook (after-init . dape-breakpoint-load)
   :config
-  (dape-breakpoint-global-mode)
-  (setq dape-buffer-window-arrangement 'right))
+  (dape-breakpoint-global-mode))
 
-;; macOS integration
 (use-package emacos
   :ensure nil
   :load-path "firstparty/emacos")
 
-;; Custom functions
 (defun select-current-line ()
   "Select the current line"
   (interactive)
   (end-of-line)
   (set-mark (line-beginning-position)))
 (global-set-key (kbd "C-;") 'select-current-line)
-
-(defun copy-word-at-point ()
-  "Copy the word at point to the kill ring."
-  (interactive)
-  (kill-new (thing-at-point 'word t)))
-(global-set-key (kbd "C-c C-w") 'copy-word-at-point)
 
 (defun duplicate-line ()
   "Duplicate current line"
@@ -534,13 +499,6 @@
     (forward-char column)))
 (global-set-key (kbd "C-,") 'duplicate-line)
 
-(defun copy-full-path-to-kill-ring ()
-  "Copy buffer's full path to kill ring"
-  (interactive)
-  (when buffer-file-name
-    (kill-new (file-truename buffer-file-name))))
-(global-set-key (kbd "C-±") 'copy-full-path-to-kill-ring)
-
 (defun toggle-shell (shell-str shell)
   (interactive)
   (if (string-equal shell-str major-mode)
@@ -549,8 +507,8 @@
            '((".*" (display-buffer-pop-up-window)
               (window-width . 0.45)))))
       (funcall shell))))
-(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
 (global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
 (global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" 'shell)))
+(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
 
 (provide 'init)
