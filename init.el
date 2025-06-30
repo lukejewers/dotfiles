@@ -276,8 +276,7 @@
     (dired root)))
 
 (use-package ibuffer
-  :ensure t
-  :defer t
+  :ensure nil
   :bind ("C-x C-b" . ibuffer)
   :hook (ibuffer-mode . hl-line-mode))
 
