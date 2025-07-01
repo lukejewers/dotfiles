@@ -145,6 +145,7 @@
   (python-shell-interpreter "ipython")
   (python-shell-completion-native-enable nil)
   (comint-process-echoes t)
+  (mode-line-collapse-minor-modes t)
   :init
   (auth-source-pass-enable)
   (global-auto-revert-mode 1)
@@ -190,10 +191,6 @@
   :ensure t
   :demand t
   :config (load-theme 'gruber-darker))
-
-(use-package minions
-  :ensure t
-  :config (minions-mode 1))
 
 (use-package compile
   :ensure nil
