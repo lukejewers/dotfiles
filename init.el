@@ -342,10 +342,13 @@
   (setq vterm-timer-delay 0.01)
   (setq vterm-max-scrollback 10000)
   (define-key project-prefix-map "t" #'project-vterm)
-  (defun vterm-mode-line-color ()
-    (let ((color (if vterm-copy-mode "DarkGoldenrod" "#282828")))
-      (set-face-background 'mode-line color)))
-  (add-hook 'vterm-copy-mode-hook #'vterm-mode-line-color))
+  (defvar my-original-mode-line-format mode-line-format)
+  (defun vterm-update-mode-line ()
+    (if vterm-copy-mode
+        (setq-local mode-line-format
+                    (append my-original-mode-line-format '(" [COPY-MODE]")))
+      (setq-local mode-line-format my-original-mode-line-format)))
+  (add-hook 'vterm-copy-mode-hook #'vterm-update-mode-line))
 
 (defun vterm-new ()
   "Create a new vterm buffer."
