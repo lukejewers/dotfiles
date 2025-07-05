@@ -426,7 +426,9 @@
   (("C-c m s" . magit-status)
    ("C-c m l" . magit-log)
    ("C-c m b" . magit-blame))
-  :custom (magit-process-finish-apply-ansi-colors t))
+  :custom
+  (magit-process-finish-apply-ansi-colors t)
+  (magit-git-executable "/opt/homebrew/bin/git"))
 
 (use-package dumb-jump
   :ensure t
