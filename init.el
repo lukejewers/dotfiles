@@ -442,10 +442,6 @@
   :ensure t
   :defer t)
 
-(use-package emacos
-  :ensure nil
-  :load-path "firstparty/emacos")
-
 (defun select-current-line ()
   "Select the current line"
   (interactive)
