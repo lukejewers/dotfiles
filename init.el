@@ -201,17 +201,6 @@
   :bind
   ("C-c c" . compile)
   ("C-c r" . recompile))
-  ;; :init
-  ;; (defun compile-completing-read-history ()
-  ;;   "Insert compile command from history using `completing-read'."
-  ;;   (interactive)
-  ;;   (let ((enable-recursive-minibuffers t))
-  ;;     (let ((command (completing-read "Compile history: " compile-history)))
-  ;;       (when command
-  ;;         (delete-minibuffer-contents)
-  ;;         (insert command)))))
-  ;; :config
-  ;; (define-key minibuffer-local-map (kbd "M-r") 'compile-completing-read-history))
 
 (use-package rg
   :ensure t
@@ -390,20 +379,10 @@
 (use-package em-hist
   :ensure nil
   :defer t
-  :init
-  (defun eshell-completing-read-history ()
-    "History selection via completing-read when M-r is pressed."
-    (let* ((history (ring-elements eshell-history-ring))
-           (selected-command (when history
-                               (completing-read "Eshell history: " history nil t))))
-      (when selected-command
-        (insert selected-command))))
   :config
   (setq eshell-hist-ignoredups t
         eshell-history-file-name "~/.zsh_history"
-        eshell-history-size 10000)
-  (keymap-unset eshell-hist-mode-map "M-r" t)
-  (define-key eshell-mode-map (kbd "M-r") 'eshell-completing-read-history))
+        eshell-history-size 10000))
 
 (use-package ido
   :ensure nil
