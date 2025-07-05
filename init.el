@@ -236,7 +236,7 @@
 (use-package wgrep
   :ensure t
   :defer t
-  :config (setq wgrep-auto-save-buffer t))
+  :custom (wgrep-auto-save-buffer t))
 
 (use-package org
   :ensure nil
@@ -249,7 +249,6 @@
 
 (use-package dired
   :ensure nil
-  :defer t
   :commands (dired)
   :hook (dired-mode . auto-revert-mode)
   :config
@@ -377,8 +376,7 @@
       (vterm buffer-name))))
 
 (use-package eshell
-  :init
-  (setq eshell-save-history-on-exit nil)
+  :custom (eshell-save-history-on-exit nil)
   :config
   (defun eshell-append-history ()
     "Call `eshell-write-history' with the `append' parameter set to `t'."
@@ -395,7 +393,6 @@
   :init
   (defun eshell-completing-read-history ()
     "History selection via completing-read when M-r is pressed."
-    (interactive)
     (let* ((history (ring-elements eshell-history-ring))
            (selected-command (when history
                                (completing-read "Eshell history: " history nil t))))
@@ -451,9 +448,8 @@
 
 (use-package dumb-jump
   :ensure t
-  :config
-  (setq dumb-jump-force-searcher 'rg)
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+  :custom (dumb-jump-force-searcher 'rg)
+  :config (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package editorconfig
   :ensure t
@@ -463,13 +459,6 @@
 (use-package pyvenv
   :ensure t
   :defer t)
-
-(use-package dape
-  :ensure t
-  :defer t
-  :hook (after-init . dape-breakpoint-load)
-  :config
-  (dape-breakpoint-global-mode))
 
 (use-package emacos
   :ensure nil
