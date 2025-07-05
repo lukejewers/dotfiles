@@ -98,7 +98,7 @@
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns x))
-  :init (exec-path-from-shell-initialize))
+  :config (exec-path-from-shell-initialize))
 
 (use-package emacs
   :ensure nil
@@ -200,18 +200,18 @@
   (compilation-ask-about save nil)
   :bind
   ("C-c c" . compile)
-  ("C-c r" . recompile)
-  :init
-  (defun compile-completing-read-history ()
-    "Insert compile command from history using `completing-read'."
-    (interactive)
-    (let ((enable-recursive-minibuffers t))
-      (let ((command (completing-read "Compile history: " compile-history)))
-        (when command
-          (delete-minibuffer-contents)
-          (insert command)))))
-  :config
-  (define-key minibuffer-local-map (kbd "M-r") 'compile-completing-read-history))
+  ("C-c r" . recompile))
+  ;; :init
+  ;; (defun compile-completing-read-history ()
+  ;;   "Insert compile command from history using `completing-read'."
+  ;;   (interactive)
+  ;;   (let ((enable-recursive-minibuffers t))
+  ;;     (let ((command (completing-read "Compile history: " compile-history)))
+  ;;       (when command
+  ;;         (delete-minibuffer-contents)
+  ;;         (insert command)))))
+  ;; :config
+  ;; (define-key minibuffer-local-map (kbd "M-r") 'compile-completing-read-history))
 
 (use-package rg
   :ensure t
