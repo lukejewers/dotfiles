@@ -34,6 +34,9 @@
       inhibit-compacting-font-caches t
       vc-handled-backends '(Git))
 
+(with-current-buffer "*Messages*" (emacs-lock-mode 'kill))
+(with-current-buffer "*scratch*" (emacs-lock-mode 'kill))
+
 ;; Default to UTF-8 for all file operations
 (prefer-coding-system 'utf-8)
 (set-language-environment "UTF-8")
