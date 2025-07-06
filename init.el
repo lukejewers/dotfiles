@@ -10,7 +10,7 @@
 ;; ==============================
 
 ;; Increase startup speed
-(setq gc-cons-threshold (* 1024 1024 100)  ; 100 MiB
+(setq gc-cons-threshold (* 1024 1024 100)
       gc-cons-percentage 0.6
       package-enable-at-startup nil)
 
@@ -21,7 +21,7 @@
       ns-pop-up-frames nil
       ns-use-proxy-icon nil)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))  ; Maximized but not fullscreen
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(background-color . "#181818"))
 
 ;; Basic Settings
@@ -137,8 +137,7 @@
                              (project-find-dir "Find dir" "d")
                              (project-dired "Dired" "D")
                              (project-vterm "t")
-                             (project-home "Home" "h")
-                             (project-fzf "fzf", "z")
+                             (project-dired-home "Home" "h")
                              (project-find-regexp "g")
                              (magit-project-status "Magit" "m")))
   (c-basic-offset 4)
@@ -165,8 +164,6 @@
    ("C-x C-c" . nil)
    ("C-x f" . nil)
    ("C-x m" . nil)
-   ("C-x p h" . project-home)
-   ("C-x p z" . project-fzf)
    ("C-z" . nil)
    ("M-o" . nil)
    ("C-M-l" . mode-line-other-buffer)
@@ -185,10 +182,8 @@
    ("s-n" . forward-list)
    ("s-p" . backward-list))
   :config
-  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
   (add-hook 'occur-hook (lambda () (switch-to-buffer-other-window "*Occur*")))
-  (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o"))))
-  (add-to-list 'display-buffer-alist '("*shell" (display-buffer-in-side-window) (side . right) (window-width . 0.45))))
+  (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o")))))
 
 (use-package gruber-darker-theme
   :ensure t
@@ -257,11 +252,11 @@
               ("Y" . dired-ranger-paste)))
 
 
-(defun project-home()
-  "Open dired in the root directory of the current project."
+(defun project-dired-home()
   (interactive)
   (let ((root (project-root (project-current t))))
     (dired root)))
+(global-set-key (kbd "C-x p h") 'project-dired-home)
 
 (use-package ibuffer
   :ensure nil
@@ -278,9 +273,7 @@
   :defer t
   :hook (before-save . whitespace-cleanup)
   :custom
-  (whitespace-line-column 80)
-  (whitespace-style
-   '(face trailing tabs indentation::space empty indention spaces trailing space-mark space-after-tab space-before-tab tab-mark)))
+  (whitespace-line-column 80))
 
 (use-package fzf
   :ensure t
@@ -299,12 +292,6 @@
     (interactive)
     (let ((default-directory "~/"))
       (fzf))))
-
-(defun project-fzf ()
-  "Run fzf in the project root."
-  (interactive)
-  (let ((default-directory (project-root (project-current t))))
-    (fzf)))
 
 (use-package avy
   :ensure t
@@ -329,11 +316,9 @@
   :ensure t
   :defer t
   :bind
-  ("C-M-SPC" . set-rectangular-region-anchor)
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this)
-  ("C-'" . mc/mark-all-like-this)
-  ("C-c C-SPC" . mc/edit-lines))
+  ("C-'" . mc/mark-all-like-this))
 
 (use-package vterm
   :defer t
@@ -354,7 +339,6 @@
   (add-hook 'vterm-copy-mode-hook #'vterm-update-mode-line))
 
 (defun vterm-new ()
-  "Create a new vterm buffer."
   (interactive)
   (let ((buffer (generate-new-buffer "*vterm*")))
     (with-current-buffer buffer
@@ -380,6 +364,7 @@
         (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
         (let ((eshell-history-ring newest-cmd-ring))
           (eshell-write-history eshell-history-file-name t)))))
+  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
   (add-hook 'eshell-pre-command-hook #'eshell-append-history))
 
 (use-package em-hist
@@ -448,14 +433,12 @@
   :defer t)
 
 (defun select-current-line ()
-  "Select the current line"
   (interactive)
   (end-of-line)
   (set-mark (line-beginning-position)))
 (global-set-key (kbd "C-;") 'select-current-line)
 
 (defun duplicate-line ()
-  "Duplicate current line"
   (interactive)
   (let ((column (- (point) (point-at-bol)))
         (line (let ((s (thing-at-point 'line t)))
