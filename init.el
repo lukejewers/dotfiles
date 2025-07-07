@@ -432,6 +432,10 @@
   :ensure t
   :defer t)
 
+(use-package python-pytest
+  :ensure t
+  :defer t)
+
 (defun select-current-line ()
   (interactive)
   (end-of-line)
