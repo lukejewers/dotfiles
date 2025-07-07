@@ -142,9 +142,7 @@
                              (magit-project-status "Magit" "m")))
   (c-basic-offset 4)
   (indent-tabs-mode nil)
-  (smerge-command-prefix "C-c v")
   (python-indent-guess-indent-offset-verbose nil)
-  (python-shell-interpreter "ipython")
   (python-shell-completion-native-enable nil)
   (comint-process-echoes t)
   (mode-line-collapse-minor-modes t)
@@ -236,10 +234,12 @@
 
 (use-package dired
   :ensure nil
-  :commands (dired)
-  :hook (dired-mode . auto-revert-mode)
+  :custom
+  (dired-kill-when-opening-new-dired-buffer t)
+  (dired-do-revert-buffer t)
+  (dired-auto-revert-buffer t)
+  (dired-dwim-target t)
   :config
-  (setq dired-kill-when-opening-new-dired-buffer t)
   (put 'dired-find-alternate-file 'disabled nil))
 
 (use-package dired-ranger
