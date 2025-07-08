@@ -1,20 +1,17 @@
-;; Startup metrics
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs loaded in %s with %d garbage collections."
-                     (format "%.2f seconds" (float-time (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
-
 ;; ==============================
 ;; Early Initialization Settings
 ;; ==============================
 
-;; Increase startup speed
+(defun my/display-startup-time ()
+  (message "Emacs loaded in %.2f seconds with %d garbage collections"
+           (float-time (time-subtract after-init-time before-init-time))
+           gcs-done))
+(add-hook 'emacs-startup-hook #'my/display-startup-time)
+
 (setq gc-cons-threshold (* 1024 1024 100)
       gc-cons-percentage 0.6
       package-enable-at-startup nil)
 
-;; Frame Appearance and Behavior
 (setq frame-title-format '("%f")
       frame-resize-pixelwise t
       frame-inhibit-implied-resize t
@@ -23,8 +20,8 @@
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(background-color . "#181818"))
+(set-face-attribute 'default nil :background "#181818" :foreground "#e4e4ef")
 
-;; Basic Settings
 (setq inhibit-startup-screen t
       inhibit-startup-message t
       ring-bell-function 'ignore
@@ -32,128 +29,82 @@
       use-dialog-box nil
       use-short-answers t
       inhibit-compacting-font-caches t
-      vc-handled-backends '(Git))
+      mode-line-format nil)
 
-(with-current-buffer "*Messages*" (emacs-lock-mode 'kill))
-(with-current-buffer "*scratch*" (emacs-lock-mode 'kill))
-
-;; Default to UTF-8 for all file operations
 (prefer-coding-system 'utf-8)
 (set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8)
-(setq locale-coding-system 'utf-8)
 
-;; Input handling
 (setq mac-left-control-modifier 'control
       mac-right-control-modifier 'meta
       mac-option-modifier 'none
       mac-command-modifier 'super)
 
-;; Avoid initial flash of light theme
-(defun avoid-initial-flash-of-light ()
-  "Avoid flash of light when starting Emacs."
-  (set-face-attribute 'default nil :background "#181818" :foreground "#e4e4ef")
-  (setq mode-line-format nil))
-(avoid-initial-flash-of-light)
-
-;; Disable UI elements for faster startup and cleaner look
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 (when (fboundp 'tooltip-mode) (tooltip-mode -1))
 (when (fboundp 'blink-cursor-mode) (blink-cursor-mode -1))
 
-;; Warning levels
 (setq warning-minimum-level :error)
 (setq warning-suppress-types '((lexical-binding)))
 
-;; Package archives
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("gnu" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
-;; Custom file
-(setq custom-file (expand-file-name "custom-vars.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file :noerror :nomessage))
-
-;; ==============================
-;; Package Initialization
-;; ==============================
-
-(unless (bound-and-true-p package--initialized)
-  (package-initialize))
-
-(unless package-archive-contents
-  (package-refresh-contents))
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file :noerror :nomessage)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
 
 ;; ==============================
 ;; Main Configuration
 ;; ==============================
 
 (use-package exec-path-from-shell
-  :ensure t
   :if (memq window-system '(mac ns x))
   :config (exec-path-from-shell-initialize))
 
 (use-package emacs
   :ensure nil
   :custom
-  (use-package-compute-statistics t)
-  (truncate-lines nil)
+  (auto-save-default nil)
+  (c-basic-offset 4)
+  (comint-process-echoes t)
   (comp-async-report-warnings-errors nil)
   (comp-deferred-compilation t)
-  (package-install-upgrade-built-in t)
-  (auto-save-default nil)
+  (completion-auto-select t)
   (create-lockfiles nil)
   (delete-by-moving-to-trash t)
-  (treesit-font-lock-level 4)
-  (make-backup-files nil)
-  (custom-safe-themes t)
-  (tab-always-indent 'complete)
-  (electric-pair-preserve-balance nil)
-  (vc-follow-symlinks t)
-  (resize-mini-windows nil)
-  (tab-width 4)
-  (display-line-numbers 'nil)
   (delete-selection-mode 1)
-  (history-length 500)
-  (lazy-highlight-initial-delay 0)
-  (help-window-select t)
-  (completion-auto-select t)
-  (set-mark-command-repeat-pop t)
-  (isearch-lazy-count t)
-  (xref-search-program 'ripgrep)
+  (display-line-numbers 'nil)
+  (electric-pair-preserve-balance nil)
   (grep-command "rg -nS --no-heading ")
   (grep-use-null-device nil)
-  (project-switch-commands '((project-find-file "Find file" "f")
-                             (project-find-dir "Find dir" "d")
-                             (project-dired "Dired" "D")
-                             (project-vterm "t")
-                             (project-dired-home "Home" "h")
-                             (project-find-regexp "g")
-                             (magit-project-status "Magit" "m")))
-  (c-basic-offset 4)
+  (help-window-select t)
+  (history-length 500)
   (indent-tabs-mode nil)
+  (isearch-lazy-count t)
+  (lazy-highlight-initial-delay 0)
+  (make-backup-files nil)
+  (mode-line-collapse-minor-modes t)
+  (package-install-upgrade-built-in t)
   (python-indent-guess-indent-offset-verbose nil)
   (python-shell-completion-native-enable nil)
-  (comint-process-echoes t)
-  (mode-line-collapse-minor-modes t)
-  :init
-  (auth-source-pass-enable)
-  (global-auto-revert-mode 1)
-  (show-paren-mode 1)
-  (electric-pair-mode 1)
-  (savehist-mode 1)
-  (set-frame-font "Iosevka 20" nil t)
-  (global-completion-preview-mode 1)
+  (resize-mini-windows nil)
+  (set-mark-command-repeat-pop t)
+  (tab-always-indent 'complete)
+  (tab-width 4)
+  (treesit-font-lock-level 4)
+  (truncate-lines nil)
+  (use-package-always-ensure t)
+  (use-package-compute-statistics t)
+  (vc-follow-symlinks t)
+  (whitespace-line-column 80)
+  (xref-search-program 'ripgrep)
+  :config
   (put 'narrow-to-region 'disabled nil)
   :bind
   (("<C-wheel-down>" . ignore)
@@ -163,43 +114,49 @@
    ("C-x f" . nil)
    ("C-x m" . nil)
    ("C-z" . nil)
-   ("M-o" . nil)
-   ("C-M-l" . mode-line-other-buffer)
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
    ("C-q" . query-replace)
+   ("M-3" . (lambda () (interactive) (insert "#")))
+   ("C-x C-b" . ibuffer)
    ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1)))
-   ("C-x f" . find-file-at-point)
-   ("M-3" . (lambda () (interactive) (insert "#")))
    ("M-o" . other-window)
    ("s-b" . backward-sexp)
    ("s-f" . forward-sexp)
    ("s-n" . forward-list)
    ("s-p" . backward-list))
-  :config
-  (add-hook 'occur-hook (lambda () (switch-to-buffer-other-window "*Occur*")))
-  (add-hook 'html-mode-hook (lambda () (local-unset-key (kbd "M-o")))))
+  :hook
+  (ibuffer-mode . hl-line-mode)
+  (before-save . whitespace-cleanup)
+  (after-init . (lambda ()
+                  (set-frame-font "Iosevka 20" nil t)
+                  (show-paren-mode 1)
+                  (global-completion-preview-mode 1)
+                  (electric-pair-mode 1)
+                  (editorconfig-mode 1)
+                  (savehist-mode 1)
+                  (electric-pair-mode 1)
+                  (global-auto-revert-mode 1)))
+  (occur-mode . (lambda () (switch-to-buffer-other-window "*Occur*")))
+  (html-mode . (lambda () (local-unset-key (kbd "M-o")))))
 
 (use-package gruber-darker-theme
-  :ensure t
-  :demand t
-  :config (load-theme 'gruber-darker))
+  :config (load-theme 'gruber-darker :no-confirm))
 
 (use-package compile
   :ensure nil
   :custom
   (compilation-scroll-output 'first-error)
   (compilation-always-kill t)
-  (compilation-ask-about save nil)
+  (compilation-ask-about-save nil)
   :bind
   ("C-c c" . compile)
   ("C-c r" . recompile))
 
 (use-package rg
-  :ensure t
   :defer t
   :bind
   ("C-c s s"   . rg)
@@ -219,7 +176,6 @@
   (add-to-list 'rg-finish-functions (lambda (buffer _) (pop-to-buffer buffer))))
 
 (use-package wgrep
-  :ensure t
   :defer t
   :custom (wgrep-auto-save-buffer t))
 
@@ -242,41 +198,17 @@
   :config
   (put 'dired-find-alternate-file 'disabled nil))
 
-(use-package dired-ranger
-  :ensure t
-  :defer t
-  :after dired
-  :bind (:map dired-mode-map
-              ("W" . dired-ranger-copy)
-              ("X" . dired-ranger-move)
-              ("Y" . dired-ranger-paste)))
-
-
 (defun project-dired-home()
   (interactive)
   (let ((root (project-root (project-current t))))
     (dired root)))
 (global-set-key (kbd "C-x p h") 'project-dired-home)
 
-(use-package ibuffer
-  :ensure nil
-  :bind ("C-x C-b" . ibuffer)
-  :hook (ibuffer-mode . hl-line-mode))
-
 (use-package transpose-frame
-  :ensure t
   :defer t
   :bind ("C-z C-t" . transpose-frame))
 
-(use-package whitespace
-  :ensure t
-  :defer t
-  :hook (before-save . whitespace-cleanup)
-  :custom
-  (whitespace-line-column 80))
-
 (use-package fzf
-  :ensure t
   :defer t
   :bind ("C-z C-f" . fzf-home)
   :config
@@ -294,26 +226,22 @@
       (fzf))))
 
 (use-package avy
-  :ensure t
   :defer t
   :bind ("M-j" . avy-goto-word-or-subword-1))
 
 (use-package move-text
   :defer t
-  :ensure t
   :bind
   ("M-p" . 'move-text-up)
   ("M-n" . 'move-text-down))
 
 (use-package expand-region
-  :ensure t
   :defer t
   :bind
   ("C-=" . er/expand-region)
   ("C--" . er/contract-region))
 
 (use-package multiple-cursors
-  :ensure t
   :defer t
   :bind
   ("C->" . mc/mark-next-like-this)
@@ -322,7 +250,6 @@
 
 (use-package vterm
   :defer t
-  :ensure t
   :bind (:map vterm-mode-map
               ("C-z" . nil))
   :custom (vterm-always-compile-module t)
@@ -338,13 +265,6 @@
       (setq-local mode-line-format my-original-mode-line-format)))
   (add-hook 'vterm-copy-mode-hook #'vterm-update-mode-line))
 
-(defun vterm-new ()
-  (interactive)
-  (let ((buffer (generate-new-buffer "*vterm*")))
-    (with-current-buffer buffer
-      (vterm-mode))
-    (switch-to-buffer buffer)))
-
 (defun project-vterm ()
   (interactive)
   (let* ((default-directory (project-root (project-current t)))
@@ -355,25 +275,25 @@
       (vterm buffer-name))))
 
 (use-package eshell
-  :custom (eshell-save-history-on-exit nil)
-  :config
-  (defun eshell-append-history ()
-    "Call `eshell-write-history' with the `append' parameter set to `t'."
-    (when eshell-history-ring
-      (let ((newest-cmd-ring (make-ring 1)))
-        (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
-        (let ((eshell-history-ring newest-cmd-ring))
-          (eshell-write-history eshell-history-file-name t)))))
-  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
-  (add-hook 'eshell-pre-command-hook #'eshell-append-history))
-
-(use-package em-hist
   :ensure nil
-  :defer t
+  :hook (eshell-mode . eshell-setup)
+  :custom
+  (eshell-save-history-on-exit nil)
+  (eshell-hist-ignoredups t)
+  (eshell-history-size 10000)
   :config
-  (setq eshell-hist-ignoredups t
-        eshell-history-file-name "~/.zsh_history"
-        eshell-history-size 10000))
+  (defun eshell-setup ()
+    "Configure eshell environment and settings."
+    (setenv "TERM" "xterm-256color")
+    (setq-local eshell-history-file-name (expand-file-name "eshell/history" user-emacs-directory))
+    (add-hook 'eshell-pre-command-hook #'eshell-append-history :append :local))
+  (defun eshell-append-history ()
+    "Efficiently append last command to history file."
+    (when-let ((ring eshell-history-ring)
+               (cmd (car (ring-elements ring))))
+      (let ((eshell-history-ring (make-ring 1)))
+        (ring-insert eshell-history-ring cmd)
+        (eshell-write-history eshell-history-file-name t)))))
 
 (use-package ido
   :ensure nil
@@ -386,55 +306,38 @@
   (ido-max-window-height 1))
 
 (use-package ido-completing-read+
-  :ensure t
   :after ido
   :config (ido-ubiquitous-mode 1))
 
 (use-package amx
-  :ensure t
-  :config (amx-mode 1))
+  :init (amx-mode 1))
 
 (use-package treesit-auto
-  :ensure t
   :custom (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
 (use-package cape
-  :ensure t
   :config
   (add-to-list 'completion-at-point-functions
                (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
 
 (use-package magit
-  :ensure t
   :defer t
   :bind
   (("C-c m s" . magit-status)
    ("C-c m l" . magit-log)
    ("C-c m b" . magit-blame))
   :custom
-  (magit-process-finish-apply-ansi-colors t)
   (magit-git-executable "/opt/homebrew/bin/git"))
 
 (use-package dumb-jump
-  :ensure t
   :custom (dumb-jump-force-searcher 'rg)
   :config (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
-(use-package editorconfig
-  :ensure t
-  :defer t
-  :config (editorconfig-mode 1))
-
-(use-package pyvenv
-  :ensure t
-  :defer t)
-
-(use-package python-pytest
-  :ensure t
-  :defer t)
+(use-package pyvenv :defer t)
+(use-package python-pytest :defer t)
 
 (defun select-current-line ()
   (interactive)
