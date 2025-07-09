@@ -227,10 +227,6 @@
     (let ((default-directory "~/"))
       (fzf))))
 
-(use-package avy
-  :defer t
-  :bind ("M-j" . avy-goto-word-or-subword-1))
-
 (use-package move-text
   :defer t
   :bind
