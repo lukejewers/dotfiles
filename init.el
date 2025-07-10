@@ -136,7 +136,6 @@
   (after-init . (lambda ()
                   (set-frame-font "Iosevka 20" nil t)
                   (show-paren-mode 1)
-                  (global-completion-preview-mode 1)
                   (electric-pair-mode 1)
                   (editorconfig-mode 1)
                   (savehist-mode 1)
@@ -147,6 +146,10 @@
 
 (use-package gruber-darker-theme
   :config (load-theme 'gruber-darker :no-confirm))
+
+(use-package corfu
+  :custom (corfu-auto nil)
+  :init (global-corfu-mode))
 
 (use-package compile
   :ensure nil
