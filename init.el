@@ -83,8 +83,6 @@
   (delete-selection-mode 1)
   (display-line-numbers 'nil)
   (electric-pair-preserve-balance nil)
-  (grep-command "rg -nS --no-heading ")
-  (grep-use-null-device nil)
   (help-window-select t)
   (history-length 500)
   (indent-tabs-mode nil)
@@ -161,24 +159,33 @@
   ("C-c c" . compile)
   ("C-c r" . recompile))
 
-(use-package rg
+(use-package grep
+  :ensure nil
   :defer t
   :bind
-  ("C-c s s"   . rg)
-  ("C-c s d"   . rg-current-dir-all-files)
-  ("C-c s p"   . rg-project-all-files)
-  ("C-c s ."   . rg-dwim)
-  ("C-c s m"   . rg-menu)
+  ("C-c s s" . grep)
+  ("C-c s p" . grep-project)
+  ("C-c s ." . grep-dwim)
+  :custom
+  (grep-use-null-device nil)
+  (grep-use-headings t)
+  (grep-save-buffers t)
+  (grep-command "rg -nS --vimgrep ")
   :config
-  (defun rg-project-all-files (search-term)
-    "Run ripgrep in project root searching all files."
-    (interactive "sSearch term: ")
-    (rg search-term "*" (project-root (project-current))))
-  (defun rg-current-dir-all-files (search-term)
-    "Run ripgrep in the current directory, searching all files."
-    (interactive "sSearch term: ")
-    (rg search-term "*" default-directory))
-  (add-to-list 'rg-finish-functions (lambda (buffer _) (pop-to-buffer buffer))))
+  (setq grep-default-command "rg -nS --vimgrep ")
+  (defun grep-project (&optional initial-input)
+  (interactive)
+  (let ((default-directory (project-root (project-current))))
+    (grep (read-shell-command "Grep project: "
+                             (concat grep-default-command "" (or initial-input ""))
+                             'grep-history))))
+  (defun grep-dwim ()
+    (interactive)
+    (if-let ((symbol (thing-at-point 'symbol t)))
+        (let ((default-directory (project-root (project-current)))
+              (command (concat grep-default-command "'" symbol "' .")))
+          (grep command))
+      (call-interactively 'grep-project))))
 
 (use-package wgrep
   :defer t
@@ -257,7 +264,7 @@
   :config
   (setq vterm-timer-delay 0.01)
   (setq vterm-max-scrollback 10000)
-  (define-key project-prefix-map "t" #'project-vterm)
+  (define-key project-prefix-map "t" #'vterm-project)
   (defvar my-original-mode-line-format mode-line-format)
   (defun vterm-update-mode-line ()
     (if vterm-copy-mode
@@ -266,7 +273,7 @@
       (setq-local mode-line-format my-original-mode-line-format)))
   (add-hook 'vterm-copy-mode-hook #'vterm-update-mode-line))
 
-(defun project-vterm ()
+(defun vterm-project ()
   (interactive)
   (let* ((default-directory (project-root (project-current t)))
          (project-name (file-name-nondirectory (directory-file-name default-directory)))
