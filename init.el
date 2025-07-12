@@ -97,7 +97,6 @@
   (set-mark-command-repeat-pop t)
   (tab-always-indent 'complete)
   (tab-width 4)
-  (treesit-font-lock-level 4)
   (truncate-lines nil)
   (use-package-always-ensure t)
   (use-package-compute-statistics t)
@@ -148,6 +147,11 @@
 (use-package corfu
   :custom (corfu-auto nil)
   :init (global-corfu-mode))
+
+(use-package cape
+  :config
+  (add-to-list 'completion-at-point-functions
+               (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
 
 (use-package compile
   :ensure nil
@@ -297,7 +301,7 @@
     (add-hook 'eshell-pre-command-hook #'eshell-append-history :append :local))
   (defun eshell-append-history ()
     "Efficiently append last command to history file."
-    (when-let ((ring eshell-history-ring)
+    (when-let* ((ring eshell-history-ring)
                (cmd (car (ring-elements ring))))
       (let ((eshell-history-ring (make-ring 1)))
         (ring-insert eshell-history-ring cmd)
@@ -320,16 +324,26 @@
 (use-package amx
   :init (amx-mode 1))
 
-(use-package treesit-auto
-  :custom (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-
-(use-package cape
-  :config
-  (add-to-list 'completion-at-point-functions
-               (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
+(use-package treesit
+  :ensure nil
+  :init
+  (dolist (mode-map '(("\\.c\\'"    . c-ts-mode)
+                      ("\\.h\\'"    . c-ts-mode)
+                      ("\\.css\\'"  . css-ts-mode)
+                      ("\\.js\\'"   . js-ts-mode)
+                      ("\\.json\\'" . json-ts-mode)
+                      ("\\.go\\'"   . go-ts-mode)
+                      ("\\.lua\\'"  . lua-ts-mode)
+                      ("\\.py\\'"   . python-ts-mode)
+                      ("\\.rs\\'"   . rust-ts-mode)
+                      ("\\.ts\\'"   . typescript-ts-mode)
+                      ("\\.yaml\\'" . yaml-ts-mode)))
+    (add-to-list 'auto-mode-alist mode-map))
+  :custom
+  (treesit-extra-load-path '("~/.emacs.d/tree-sitter/"))
+  (treesit-font-lock-level 4)
+  :hook
+  (treesit-ready . treesit-install-language-grammar))
 
 (use-package magit
   :defer t
