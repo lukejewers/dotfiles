@@ -1,6 +1,6 @@
-;; ==============================
-;; Early Initialization
-;; ==============================
+;; ==================== ;;
+;; Early Initialization ;;
+;; ==================== ;;
 
 (defun my/display-startup-time ()
   (message "Emacs loaded in %.2f seconds with %d garbage collections"
@@ -59,9 +59,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; ==============================
-;; Main Configuration
-;; ==============================
+;; ================== ;;
+;; Main Configuration ;;
+;; ================== ;;
 
 (use-package exec-path-from-shell
   :ensure t
@@ -345,7 +345,6 @@
   :config (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package pyvenv :defer t)
-(use-package python-pytest :defer t)
 
 (defun select-current-line ()
   (interactive)
