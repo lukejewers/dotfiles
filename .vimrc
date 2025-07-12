@@ -1,4 +1,3 @@
-" Vim sets
 syntax on
 filetype plugin indent on
 set noerrorbells
@@ -25,6 +24,3 @@ set ttyfast
 set incsearch
 set wildmenu wildmode=longest:full,full
 colorscheme habamax
-
-" Leader
-let mapleader = " "
