@@ -226,23 +226,6 @@
   :defer t
   :bind ("C-z C-t" . transpose-frame))
 
-(use-package fzf
-  :defer t
-  :bind ("C-z C-f" . fzf-home)
-  :config
-  (setq fzf/args "-x --print-query --no-hscroll --color=fg:#e4e4ef,bg:#181818,hl:#ffdd33,fg+:#f6f6f6,bg+:#282828,hl+:#ffdd33,info:#96a6c8,prompt:#96a6c8,pointer:#ffdd33,marker:#73c936,spinner:#96a6c8,header:#73c936 --bind=ctrl-j:accept,ctrl-k:kill-line,ctrl-delete:backward-kill-word --walker-skip .git,.Trash,.nvm,.cache,.cargo,venv,.venv,.pyenv,.rustup,.next,node_modules,go,target,Library,Applications,Music,Movies"
-        fzf/executable "fzf"
-        fzf/git-grep-args "-i --line-number %s"
-        fzf/grep-command "rg --no-heading -nH"
-        fzf/position-bottom t
-        fzf/window-height 10)
-
-  (defun fzf-home ()
-    "Run fzf from home directory."
-    (interactive)
-    (let ((default-directory "~/"))
-      (fzf))))
-
 (use-package move-text
   :defer t
   :bind
