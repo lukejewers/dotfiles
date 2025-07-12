@@ -323,17 +323,24 @@
   (magit-git-executable "/opt/homebrew/bin/git"))
 
 (use-package dumb-jump
+  :defer 1
   :custom (dumb-jump-force-searcher 'rg)
   :config (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package pyvenv :defer t)
 
+;; ================ ;;
+;; Custom Functions ;;
+;; ================ ;;
+
+;;;###autoload
 (defun select-current-line ()
   (interactive)
   (end-of-line)
   (set-mark (line-beginning-position)))
 (global-set-key (kbd "C-;") 'select-current-line)
 
+;;;###autoload
 (defun duplicate-line ()
   (interactive)
   (let ((column (- (point) (point-at-bol)))
@@ -346,6 +353,7 @@
     (forward-char column)))
 (global-set-key (kbd "C-,") 'duplicate-line)
 
+;;;###autoload
 (defun toggle-shell (shell-str shell)
   (interactive)
   (if (string-equal shell-str major-mode)
