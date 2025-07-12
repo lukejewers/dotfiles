@@ -216,11 +216,12 @@
   :config
   (put 'dired-find-alternate-file 'disabled nil))
 
+;;;###autoload
 (defun project-dired-home()
   (interactive)
   (let ((root (project-root (project-current t))))
     (dired root)))
-(global-set-key (kbd "C-x p h") 'project-dired-home)
+(global-set-key (kbd "C-x p h") #'project-dired-home)
 
 (use-package transpose-frame
   :defer t
@@ -262,14 +263,15 @@
       (setq-local mode-line-format my-original-mode-line-format)))
   (add-hook 'vterm-copy-mode-hook #'vterm-update-mode-line))
 
+;;;###autoload
 (defun vterm-project ()
-  (interactive)
-  (let* ((default-directory (project-root (project-current t)))
-         (project-name (file-name-nondirectory (directory-file-name default-directory)))
-         (buffer-name (format "*vterm-%s*" project-name)))
-    (if (get-buffer buffer-name)
-        (switch-to-buffer buffer-name)
-      (vterm buffer-name))))
+    (interactive)
+    (let* ((default-directory (project-root (project-current t)))
+           (project-name (file-name-nondirectory (directory-file-name default-directory)))
+           (buffer-name (format "*vterm-%s*" project-name)))
+      (if (get-buffer buffer-name)
+          (switch-to-buffer buffer-name)
+        (vterm buffer-name))))
 
 (use-package eshell
   :ensure nil
@@ -338,7 +340,7 @@
   (interactive)
   (end-of-line)
   (set-mark (line-beginning-position)))
-(global-set-key (kbd "C-;") 'select-current-line)
+(global-set-key (kbd "C-;") #'select-current-line)
 
 ;;;###autoload
 (defun duplicate-line ()
@@ -351,7 +353,7 @@
     (insert line)
     (move-beginning-of-line 1)
     (forward-char column)))
-(global-set-key (kbd "C-,") 'duplicate-line)
+(global-set-key (kbd "C-,") #'duplicate-line)
 
 ;;;###autoload
 (defun toggle-shell (shell-str shell)
@@ -362,8 +364,35 @@
            '((".*" (display-buffer-pop-up-window)
               (window-width . 0.45)))))
       (funcall shell))))
-(global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" 'vterm)))
-(global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" 'shell)))
-(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" 'eshell)))
+(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" #'vterm)))
+(global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell)))
+(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell)))
+
+(defvar my/search-directories
+  '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/" "~/.zshrc" "~/.zsh_history"))
+
+;;;###autoload
+(defun find-file-in-my-directories ()
+  (interactive)
+  (let* ((home-dir (expand-file-name "~/"))
+         (fd-cmd (concat "fd --type f --hidden --no-ignore-vcs"
+                         " --exclude node_modules"
+                         " --exclude .venv"
+                         " --exclude venv"
+                         " --exclude .git"
+                         " --exclude eln-cache"
+                         " . "
+                         (mapconcat (lambda (dir)
+                                     (shell-quote-argument (expand-file-name dir)))
+                                   my/search-directories " ")))
+         (full-paths (split-string (shell-command-to-string fd-cmd) "\n" t))
+         (display-paths (mapcar (lambda (path)
+                                 (replace-regexp-in-string
+                                  (regexp-quote home-dir) "~/" path))
+                               full-paths))
+         (file-to-find (completing-read "Find file: " display-paths nil t)))
+    (when file-to-find
+      (find-file (expand-file-name file-to-find)))))
+(global-set-key (kbd "C-z C-f") #'find-file-in-my-directories)
 
 (provide 'init)
