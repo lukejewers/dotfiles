@@ -85,6 +85,7 @@
   (electric-pair-preserve-balance nil)
   (help-window-select t)
   (history-length 500)
+  (icomplete-compute-delay 0)
   (indent-tabs-mode nil)
   (isearch-lazy-count t)
   (lazy-highlight-initial-delay 0)
@@ -136,6 +137,7 @@
                   (electric-pair-mode 1)
                   (editorconfig-mode 1)
                   (savehist-mode 1)
+                  (fido-mode 1)
                   (electric-pair-mode 1)
                   (global-auto-revert-mode 1)))
   (occur-mode . (lambda () (switch-to-buffer-other-window "*Occur*")))
@@ -306,23 +308,6 @@
       (let ((eshell-history-ring (make-ring 1)))
         (ring-insert eshell-history-ring cmd)
         (eshell-write-history eshell-history-file-name t)))))
-
-(use-package ido
-  :ensure nil
-  :demand t
-  :config (ido-mode 1)
-  :custom
-  (ido-everywhere t)
-  (ido-enable-flex-matching t)
-  (ido-use-url-at-point nil)
-  (ido-max-window-height 1))
-
-(use-package ido-completing-read+
-  :after ido
-  :config (ido-ubiquitous-mode 1))
-
-(use-package amx
-  :init (amx-mode 1))
 
 (use-package treesit
   :ensure nil
