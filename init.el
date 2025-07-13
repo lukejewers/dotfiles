@@ -85,7 +85,10 @@
   (electric-pair-preserve-balance nil)
   (help-window-select t)
   (history-length 500)
+  (completion-category-defaults nil)
   (icomplete-compute-delay 0)
+  (icomplete-show-matches-on-no-input t)
+  (icomplete-tidy-shadowed-file-names t)
   (indent-tabs-mode nil)
   (isearch-lazy-count t)
   (lazy-highlight-initial-delay 0)
@@ -369,7 +372,7 @@
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell)))
 
 (defvar my/search-directories
-  '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/" "~/.zshrc" "~/.zsh_history"))
+  '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/"))
 
 ;;;###autoload
 (defun find-file-in-my-directories ()
