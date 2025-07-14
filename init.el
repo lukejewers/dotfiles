@@ -158,6 +158,17 @@
   (add-to-list 'completion-at-point-functions
                (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
 
+(use-package ansi-color
+  :ensure nil
+  :init
+  (defun colorise-compilation-output ()
+    (when compilation-filter-start
+    (let ((buffer-read-only nil))
+      (ansi-color-apply-on-region
+       compilation-filter-start
+       (point)))))
+  :hook (compilation-filter . colorise-compilation-output))
+
 (use-package compile
   :ensure nil
   :custom
