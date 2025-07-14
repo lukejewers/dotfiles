@@ -172,14 +172,7 @@
 
 (use-package ansi-color
   :ensure nil
-  :init
-  (defun colorise-compilation-output ()
-    (when compilation-filter-start
-    (let ((buffer-read-only nil))
-      (ansi-color-apply-on-region
-       compilation-filter-start
-       (point)))))
-  :hook (compilation-filter . colorise-compilation-output))
+  :hook (compilation-filter . ansi-color-compilation-filter))
 
 (use-package compile
   :ensure nil
