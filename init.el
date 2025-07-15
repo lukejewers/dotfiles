@@ -195,9 +195,9 @@
   (grep-use-null-device nil)
   (grep-use-headings t)
   (grep-save-buffers t)
-  (grep-command "rg -nS --vimgrep ")
+  (grep-command "rg -S --vimgrep ")
   :config
-  (setq grep-default-command "rg -nS --vimgrep ")
+  (setq grep-default-command "rg -S --vimgrep ")
   (defun grep-project (&optional initial-input)
   (interactive)
   (let ((default-directory (project-root (project-current))))
@@ -211,10 +211,6 @@
               (command (concat grep-default-command "'" symbol "' .")))
           (grep command))
       (call-interactively 'grep-project))))
-
-(use-package wgrep
-  :defer t
-  :custom (wgrep-auto-save-buffer t))
 
 (use-package org
   :ensure nil
