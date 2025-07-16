@@ -212,6 +212,11 @@
           (grep command))
       (call-interactively 'grep-project))))
 
+(use-package avy
+  :defer t
+  :bind ("M-j" . avy-goto-char-2)
+  :config (define-key isearch-mode-map (kbd "M-j") 'avy-isearch))
+
 (use-package org
   :ensure nil
   :custom
