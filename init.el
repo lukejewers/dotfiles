@@ -73,7 +73,7 @@
   :ensure nil
   :custom
   (auto-save-default nil)
-  (c-basic-offset 4)
+  (setq-default c-basic-offset 4)
   (comint-process-echoes t)
   (comp-async-report-warnings-errors nil)
   (comp-deferred-compilation t)
@@ -206,7 +206,7 @@
                              'grep-history))))
   (defun grep-dwim ()
     (interactive)
-    (if-let ((symbol (thing-at-point 'symbol t)))
+    (if-let* ((symbol (thing-at-point 'symbol t)))
         (let ((default-directory (project-root (project-current)))
               (command (concat grep-default-command "'" symbol "' .")))
           (grep command))
