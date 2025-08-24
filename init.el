@@ -195,9 +195,9 @@
   (grep-use-null-device nil)
   (grep-use-headings t)
   (grep-save-buffers t)
-  (grep-command "rg -S --vimgrep ")
+  (grep-command "rg -S --no-heading ")
   :config
-  (setq grep-default-command "rg -S --vimgrep ")
+  (setq grep-default-command "rg -S --no-heading ")
   (defun grep-project (&optional initial-input)
   (interactive)
   (let ((default-directory (project-root (project-current))))
