@@ -110,7 +110,7 @@
    ("<C-wheel-up>" . ignore)
    ("<pinch>" . ignore)
    ("C-x C-c" . nil)
-   ("C-x f" . nil)
+   ("C-x f" . find-file-at-point)
    ("C-x m" . nil)
    ("C-z" . nil)
    ("C-M--" . shrink-window-horizontally)
