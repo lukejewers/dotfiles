@@ -37,9 +37,8 @@ Options:
   -h, --help      Show this help
 
 Examples:
-  $0 dQw4w9WgXcQ         # Download specific video
-  $0 @TsodingDaily       # List 3 latest videos
-  $0 -l 5 @TsodingDaily  # List 5 latest videos
+  $0 -d sZ8GJ1TiMdk         # Download specific video
+  $0 -l 3 @TsodingDaily     # List 3 latest videos
 EOF
     exit 1
 }
