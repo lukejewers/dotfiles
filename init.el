@@ -161,14 +161,9 @@
 (use-package amx
   :init (amx-mode 1))
 
-(use-package corfu
-  :custom (corfu-auto nil)
-  :init (global-corfu-mode))
-
-(use-package cape
-  :config
-  (add-to-list 'completion-at-point-functions
-               (cape-capf-super #'cape-file #'cape-dabbrev #'cape-keyword #'cape-abbrev) t))
+(use-package company
+  :ensure t
+  :config (global-company-mode 1))
 
 (use-package ansi-color
   :ensure nil
