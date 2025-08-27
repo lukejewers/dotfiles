@@ -163,7 +163,10 @@
 
 (use-package company
   :ensure t
-  :config (global-company-mode 1))
+  :config
+  (global-company-mode 1)
+  (with-eval-after-load 'company
+    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)))
 
 (use-package ansi-color
   :ensure nil
