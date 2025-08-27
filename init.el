@@ -390,13 +390,7 @@
 (defun find-file-in-my-directories ()
   (interactive)
   (let* ((home-dir (expand-file-name "~/"))
-         (fd-cmd (concat "fd --type f --hidden --no-ignore-vcs"
-                         " --exclude node_modules"
-                         " --exclude .venv"
-                         " --exclude venv"
-                         " --exclude .git"
-                         " --exclude eln-cache"
-                         " . "
+         (fd-cmd (concat "fd --type f --hidden --no-ignore-vcs --exclude .git --exclude eln-cache . "
                          (mapconcat (lambda (dir)
                                      (shell-quote-argument (expand-file-name dir)))
                                    my/search-directories " ")))
