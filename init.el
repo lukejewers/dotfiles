@@ -162,7 +162,6 @@
   :init (amx-mode 1))
 
 (use-package company
-  :ensure t
   :config
   (global-company-mode 1)
   (with-eval-after-load 'company
@@ -262,7 +261,8 @@
   :bind
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this)
-  ("C-'" . mc/mark-all-like-this))
+  ("C-c ." . mc/mark-all-like-this)
+  ("C-c ," . mc/edit-lines))
 
 (use-package vterm
   :defer t
