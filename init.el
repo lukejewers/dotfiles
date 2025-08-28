@@ -212,7 +212,7 @@
 
 (use-package avy
   :defer t
-  :bind ("M-j" . avy-goto-char-2)
+  :bind ("M-j" . avy-goto-char)
   :config (define-key isearch-mode-map (kbd "M-j") 'avy-isearch))
 
 (use-package org
