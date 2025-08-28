@@ -73,7 +73,7 @@
   :ensure nil
   :custom
   (auto-save-default nil)
-  (setq-default c-basic-offset 4)
+  (c-ts-mode-indent-offset 4)
   (comint-process-echoes t)
   (comp-async-report-warnings-errors nil)
   (comp-deferred-compilation t)
@@ -105,6 +105,8 @@
   (xref-search-program 'ripgrep)
   :config
   (put 'narrow-to-region 'disabled nil)
+  (with-eval-after-load 'c-ts-mode
+    (define-key c-ts-mode-map (kbd "C-c .") nil))
   :bind
   (("<C-wheel-down>" . ignore)
    ("<C-wheel-up>" . ignore)
