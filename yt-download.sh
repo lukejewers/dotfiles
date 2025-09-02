@@ -17,16 +17,6 @@ get_video_data() {
                    "[\(if .upload_date? then .upload_date[0:4]+"-"+.upload_date[4:6]+"-"+.upload_date[6:8] else "DATE-N/A" end)] [\(.id)] \(.title)\n   \(.url)\n"'
 }
 
-download_video() {
-    yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
-        --merge-output-format mp4 \
-        --embed-thumbnail \
-        --embed-metadata \
-        --no-mtime \
-        -o "${OUTPUT_DIR}/%(upload_date>%Y-%m-%d)s - %(title)s.%(ext)s" \
-        "$1"
-}
-
 usage() {
     cat <<EOF
 Usage: $0 [OPTIONS] (VIDEO_ID|@channel)
@@ -47,6 +37,7 @@ EOF
 LIST_COUNT=3
 OUTPUT_DIR="${HOME}/Videos"
 MODE="download"
+WATCHED_FILE="${HOME}/Videos/.yt-watched"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -92,7 +83,34 @@ else
         usage
     fi
 
-    echo "Downloading video $INPUT..."
-    download_video "https://youtu.be/$INPUT"
+    # Get video title
+    video_title=$(yt-dlp --flat-playlist --ignore-errors -J "https://youtu.be/$INPUT" | jq -r '.title')
+
+    # Check if video is already watched
+    if [ -f "$WATCHED_FILE" ]; then
+        # Normalize title for comparison (lowercase, remove punctuation)
+        normalized_title=$(echo "$video_title" | tr '[:upper:]' '[:lower:]' | tr -d '[:punct:]')
+
+        while IFS= read -r line; do
+            # Remove date prefix from watched file entries
+            watched_title=$(echo "$line" | sed 's/^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} - //' | sed 's/\.mp4$//')
+            normalized_watched=$(echo "$watched_title" | tr '[:upper:]' '[:lower:]' | tr -d '[:punct:]')
+
+            if [ "$normalized_title" = "$normalized_watched" ]; then
+                echo "Skipping download: '$video_title' is already in watched list"
+                exit 0
+            fi
+        done < "$WATCHED_FILE"
+    fi
+
+    echo "Downloading: $video_title..."
+    yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" \
+        --merge-output-format mp4 \
+        --embed-thumbnail \
+        --embed-metadata \
+        --no-mtime \
+        -o "${OUTPUT_DIR}/%(upload_date>%Y-%m-%d)s - %(title)s.%(ext)s" \
+        "https://youtu.be/$INPUT"
+
     echo "Download complete!"
 fi
