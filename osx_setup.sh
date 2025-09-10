@@ -1,22 +1,5 @@
 #!/usr/bin/env bash
 
-# Update terminal prompt
-echo 'PS1="%~ %f$ "' >> ~/.zshrc
-
-echo '' >> ~/.zshrc
-echo '# Zsh History Configuration' >> ~/.zshrc
-echo 'HISTFILE=~/.zsh_history' >> ~/.zshrc
-echo 'SAVEHIST=10000' >> ~/.zshrc
-echo 'HISTSIZE=10000' >> ~/.zshrc
-echo '' >> ~/.zshrc
-echo 'setopt SHARE_HISTORY' >> ~/.zshrc
-echo 'setopt HIST_EXPAND' >> ~/.zshrc
-echo 'setopt HIST_IGNORE_ALL_DUPS' >> ~/.zshrc
-echo 'setopt HIST_FIND_NO_DUPS' >> ~/.zshrc
-
-echo '' >> ~/.zshrc
-echo 'export CLICOLOR=1' >> ~/.zshrc
-
 echo "Configuring OSX..."
 # Set fast key repeat rate
 defaults write -g InitialKeyRepeat -int 15
@@ -56,6 +39,7 @@ echo "Setting symlinks..."
 mkdir -p ~/.emacs.d
 mkdir -p ~/.config/ghostty
 mkdir -p ~/.hammerspoon
+mkdir -p ~/Library/KeyBindings
 
 ln -s -f ~/.dotfiles/.vimrc ~/.vimrc
 ln -s -f ~/.dotfiles/DefaultKeybinding.dict ~/Library/KeyBindings/DefaultKeyBinding.Dict
@@ -64,5 +48,18 @@ ln -s -f ~/.dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
 ln -s -f ~/.dotfiles/init.el ~/.emacs.d/init.el
 
 [ -e /opt/homebrew/opt/emacs-plus@31/Emacs.app ] && ln -sf /opt/homebrew/opt/emacs-plus@31/Emacs.app /Applications
+
+echo "Creating .zshrc loader..."
+cat > ~/.zshrc << 'EOF'
+#!/bin/zsh
+#
+# Machine-specific zsh configuration loader
+# This file is NOT version controlled
+
+# Load shared base configuration
+[ -f ~/.dotfiles/.zshrc.base ] && source ~/.dotfiles/.zshrc.base
+
+# --- Machine-Specific Settings Below This Line ---
+EOF
 
 echo "Configuration complete."

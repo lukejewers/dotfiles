@@ -1,0 +1,36 @@
+# prompt
+PS1="%~ %f$ "
+
+# history
+HISTFILE=~/.zsh_history
+SAVEHIST=10000
+HISTSIZE=10000
+setopt HIST_FIND_NO_DUPS     # Do not display a line previously found.
+setopt HIST_IGNORE_ALL_DUPS  # Remove duplicate commands from history
+setopt HIST_IGNORE_SPACE     # Don't save commands starting with space
+setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks before recording entry.
+setopt HIST_SAVE_NO_DUPS     # Don't write duplicate entries in the history file.
+setopt INC_APPEND_HISTORY    # Write immediately, not on exit
+setopt SHARE_HISTORY         # Share history between all zsh sessions
+
+# editor
+export EDITOR="emacsclient"
+
+# colors
+export TERM=xterm-256color
+export CLICOLOR=1
+export LSCOLORS="ExFxBxDxCxegedabagacad"
+
+# kbd
+bindkey -e  # emacs keybindings
+
+# completion
+autoload -Uz compinit
+compinit
+
+# aliases
+alias noiseon="(afplay \"$HOME/Sounds/brown-noise.mp3\" > /dev/null 2>&1 &) && echo 'Brown noise started'"
+alias noiseoff="pkill -f 'afplay.*brown-noise' 2>/dev/null && echo 'Brown noise stopped' || echo 'No brown noise playing'"
+
+# path
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
