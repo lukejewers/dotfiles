@@ -139,6 +139,7 @@
                   (editorconfig-mode 1)
                   (savehist-mode 1)
                   (electric-pair-mode 1)
+                  (global-completion-preview-mode 1)
                   (global-auto-revert-mode 1)))
   (occur-mode . (lambda () (switch-to-buffer-other-window "*Occur*")))
   (html-mode . (lambda () (local-unset-key (kbd "M-o")))))
@@ -163,15 +164,15 @@
 (use-package amx
   :init (amx-mode 1))
 
-(use-package company
-  :config
-  (global-company-mode 1)
-  (with-eval-after-load 'company
-    (define-key company-active-map (kbd "<tab>") #'company-complete-selection)))
-
 (use-package ansi-color
   :ensure nil
   :hook (compilation-filter . ansi-color-compilation-filter))
+
+(use-package cape
+  :config
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-keyword))
 
 (use-package compile
   :ensure nil
