@@ -212,10 +212,6 @@
           (grep command))
       (call-interactively 'grep-project))))
 
-(use-package imenu-list
-  :defer t
-  :bind ("C-'" . imenu-list-smart-toggle))
-
 (use-package avy
   :defer t
   :bind ("M-j" . avy-goto-char)
