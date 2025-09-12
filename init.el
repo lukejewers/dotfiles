@@ -86,7 +86,6 @@
   (help-window-select t)
   (history-length 500)
   (indent-tabs-mode nil)
-  (isearch-lazy-count t)
   (lazy-highlight-initial-delay 0)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes t)
@@ -161,6 +160,19 @@
   :after ido
   :config (ido-ubiquitous-mode 1))
 
+(use-package isearch
+  :ensure nil
+  :custom (isearch-lazy-count t)
+  :bind (:map isearch-mode-map
+              ("C-<return>" . isearch-done-opposite))
+  :init
+  (defun isearch-done-opposite (&optional nopush edit)
+    (interactive)
+    (let ((forward isearch-forward))
+      (isearch-done nopush edit)
+      (when (and forward isearch-other-end)
+        (goto-char isearch-other-end)))))
+
 (use-package amx
   :init (amx-mode 1))
 
@@ -211,11 +223,6 @@
               (command (concat grep-default-command "'" symbol "' .")))
           (grep command))
       (call-interactively 'grep-project))))
-
-(use-package avy
-  :defer t
-  :bind ("M-j" . avy-goto-char)
-  :config (define-key isearch-mode-map (kbd "M-j") 'avy-isearch))
 
 (use-package org
   :ensure nil
