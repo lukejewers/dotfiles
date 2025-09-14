@@ -17,7 +17,9 @@ setopt SHARE_HISTORY         # Share history between all zsh sessions
 export EDITOR="emacsclient"
 
 # colors
-export TERM=xterm-256color
+if [[ -z "$INSIDE_EMACS" ]]; then
+    export TERM=xterm-256color
+fi
 export CLICOLOR=1
 export LSCOLORS="ExFxBxDxCxegedabagacad"
 
