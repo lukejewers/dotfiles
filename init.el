@@ -118,7 +118,7 @@
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
-   ("C-q" . query-replace)
+   ("C-q" . query-replace-regexp)
    ("M-3" . (lambda () (interactive) (insert "#")))
    ("C-x C-b" . ibuffer)
    ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
@@ -203,6 +203,7 @@
   ("C-c s s" . grep)
   ("C-c s p" . grep-project)
   ("C-c s ." . grep-dwim)
+  ("C-c s r" . replace-regexp-no-move)
   :custom
   (grep-use-null-device nil)
   (grep-use-headings t)
@@ -210,19 +211,25 @@
   (grep-command "rg -S --no-heading ")
   :config
   (setq grep-default-command "rg -S --no-heading ")
+
   (defun grep-project (&optional initial-input)
-  (interactive)
-  (let ((default-directory (project-root (project-current))))
-    (grep (read-shell-command "Grep project: "
-                             (concat grep-default-command "" (or initial-input ""))
-                             'grep-history))))
+    (interactive)
+    (let ((default-directory (project-root (project-current))))
+      (grep (read-shell-command "Grep project: "
+                                (concat grep-default-command "" (or initial-input ""))
+                                'grep-history))))
   (defun grep-dwim ()
     (interactive)
     (if-let* ((symbol (thing-at-point 'symbol t)))
         (let ((default-directory (project-root (project-current)))
-              (command (concat grep-default-command "'" symbol "' .")))
+              (command (concat grep-default-command (shell-quote-argument symbol) " .")))
           (grep command))
-      (call-interactively 'grep-project))))
+      (call-interactively 'grep-project)))
+
+  (defun replace-regexp-no-move ()
+    (interactive)
+    (save-excursion
+      (call-interactively 'replace-regexp))))
 
 (use-package org
   :ensure nil
@@ -392,7 +399,7 @@
            '((".*" (display-buffer-pop-up-window)
               (window-width . 0.45)))))
       (funcall shell))))
-(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" #'vterm)))
+(global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" #'vterm)))
 (global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell)))
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell)))
 
