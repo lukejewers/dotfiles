@@ -33,6 +33,7 @@ compinit
 # aliases
 alias noiseon="(afplay \"$HOME/Sounds/brown-noise.mp3\" > /dev/null 2>&1 &) && echo 'Brown noise started'"
 alias noiseoff="pkill -f 'afplay.*brown-noise' 2>/dev/null && echo 'Brown noise stopped' || echo 'No brown noise playing'"
+alias yt-download="$HOME/.dotfiles/yt-download.sh"
 
 # path
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
