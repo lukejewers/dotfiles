@@ -118,7 +118,6 @@
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
-   ("C-q" . query-replace-regexp)
    ("M-3" . (lambda () (interactive) (insert "#")))
    ("C-x C-b" . ibuffer)
    ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
@@ -164,7 +163,8 @@
   :ensure nil
   :custom (isearch-lazy-count t)
   :bind (:map isearch-mode-map
-              ("C-<return>" . isearch-done-opposite))
+              ("C-<return>" . isearch-done-opposite)
+              ("C-q"        . isearch-query-replace-regexp))
   :init
   (defun isearch-done-opposite (&optional nopush edit)
     (interactive)
