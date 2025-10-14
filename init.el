@@ -300,13 +300,13 @@
 
 ;;;###autoload
 (defun vterm-project ()
-    (interactive)
-    (let* ((default-directory (project-root (project-current t)))
-           (project-name (file-name-nondirectory (directory-file-name default-directory)))
-           (buffer-name (format "*vterm-%s*" project-name)))
-      (if (get-buffer buffer-name)
-          (switch-to-buffer buffer-name)
-        (vterm buffer-name))))
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (project-name (file-name-nondirectory (directory-file-name default-directory)))
+         (buffer-name (format "*vterm-%s*" project-name)))
+    (if (get-buffer buffer-name)
+        (switch-to-buffer buffer-name)
+      (vterm buffer-name))))
 
 (use-package eshell
   :ensure nil
@@ -324,7 +324,7 @@
   (defun eshell-append-history ()
     "Efficiently append last command to history file."
     (when-let* ((ring eshell-history-ring)
-               (cmd (car (ring-elements ring))))
+                (cmd (car (ring-elements ring))))
       (let ((eshell-history-ring (make-ring 1)))
         (ring-insert eshell-history-ring cmd)
         (eshell-write-history eshell-history-file-name t)))))
@@ -391,17 +391,19 @@
 (global-set-key (kbd "C-,") #'duplicate-line)
 
 ;;;###autoload
-(defun toggle-shell (shell-str shell)
+(defun toggle-shell (shell-str shell &optional window-width)
   (interactive)
   (if (string-equal shell-str major-mode)
       (quit-window)
     (let ((display-buffer-alist
-           '((".*" (display-buffer-pop-up-window)
-              (window-width . 0.45)))))
+           (if window-width
+               `((".*" (display-buffer-pop-up-window)
+                  (window-width . ,window-width)))
+             nil)))
       (funcall shell))))
 (global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" #'vterm)))
-(global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell)))
-(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell)))
+(global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell 0.45)))
+(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell 0.45)))
 
 (defvar my/search-directories
   '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/"))
@@ -412,13 +414,13 @@
   (let* ((home-dir (expand-file-name "~/"))
          (fd-cmd (concat "fd --type f --hidden --no-ignore-vcs --exclude .git --exclude eln-cache . "
                          (mapconcat (lambda (dir)
-                                     (shell-quote-argument (expand-file-name dir)))
-                                   my/search-directories " ")))
+                                      (shell-quote-argument (expand-file-name dir)))
+                                    my/search-directories " ")))
          (full-paths (split-string (shell-command-to-string fd-cmd) "\n" t))
          (display-paths (mapcar (lambda (path)
-                                 (replace-regexp-in-string
-                                  (regexp-quote home-dir) "~/" path))
-                               full-paths))
+                                  (replace-regexp-in-string
+                                   (regexp-quote home-dir) "~/" path))
+                                full-paths))
          (file-to-find (completing-read "Find file: " display-paths nil t)))
     (when file-to-find
       (find-file (expand-file-name file-to-find)))))
