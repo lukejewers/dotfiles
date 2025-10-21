@@ -31,7 +31,6 @@ local apps = {
     emacs = 'Emacs',
     finder = 'Finder',
     firefox = 'Firefox',
-    ghostty = 'Ghostty',
     messages = 'Messages',
     settings = 'System Settings',
 }
@@ -41,7 +40,6 @@ local popup_apps = {
     [apps.messages] = true,
     [apps.finder]   = true,
     [apps.settings] = true,
-    [apps.ghostty]  = true,
 }
 
 -- Layout state management
@@ -248,7 +246,6 @@ call_app("j", apps.emacs)
 call_app("l", apps.firefox)
 call_app("m", apps.messages)
 call_app("s", apps.settings)
-call_app("t", apps.ghostty)
 
 -- Bind layout switching hotkeys
 switch_layouts("0", screen_states.FULLSCREEN)

@@ -34,7 +34,6 @@ brew "wget"
 
 # casks
 cask "firefox"
-cask "ghostty"
 cask "google-chrome"
 cask "hammerspoon"
 cask "iina"
