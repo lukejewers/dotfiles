@@ -114,6 +114,7 @@
    ("C-x f" . find-file-at-point)
    ("C-x m" . nil)
    ("C-z" . nil)
+   ("C-q" . query-replace-regexp)
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
