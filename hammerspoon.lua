@@ -31,11 +31,12 @@ local apps = {
     emacs = 'Emacs',
     finder = 'Finder',
     firefox = 'Firefox',
+    kindle = 'Kindle',
     messages = 'Messages',
     settings = 'System Settings',
 }
 
--- Apps that should open in a smaller, centered "popup" window
+-- Popup apps
 local popup_apps = {
     [apps.messages] = true,
     [apps.finder]   = true,
@@ -240,14 +241,15 @@ end)
 -- BIND HOTKEYS
 -------------------------------------------------------------------
 
--- Bind applications to hotkeys
+-- Applications key bindings
 call_app("f", apps.finder)
 call_app("j", apps.emacs)
+call_app("b", apps.kindle)
 call_app("l", apps.firefox)
 call_app("m", apps.messages)
 call_app("s", apps.settings)
 
--- Bind layout switching hotkeys
+-- Layout key bindings
 switch_layouts("0", screen_states.FULLSCREEN)
 switch_layouts("9", screen_states.TWOPANE, apps.emacs, apps.firefox)
 
