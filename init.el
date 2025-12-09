@@ -134,7 +134,6 @@
   (after-init . (lambda ()
                   (set-frame-font "Iosevka 20" nil t)
                   (show-paren-mode 1)
-                  (electric-pair-mode 1)
                   (editorconfig-mode 1)
                   (savehist-mode 1)
                   (electric-pair-mode 1)
@@ -209,9 +208,9 @@
   (grep-use-null-device nil)
   (grep-use-headings t)
   (grep-save-buffers t)
-  (grep-command "rg -S --no-heading ")
+  (grep-command "rg -S --no-heading --color=never ")
   :config
-  (setq grep-default-command "rg -S --no-heading ")
+  (setq grep-default-command "rg -S --no-heading --color=never ")
 
   (defun grep-project (&optional initial-input)
     (interactive)
