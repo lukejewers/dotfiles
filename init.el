@@ -359,10 +359,21 @@
   :custom
   (magit-git-executable "/opt/homebrew/bin/git"))
 
-(use-package dumb-jump
-  :defer 1
-  :custom (dumb-jump-force-searcher 'rg)
-  :config (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+(use-package eglot
+  :custom
+  (eglot-stay-out-of '(flymake eldoc completion-at-point))
+  (eglot-ignored-server-capabilities
+   '(:documentHighlightProvider
+     :completionProvider
+     :hoverProvider
+     :signatureHelpProvider
+     :codeActionProvider
+     :documentFormattingProvider
+     :renameProvider
+     :inlayHintProvider
+     :referencesProvider
+     :typeDefinitionProvider
+     :implementationProvider)))
 
 (use-package pyvenv :defer t)
 
@@ -405,8 +416,8 @@
 (global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell 0.45)))
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell 0.45)))
 
-(defvar my/search-directories
-  '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/"))
+;;;###autoload
+(defvar my/search-directories '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/"))
 
 ;;;###autoload
 (defun find-file-in-my-directories ()
