@@ -1,25 +1,45 @@
-/* ~/Library/KeyBindings/DefaultKeyBinding.Dict
+/* ~/Library/KeyBindings/DefaultKeyBinding.Dict */
 
 {
-    "~f"      = "moveWordForward:";              /* M-f */
-    "~b"      = "moveWordBackward:";             /* M-b */
-    "~<"      = "moveToBeginningOfDocument:";    /* M-< */
-    "~>"      = "moveToEndOfDocument:";          /* M-> */
-    "~v"      = "pageUp:";                       /* M-v */
-    "^v"      = "pageDown:";                     /* C-v */
-    "~d"      = "deleteWordForward:";            /* M-d */
-    "^\177"   = "deleteWordBackward:";           /* C-delete */
-    "^/"      = "undo:";                         /* C-/ */
-    "~c"      = "capitalizeWord:";               /* M-c */
-    "~u"      = "uppercaseWord:";                /* M-u */
-    "~l"      = "lowercaseWord:";                /* M-l */
-    "^t"      = "transpose:";                    /* C-t */
-    "~t"      = "transposeWords:";               /* M-t */
-    "~/"      = "complete:";                     /* M-/ */
-    "^g"      = "_cancelKey:";                   /* C-g */
-    "^a"      = "moveToBeginningOfLine:";        /* C-a */
-    "^e"      = "moveToEndOfLine:";              /* C-e */
-    "~w"      = "copy:";
-    "^w"      = "cut:";
-    "^y"      = "yankAndSelect:";
+    "^a"       = "moveToBeginningOfLine:";             /* C-a: Beginning of line */
+    "^e"       = "moveToEndOfLine:";                   /* C-e: End of line */
+    "^p"       = "moveUp:";                            /* C-p: Previous line */
+    "^n"       = "moveDown:";                          /* C-n: Next line */
+    "^b"       = "moveBackward:";                      /* C-b: Backward character */
+    "^f"       = "moveForward:";                       /* C-f: Forward character */
+
+    "^A"       = "moveToBeginningOfLineAndModifySelection:";
+    "^E"       = "moveToEndOfLineAndModifySelection:";
+    "^B"       = "moveBackwardAndModifySelection:";
+    "^F"       = "moveForwardAndModifySelection:";
+    "~B"       = "moveWordBackwardAndModifySelection:";
+    "~F"       = "moveWordForwardAndModifySelection:";
+
+    "^ "       = "setMark:";                           /* C-Space: Set Mark */
+    "^k"       = "deleteToEndOfLine:";                 /* C-k: Kill to end of line */
+    "^w"       = "cut:";                               /* C-w: Cut/Kill Region */
+    "~w"       = "copy:";                              /* M-w: Copy Region */
+    "^y"       = "paste:";                             /* C-y: Paste */
+    "~y"       = "yank:";                              /* M-y: Yank */
+
+    "~f"       = "moveWordForward:";                   /* M-f: Forward word */
+    "~b"       = "moveWordBackward:";                  /* M-b: Backward word */
+    "~{"       = "moveToBeginningOfParagraph:";        /* M-{ : Beginning of Paragraph */
+    "~}"       = "moveToEndOfParagraph:";              /* M-} : End of Paragraph */
+    "~<"       = "moveToBeginningOfDocument:";         /* M-<: Beginning of document */
+    "~>"       = "moveToEndOfDocument:";               /* M->: End of document */
+
+    "^v"       = "pageDown:";                          /* C-v: Page down */
+    "~v"       = "pageUp:";                            /* M-v: Page up */
+    "~d"       = "deleteWordForward:";                 /* M-d: Delete next word */
+    "^\177"    = "deleteWordBackward:";                /* C-delete: Delete previous word */
+    "^/"       = "undo:";                              /* C-/: Undo */
+    "~c"       = "capitalizeWord";                     /* M-c: Capitalize word */
+    "~u"       = "uppercaseWord:";                     /* M-u: Uppercase word */
+    "~l"       = "lowercaseWord:";                     /* M-l: Lowercase word */
+    "^t"       = "transpose:";                         /* C-t: Transpose characters */
+    "~t"       = "transposeWords:";                    /* M-t: Transpose words */
+    "~/"       = "complete:";                          /* M-/: Complete */
+    "^g"       = "_cancelKey:";                        /* C-g: Cancel */
+    "^j"       = "insertNewlineIgnoringFieldEditor:";  /* C-j: Newline */
 }
