@@ -11,6 +11,7 @@
 (setq gc-cons-threshold (* 1024 1024 100)
       gc-cons-percentage 0.6
       package-enable-at-startup nil)
+(add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold (* 1024 1024 16))))
 
 (setq frame-title-format '("%f")
       frame-resize-pixelwise t
@@ -48,12 +49,12 @@
 (setq warning-minimum-level :error)
 (setq warning-suppress-types '((lexical-binding)))
 
+(setq custom-file (locate-user-emacs-file "custom-vars.el"))
+(load custom-file :noerror :nomessage)
+
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("gnu" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-
-(setq custom-file (locate-user-emacs-file "custom-vars.el"))
-(load custom-file :noerror :nomessage)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
