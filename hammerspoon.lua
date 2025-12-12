@@ -1,30 +1,9 @@
- -------------------------------------------------------------------
---  CONFIGURATION
--------------------------------------------------------------------
-
--- Animation duration for window movements.
--- A very small value is used to ensure mouse dragging works correctly.
-hs.window.animationDuration = 0.01
-
--- Modifier key
-local hyper     = { "ctrl", "cmd" }
-local alt_hyper = { "ctrl", "cmd", "alt" }
-
--- Set to true to snap windows by dragging them to the edge of your screen
-local enable_window_snapping_with_mouse = true
-
--- Set to true to snap windows using keyboard shortcuts (eg. Ctrl + Option + Right Arrow)
-local enable_window_snapping_with_keyboard = true
-
--- The height of the window's title area (in pixels). Used for mouse-drag detection.
-local window_titlebar_height = 0
-
--- The sensitivity (in pixels) for snapping when the mouse reaches the screen edge.
-local monitor_edge_sensitivity = 0
-
 -------------------------------------------------------------------
 --  APPLICATION & LAYOUT DEFINITIONS
 -------------------------------------------------------------------
+
+-- Modifier key
+local hyper = { "ctrl", "cmd" }
 
 -- Apps
 local apps = {
@@ -99,87 +78,8 @@ local function switch_layouts(key, target_state, app1, app2)
 end
 
 -------------------------------------------------------------------
---  WINDOW SNAPPING
---  From https://gist.githubusercontent.com/spartanatreyu/850788a0441e1c5565668a35ed9a1dfc/raw/a6ac8731014f99e0adf46878a0a03f04badb7656/init.lua
+--  WINDOW MANAGEMENT
 -------------------------------------------------------------------
-
-function round(num)
-    return math.floor(num + 0.5)
-end
-
-function get_window_under_mouse()
-    local my_pos = hs.geometry.new(hs.mouse.getAbsolutePosition())
-    local my_screen = hs.mouse.getCurrentScreen()
-
-    return hs.fnutils.find(hs.window.orderedWindows(), function(w)
-        return my_screen == w:screen() and my_pos:inside(w:frame())
-    end)
-end
-
-
-local dragging = 0 -- 0: no drag, 1: dragging a window, -1: dragging but not a window
-local dragging_window = nil
-
-local click_event = hs.eventtap.new({hs.eventtap.event.types.leftMouseDragged}, function(e)
-    if dragging == 0 then
-        dragging_window = get_window_under_mouse()
-        if dragging_window ~= nil then
-            local m = hs.mouse.getAbsolutePosition()
-            local f = dragging_window:frame()
-            -- Check if mouse is inside the titlebar area
-            if m.x > f.x and m.x < (f.x + f.w) and m.y > f.y and m.y < (f.y + window_titlebar_height) then
-                dragging = 1
-            else
-                dragging = -1
-                dragging_window = nil
-            end
-        end
-    end
-end)
-
-local unclick_event = hs.eventtap.new({hs.eventtap.event.types.leftMouseUp}, function(e)
-    if dragging == 1 and dragging_window ~= nil then
-        local win = dragging_window
-        local m = hs.mouse.getAbsolutePosition()
-        local screen = win:screen()
-        local max = screen:frame()
-        local f = {} -- New frame
-
-        -- Top Left
-        if m.x <= max.x + monitor_edge_sensitivity and m.y <= max.y + monitor_edge_sensitivity then
-            f = {x = max.x, y = max.y, w = max.w / 2, h = max.h / 2}
-        -- Maximize
-        elseif m.y <= max.y + monitor_edge_sensitivity then
-            win:maximize()
-            f = nil
-        -- Top Right
-        elseif m.x >= max.x + max.w - monitor_edge_sensitivity and m.y <= max.y + monitor_edge_sensitivity then
-            f = {x = max.x + max.w / 2, y = max.y, w = max.w / 2, h = max.h / 2}
-        -- Left Half
-        elseif m.x <= max.x + monitor_edge_sensitivity then
-            f = {x = max.x, y = max.y, w = max.w / 2, h = max.h}
-        -- Right Half
-        elseif m.x >= max.x + max.w - monitor_edge_sensitivity then
-            f = {x = max.x + max.w / 2, y = max.y, w = max.w / 2, h = max.h}
-        -- Bottom Left
-        elseif m.x <= max.x + monitor_edge_sensitivity and m.y >= max.y + max.h - monitor_edge_sensitivity then
-            f = {x = max.x, y = max.y + max.h / 2, w = max.w / 2, h = max.h / 2}
-        -- Bottom Right
-        elseif m.x >= max.x + max.w - monitor_edge_sensitivity and m.y >= max.y + max.h - monitor_edge_sensitivity then
-            f = {x = max.x + max.w / 2, y = max.y + max.h / 2, w = max.w / 2, h = max.h / 2}
-        else
-            f = nil
-        end
-
-        if f then win:setFrame(f) end
-    end
-
-    dragging = 0
-    dragging_window = nil
-end)
-
-click_event:start()
-unclick_event:start()
 
 -- Left Half
 hs.hotkey.bind(hyper, "Left", function()
@@ -207,34 +107,6 @@ hs.hotkey.bind(hyper, "Down", function()
     local win = hs.window.focusedWindow()
     if not win then return end
     win:moveToUnit({0.15, 0.15, 0.7, 0.7})
-end)
-
--- Top Left Corner
-hs.hotkey.bind(alt_hyper, "Up", function()
-    local win = hs.window.focusedWindow()
-    if not win then return end
-    win:moveToUnit({0, 0, 0.5, 0.5})
-end)
-
--- Top Right Corner
-hs.hotkey.bind(alt_hyper, "Right", function()
-    local win = hs.window.focusedWindow()
-    if not win then return end
-    win:moveToUnit({0.5, 0, 0.5, 0.5})
-end)
-
--- Bottom Right Corner
-hs.hotkey.bind(alt_hyper, "Down", function()
-    local win = hs.window.focusedWindow()
-    if not win then return end
-    win:moveToUnit({0.5, 0.5, 0.5, 0.5})
-end)
-
--- Bottom Left Corner
-hs.hotkey.bind(alt_hyper, "Left", function()
-    local win = hs.window.focusedWindow()
-    if not win then return end
-    win:moveToUnit({0, 0.5, 0.5, 0.5})
 end)
 
 -------------------------------------------------------------------
