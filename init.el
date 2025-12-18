@@ -35,10 +35,10 @@
 (prefer-coding-system 'utf-8)
 (set-language-environment "UTF-8")
 
-(setq mac-left-control-modifier 'control
-      mac-right-control-modifier 'meta
-      mac-option-modifier 'none
-      mac-command-modifier 'super)
+(when (eq system-type 'darwin)
+  (setq mac-left-control-modifier 'control
+        mac-option-modifier 'meta
+        mac-command-modifier 'super))
 
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
