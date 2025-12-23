@@ -10,7 +10,7 @@ local apps = {
     emacs = 'Emacs',
     finder = 'Finder',
     firefox = 'Firefox',
-    kindle = 'Kindle',
+    ghostty = 'Ghostty',
     messages = 'Messages',
     settings = 'System Settings',
 }
@@ -116,7 +116,7 @@ end)
 -- Applications key bindings
 call_app("f", apps.finder)
 call_app("j", apps.emacs)
-call_app("b", apps.kindle)
+call_app("k", apps.ghostty)
 call_app("l", apps.firefox)
 call_app("m", apps.messages)
 call_app("s", apps.settings)
