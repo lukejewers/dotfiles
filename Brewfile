@@ -11,7 +11,7 @@ brew "colima"
 brew "curl"
 brew "deno"
 brew "docker"
-brew "emacs-plus@31", args: ["with-savchenkovaleriy-big-sur-curvy-3d-icon"]
+brew "emacs-plus@31"
 brew "fd"
 brew "ffmpeg"
 brew "gcc"
