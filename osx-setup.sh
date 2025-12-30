@@ -37,11 +37,13 @@ fi
 
 echo "Setting symlinks..."
 mkdir -p ~/.emacs.d
+mkdir -p ~/.config/ghostty
 mkdir -p ~/.hammerspoon
 mkdir -p ~/Library/KeyBindings
 
 ln -s -f ~/.dotfiles/.vimrc ~/.vimrc
 ln -s -f ~/.dotfiles/DefaultKeybinding.dict ~/Library/KeyBindings/DefaultKeyBinding.Dict
+ln -s -f ~/.dotfiles/.ghostty ~/.config/ghostty/config
 ln -s -f ~/.dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
 ln -s -f ~/.dotfiles/init.el ~/.emacs.d/init.el
 ln -s -f ~/.dotfiles/com.local.KeyRemapping.plist ~/Library/LaunchAgents/com.local.KeyRemapping.plist
