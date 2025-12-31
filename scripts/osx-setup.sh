@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+set -xe
+
+echo "Installing system deps..."
+brew bundle --file=$HOME/.dotfiles/.brewfile
+
 echo "Configuring OSX..."
 # Set fast key repeat rate
 defaults write -g InitialKeyRepeat -int 15
@@ -18,7 +23,7 @@ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 70 '<dic
 # Show hidden files in Finder
 defaults write com.apple.finder AppleShowAllFiles -bool true
 # Save screenshots to a specific location (e.g., Desktop)
-mkdir -p "${HOME}/Screenshots"
+mkdir -p ${HOME}/Screenshots
 defaults write com.apple.screencapture location -string "${HOME}/Screenshots"
 # Set dock & menubar to auto-hide
 defaults write com.apple.dock autohide -bool true
@@ -36,29 +41,29 @@ if [ ! -d "$HOME/.dotfiles" ]; then
 fi
 
 echo "Setting symlinks..."
-mkdir -p ~/.emacs.d
-mkdir -p ~/.config/ghostty
-mkdir -p ~/.hammerspoon
-mkdir -p ~/Library/KeyBindings
+mkdir -p $HOME/.emacs.d
+mkdir -p $HOME/.config/ghostty
+mkdir -p $HOME/.hammerspoon
+mkdir -p $HOME/Library/KeyBindings
 
-ln -s -f ~/.dotfiles/.vimrc ~/.vimrc
-ln -s -f ~/.dotfiles/DefaultKeybinding.dict ~/Library/KeyBindings/DefaultKeyBinding.Dict
-ln -s -f ~/.dotfiles/.ghostty ~/.config/ghostty/config
-ln -s -f ~/.dotfiles/hammerspoon.lua ~/.hammerspoon/init.lua
-ln -s -f ~/.dotfiles/init.el ~/.emacs.d/init.el
-ln -s -f ~/.dotfiles/com.local.KeyRemapping.plist ~/Library/LaunchAgents/com.local.KeyRemapping.plist
+ln -s -f $HOME/.dotfiles/.defaultkeybinding $HOME/Library/KeyBindings/DefaultKeyBinding.dict
+ln -s -f $HOME/.dotfiles/.emacs $HOME/.emacs.d/init.el
+ln -s -f $HOME/.dotfiles/.ghostty $HOME/.config/ghostty/config
+ln -s -f $HOME/.dotfiles/.hammerspoon $HOME/.hammerspoon/init.lua
+ln -s -f $HOME/.dotfiles/.keyremapping $HOME/Library/LaunchAgents/com.local.KeyRemapping.plist
+ln -s -f $HOME/.dotfiles/.vimrc $HOME/.vimrc
 
 [ -e /opt/homebrew/opt/emacs-plus@31/Emacs.app ] && ln -sf /opt/homebrew/opt/emacs-plus@31/Emacs.app /Applications
 
 echo "Creating .zshrc loader..."
-cat > ~/.zshrc << 'EOF'
+cat > $HOME/.zshrc << 'EOF'
 #!/bin/zsh
 #
 # Machine-specific zsh configuration loader
 # This file is NOT version controlled
 
 # Load shared base configuration
-[ -f ~/.dotfiles/.zshrc.base ] && source ~/.dotfiles/.zshrc.base
+[ -f $HOME/.dotfiles/.zshrc.base ] && source $HOME/.dotfiles/.zshrc.base
 
 # --- Machine-Specific Settings Below This Line ---
 EOF

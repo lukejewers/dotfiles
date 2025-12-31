@@ -1,7 +1,7 @@
+# installation directory
+cask_args appdir: '/Applications'
+
 # taps
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-fonts"
 tap "d12frosted/emacs-plus"
 
 # packages
@@ -18,25 +18,22 @@ brew "gcc"
 brew "git"
 brew "go"
 brew "libtool"
-brew "memcached"
 brew "node"
 brew "npm"
 brew "pgformatter"
 brew "postgresql"
 brew "pyenv"
-brew "pyright"
-brew "raylib"
 brew "ripgrep"
 brew "sqlite"
 brew "tree-sitter"
 brew "typescript"
 brew "wget"
+brew "yt-dlp"
 
 # casks
 cask "firefox"
+cask "font-iosevka"
+cask "ghostty"
 cask "google-chrome"
 cask "hammerspoon"
 cask "iina"
-
-# fonts
-cask "font-iosevka"
