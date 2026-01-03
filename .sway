@@ -1,0 +1,91 @@
+ # sway config (~/.config/sway/config)
+
+### exec
+exec pipewire
+
+### Layout
+output eDP-1 scale 1.2
+workspace_layout tabbed
+
+### title bar
+default_border none
+default_floating_border none
+font pango:Iosevka Nerd Font 0.01
+titlebar_padding 1
+titlebar_border_thickness 0
+hide_edge_borders --i3 smart
+# class                 border  backgr. text    indic.  child_border
+client.focused          #181818 #181818 #181818 #96a6c8 #96a6c8
+client.focused_inactive #181818 #181818 #181818 #96a6c8 #96a6c8
+client.unfocused        #181818 #181818 #181818 #96a6c8 #96a6c8
+client.urgent           #c73c3f #c73c3f #ffffff #c73c3f #c73c3f
+
+### Variables
+set $hyper Ctrl+Mod4
+set $left left
+set $right right
+set $up up
+set $down down
+
+### Apps
+set $term ghostty
+set $menu rofi
+set $emacs emacs
+set $browser firefox
+set $finder nautilus
+
+### Window focus
+bindsym $hyper+$left focus left
+bindsym $hyper+$right focus right
+bindsym $hyper+$up focus up
+bindsym $hyper+$down focus down
+
+### Layout manipulation
+bindsym $hyper+t layout tabbed
+bindsym $hyper+e layout toggle split
+bindsym $hyper+f fullscreen
+bindsym $hyper+w kill
+bindsym $hyper+c reload
+
+bindsym $hyper+j exec swaymsg [app_id="emacs"] focus || exec $emacs
+bindsym $hyper+k exec swaymsg [app_id="Firefox"] focus || exec $browser
+
+bindsym $hyper+Return exec $term
+bindsym $hyper+d exec rofi -show drun
+
+# Audio Controls
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ --limit 1.0
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+# Brightness controls
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+
+# Screenshot
+bindsym Print exec grim
+
+# Keyboard settings
+input type:keyboard {
+    repeat_rate  40
+    repeat_delay 225
+}
+
+input "type:touchpad" {
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+    click_method clickfinger
+}
+
+### Bar
+bar {
+    position bottom
+    swaybar_command waybar
+}
+
+### Background
+output * bg #181818 solid_color
+
+include /etc/sway/config.d/*

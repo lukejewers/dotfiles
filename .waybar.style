@@ -1,0 +1,60 @@
+* {
+    font-family: "Iosevka Nerd Font", "Iosevka", "Font Awesome 6 Free", sans-serif;
+    font-size: 16px;
+    border: none;
+    border-radius: 0;
+}
+
+#taskbar button.active {
+    border-bottom: 3px solid #ffdd33;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+window#waybar {
+    background-color: rgba(24, 24, 24, 1);
+    color: #e4e4ef;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+#workspaces button {
+    padding: 0 16px;
+    color: #565f73;
+}
+
+#workspaces button.focused {
+    color: #96a6c8; /* Gruber Niagara Blue */
+    background-color: rgba(150, 166, 200, 0.1); /* Subtle blue tint */
+    border-bottom: 3px solid #96a6c8;
+}
+
+#workspaces button.urgent {
+    color: #f38ba8;
+}
+
+#clock, #battery, #cpu, #memory, #backlight, #network, #pulseaudio, #tray {
+    padding: 0 10px;
+    margin: 4px 0;
+}
+
+#battery.charging, #battery.plugged {
+    color: #a6e3a1;
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f38ba8;
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
