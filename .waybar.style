@@ -5,32 +5,17 @@
     border-radius: 0;
 }
 
-#taskbar button.active {
-    border-bottom: 3px solid #ffdd33;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
-}
-
 window#waybar {
     background-color: rgba(24, 24, 24, 1);
     color: #e4e4ef;
-    transition-property: background-color;
-    transition-duration: .5s;
 }
 
-#workspaces button {
-    padding: 0 16px;
-    color: #565f73;
+#waybar > box {
+    padding-top: 4px;
 }
 
-#workspaces button.focused {
-    color: #96a6c8; /* Gruber Niagara Blue */
-    background-color: rgba(150, 166, 200, 0.1); /* Subtle blue tint */
-    border-bottom: 3px solid #96a6c8;
-}
-
-#workspaces button.urgent {
-    color: #f38ba8;
+#taskbar button.active {
+    border-bottom: 3px solid #ffdd33;
 }
 
 #clock, #battery, #cpu, #memory, #backlight, #network, #pulseaudio, #tray {
