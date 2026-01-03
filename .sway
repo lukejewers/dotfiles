@@ -2,6 +2,8 @@
 
 ### exec
 exec pipewire
+exec emacs
+exec firefox
 
 ### Layout
 output eDP-1 scale 1.2
@@ -49,9 +51,8 @@ bindsym $hyper+c reload
 
 bindsym $hyper+j exec swaymsg [app_id="emacs"] focus || exec $emacs
 bindsym $hyper+k exec swaymsg [app_id="Firefox"] focus || exec $browser
-
-bindsym $hyper+Return exec $term
-bindsym $hyper+d exec rofi -show drun
+bindsym $hyper+l exec swaymsg [app_id="com.mitchellh.ghostty"] focus || exec $term
+bindsym $hyper+Space exec rofi -show drun
 
 # Audio Controls
 bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
