@@ -31,6 +31,7 @@ ln -sf ~/.dotfiles/.sway ~/.config/sway/config
 ln -sf ~/.dotfiles/.waybar.config ~/.config/waybar/config.jsonc
 ln -sf ~/.dotfiles/.waybar.style ~/.config/waybar/style.css
 ln -sf ~/.dotfiles/.ghostty ~/.config/ghostty/config
+ln -sf ~/.dotfiles/.emacs ~/.emacs.d/init.el
 
 sudo ln -sf /etc/sv/dbus /var/service/
 sudo ln -sf /etc/sv/elogind /var/service/
