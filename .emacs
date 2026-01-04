@@ -124,11 +124,7 @@
    ("C-x C-b" . ibuffer)
    ("C-x 2" . (lambda () (interactive) (split-window-vertically) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1)))
-   ("M-o" . other-window)
-   ("s-b" . backward-sexp)
-   ("s-f" . forward-sexp)
-   ("s-n" . forward-list)
-   ("s-p" . backward-list))
+   ("M-o" . other-window))
   :hook
   (ibuffer-mode . hl-line-mode)
   (before-save . whitespace-cleanup)
@@ -145,6 +141,14 @@
 
 (use-package gruber-darker-theme
   :config (load-theme 'gruber-darker :no-confirm))
+
+(use-package windmove
+  :ensure nil
+  :bind
+  (("s-b" . windmove-left)
+   ("s-f" . windmove-right)
+   ("s-p" . windmove-up)
+   ("s-n" . windmove-down)))
 
 (use-package ido
   :ensure nil
