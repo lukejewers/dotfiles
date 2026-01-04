@@ -358,7 +358,8 @@
    ("C-c m l" . magit-log)
    ("C-c m b" . magit-blame))
   :custom
-  (magit-git-executable "/opt/homebrew/bin/git"))
+  (when (eq system-type 'darwin)
+    (magit-git-executable "/opt/homebrew/bin/git")))
 
 (use-package eglot
   :custom
