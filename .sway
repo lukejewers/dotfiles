@@ -6,7 +6,6 @@ exec emacs
 exec firefox
 
 ### Layout
-output eDP-1 scale 1.2
 workspace_layout tabbed
 
 ### title bar

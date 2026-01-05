@@ -1,17 +1,13 @@
 * {
     font-family: "Iosevka Nerd Font", "Iosevka", "Font Awesome 6 Free", sans-serif;
-    font-size: 16px;
+    font-size: 20px;
     border: none;
     border-radius: 0;
 }
 
 window#waybar {
-    background-color: rgba(24, 24, 24, 1);
+    background-color: #282828;
     color: #e4e4ef;
-}
-
-#waybar > box {
-    padding-top: 4px;
 }
 
 #taskbar button.active {
