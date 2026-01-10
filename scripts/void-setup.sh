@@ -56,10 +56,10 @@ apply_gs() {
     fi
 }
 
-apply_gs org.gnome.desktop.interface font-name 'Iosevka 14'
-apply_gs org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 14'
-apply_gs org.gnome.desktop.interface document-font-name 'Iosevka 14'
-apply_gs org.gnome.desktop.wm.preferences titlebar-font 'Iosevka Bold 14'
+apply_gs org.gnome.desktop.interface font-name 'Iosevka 16'
+apply_gs org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 16'
+apply_gs org.gnome.desktop.interface document-font-name 'Iosevka 16'
+apply_gs org.gnome.desktop.wm.preferences titlebar-font 'Iosevka Bold 16'
 apply_gs org.gnome.desktop.interface color-scheme 'prefer-dark'
 apply_gs org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
 apply_gs org.gnome.desktop.interface gtk-key-theme 'Emacs'
