@@ -27,6 +27,7 @@ defaults write -g KeyRepeat -int 2
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write NSGlobalDomain NSAutomaticSpellCheckingEnabled -bool false
 defaults write com.apple.LaunchServices LSQuarantine -bool false
+defaults write com.apple.controlcenter.plist BatteryShowPercentage -bool true
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.5
