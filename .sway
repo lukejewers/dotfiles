@@ -50,7 +50,6 @@ bindsym $hyper+c reload
 
 bindsym $hyper+j exec swaymsg [app_id="emacs"] focus || exec $emacs
 bindsym $hyper+k exec swaymsg [app_id="Firefox"] focus || exec $browser
-bindsym $hyper+l exec swaymsg [app_id="com.mitchellh.ghostty"] focus || exec $term
 bindsym $hyper+Space exec rofi -show drun
 
 # Gestures
@@ -73,6 +72,9 @@ bindsym Print exec grim
 
 # Keyboard settings
 input type:keyboard {
+    xkb_layout gb
+    xkb_variant mac
+    xkb_options altwin:meta_alt
     repeat_rate  40
     repeat_delay 225
 }
