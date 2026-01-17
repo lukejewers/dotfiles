@@ -1,9 +1,24 @@
- # sway config (~/.config/sway/config)
+# sway config (~/.config/sway/config)
 
 ### exec
-exec pipewire
-exec emacs
-exec firefox
+exec {
+  pipewire &
+  emacs &
+  firefox &
+}
+
+exec_always {
+  gsettings set org.gnome.desktop.interface font-name 'Iosevka 16'
+  gsettings set org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 16'
+  gsettings set org.gnome.desktop.interface document-font-name 'Iosevka 16'
+  gsettings set org.gnome.desktop.wm.preferences titlebar-font 'Iosevka Bold 16'
+  gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+  gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+  gsettings set org.gnome.desktop.interface gtk-key-theme 'Emacs'
+  gsettings set org.gnome.desktop.interface icon-theme 'Adwaita'
+  gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
+  gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll true
+}
 
 ### Layout
 workspace_layout tabbed
@@ -50,6 +65,7 @@ bindsym $hyper+c reload
 
 bindsym $hyper+j exec swaymsg [app_id="emacs"] focus || exec $emacs
 bindsym $hyper+k exec swaymsg [app_id="Firefox"] focus || exec $browser
+bindsym $hyper+Return exec $term
 bindsym $hyper+Space exec rofi -show drun
 
 # Gestures

@@ -1,77 +1,66 @@
 #!/bin/bash
 
+echo "Updating system and adding non-free repo..."
 sudo xbps-install -Syu
 sudo xbps-install -y void-repo-nonfree
 sudo xbps-install -Syu
 
+echo "Installing Drivers and Core Services..."
 sudo xbps-install -y \
     linux-firmware-amd \
     mesa-dri mesa-vaapi mesa-vdpau vulkan-radeon libgbm \
     tlp elogind dbus bluez
 
-sudo xbps-install -y \
-    gsettings-desktop-schemas sway waybar ghostty rofi \
-    nautilus firefox emacs-pgtk \
-    cmake libtool gdb git wget xtools wl-clipboard \
-    font-iosevka-nerd nerd-fonts font-logos
-
-
+echo "Installing Audio Stack (Pipewire)..."
 sudo xbps-install -y \
     pipewire wireplumber pipewire-pulse alsa-pipewire \
     pavucontrol sof-firmware alsa-utils
 
+echo "Installing Desktop Environment and Apps..."
+sudo xbps-install -y \
+    gsettings-desktop-schemas sway waybar ghostty rofi \
+    nautilus firefox emacs-pgtk \
+    cmake libtool gdb git wget xtools wl-clipboard \
+    font-iosevka-nerd nerd-fonts font-logos jq ffmpeg yt-dlp
+
 echo "Setting up dotfiles..."
-rm -rf ~/.dotfiles
-git clone https://github.com/lukejewers/dotfiles.git ~/.dotfiles
+DOTFILES="$HOME/.dotfiles"
+if [ -d "$DOTFILES" ]; then
+    echo "Dotfiles dir exists, pulling latest..."
+    cd "$DOTFILES" && git pull
+else
+    git clone https://github.com/lukejewers/dotfiles.git "$DOTFILES"
+fi
 
 mkdir -p ~/.config/sway ~/.config/waybar ~/.config/ghostty ~/.emacs.d
+ln -sf "$DOTFILES"/.sway ~/.config/sway/config
+ln -sf "$DOTFILES"/.waybar.config ~/.config/waybar/config.jsonc
+ln -sf "$DOTFILES"/.waybar.style ~/.config/waybar/style.css
+ln -sf "$DOTFILES"/.ghostty ~/.config/ghostty/config
+ln -sf "$DOTFILES"/.emacs ~/.emacs.d/init.el
 
-ln -sf ~/.dotfiles/.sway ~/.config/sway/config
-ln -sf ~/.dotfiles/.waybar.config ~/.config/waybar/config.jsonc
-ln -sf ~/.dotfiles/.waybar.style ~/.config/waybar/style.css
-ln -sf ~/.dotfiles/.ghostty ~/.config/ghostty/config
-ln -sf ~/.dotfiles/.emacs ~/.emacs.d/init.el
-
+echo "Enabling services..."
 sudo ln -sf /etc/sv/dbus /var/service/
 sudo ln -sf /etc/sv/elogind /var/service/
 sudo ln -sf /etc/sv/tlp /var/service/
 sudo ln -sf /etc/sv/bluetoothd /var/service/
 
-sudo gpasswd -a $USER video
-sudo gpasswd -a $USER audio
-sudo gpasswd -a $USER bluetooth
+echo "Adding user to groups..."
+for group in video audio bluetooth; do
+    sudo gpasswd -a "$USER" $group
+done
 
+echo "Configuring Pipewire ALSA..."
 sudo mkdir -p /etc/alsa/conf.d
 sudo ln -sf /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d/
 sudo ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/
 
-echo "Applying GSettings..."
-apply_gs() {
-    if [ -z "$WAYLAND_DISPLAY" ] && [ -z "$DISPLAY" ]; then
-        # in a TTY, need a temporary DBus session
-        dbus-run-session gsettings set "$1" "$2" "$3"
-    else
-        # in Sway
-        gsettings set "$1" "$2" "$3"
-    fi
-}
-
-apply_gs org.gnome.desktop.interface font-name 'Iosevka 16'
-apply_gs org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 16'
-apply_gs org.gnome.desktop.interface document-font-name 'Iosevka 16'
-apply_gs org.gnome.desktop.wm.preferences titlebar-font 'Iosevka Bold 16'
-apply_gs org.gnome.desktop.interface color-scheme 'prefer-dark'
-apply_gs org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
-apply_gs org.gnome.desktop.interface gtk-key-theme 'Emacs'
-apply_gs org.gnome.desktop.interface icon-theme 'Adwaita'
-apply_gs org.gnome.desktop.peripherals.touchpad tap-to-click true
-apply_gs org.gnome.desktop.peripherals.touchpad natural-scroll true
-
-if ! grep -q "MOZ_ENABLE_WAYLAND" ~/.bashrc; then
+echo "Setting environment variables..."
+if ! grep -q "MOZ_ENABLE_WAYLAND" $HOME/.bashrc; then
     {
       echo 'export MOZ_ENABLE_WAYLAND=1'
       echo 'export XDG_CURRENT_DESKTOP=sway'
-    } >> ~/.bashrc
+    } >> $HOME/.bashrc
 fi
 
 echo "Done! Please reboot."
