@@ -91,7 +91,7 @@ input type:keyboard {
     xkb_layout gb
     xkb_variant mac
     xkb_options altwin:meta_alt
-    repeat_rate  40
+    repeat_rate  33
     repeat_delay 225
 }
 
