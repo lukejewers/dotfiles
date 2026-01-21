@@ -32,12 +32,18 @@ else
     git clone https://github.com/lukejewers/dotfiles.git "$DOTFILES"
 fi
 
-mkdir -p ~/.config/sway ~/.config/waybar ~/.config/ghostty ~/.emacs.d
-ln -sf "$DOTFILES"/.sway ~/.config/sway/config
-ln -sf "$DOTFILES"/.waybar.config ~/.config/waybar/config.jsonc
-ln -sf "$DOTFILES"/.waybar.style ~/.config/waybar/style.css
-ln -sf "$DOTFILES"/.ghostty ~/.config/ghostty/config
-ln -sf "$DOTFILES"/.emacs ~/.emacs.d/init.el
+mkdir -p "$HOME/.config/sway" "$HOME/.config/waybar" "$HOME/.config/ghostty" "$HOME/.emacs.d"
+
+ln -sf "$DOTFILES/.sway" "$HOME/.config/sway/config"
+ln -sf "$DOTFILES/.waybar.config" "$HOME/.config/waybar/config.jsonc"
+ln -sf "$DOTFILES/.waybar.style" "$HOME/.config/waybar/style.css"
+ln -sf "$DOTFILES/.ghostty" "$HOME/.config/ghostty/config"
+ln -sf "$DOTFILES/.emacs" "$HOME/.emacs.d/init.el"
+
+echo "Enabling key remap..."
+sudo cp "$DOTFILES/.hwdb" /etc/udev/hwdb.d/90-keyboard-custom.hwdb
+sudo udevadm hwdb --update
+sudo udevadm trigger
 
 echo "Enabling services..."
 sudo ln -sf /etc/sv/dbus /var/service/
