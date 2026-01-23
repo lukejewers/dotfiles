@@ -9,7 +9,7 @@ echo "Installing Drivers and Core Services..."
 sudo xbps-install -y \
     linux-firmware-amd \
     mesa-dri mesa-vaapi mesa-vdpau vulkan-radeon libgbm \
-    tlp elogind dbus bluez
+    tlp elogind dbus bluez keyd
 
 echo "Installing Audio Stack (Pipewire)..."
 sudo xbps-install -y \
@@ -45,11 +45,15 @@ sudo cp "$DOTFILES/.hwdb" /etc/udev/hwdb.d/90-keyboard-custom.hwdb
 sudo udevadm hwdb --update
 sudo udevadm trigger
 
+ln -sf "$DOTFILES/.keyd" "/etc/keyd/default.conf"
+ln -sf "$DOTFILES/.keyd-application-mapper" "$HOME/.config/.keyd/app.conf"
+
 echo "Enabling services..."
 sudo ln -sf /etc/sv/dbus /var/service/
 sudo ln -sf /etc/sv/elogind /var/service/
 sudo ln -sf /etc/sv/tlp /var/service/
 sudo ln -sf /etc/sv/bluetoothd /var/service/
+sudo ln -sf /etc/sv/keyd /var/service/
 
 echo "Adding user to groups..."
 for group in video audio bluetooth; do
