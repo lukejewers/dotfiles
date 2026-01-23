@@ -19,6 +19,7 @@ sudo xbps-install -y \
 echo "Installing Desktop Environment and Apps..."
 sudo xbps-install -y \
     gsettings-desktop-schemas sway waybar ghostty rofi \
+    xdg-desktop-portal-wlr xdg-desktop-portal-gtk slurp \
     nautilus firefox emacs-pgtk \
     cmake libtool gdb git wget xtools wl-clipboard \
     font-iosevka-nerd nerd-fonts font-logos jq ffmpeg yt-dlp

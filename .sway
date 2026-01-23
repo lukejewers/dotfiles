@@ -5,9 +5,7 @@ exec {
   pipewire &
   emacs &
   firefox &
-}
-
-exec_always {
+  dbus-update-activation-environment --all
   gsettings set org.gnome.desktop.interface font-name 'Iosevka 16'
   gsettings set org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 16'
   gsettings set org.gnome.desktop.interface document-font-name 'Iosevka 16'
@@ -18,6 +16,7 @@ exec_always {
   gsettings set org.gnome.desktop.interface icon-theme 'Adwaita'
   gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
   gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll true
+  brightnessctl set 80%
 }
 
 ### Layout
@@ -79,7 +78,6 @@ bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@
 bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 
 # Brightness controls
-exec brightnessctl set 75%
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
@@ -91,7 +89,7 @@ input type:keyboard {
     xkb_layout gb
     xkb_variant mac
     xkb_options altwin:meta_alt
-    repeat_rate  33
+    repeat_rate  36
     repeat_delay 225
 }
 
