@@ -9,7 +9,7 @@ echo "Installing Drivers and Core Services..."
 sudo xbps-install -y \
     linux-firmware-amd \
     mesa-dri mesa-vaapi mesa-vdpau vulkan-radeon libgbm \
-    tlp elogind dbus bluez keyd
+    tlp elogind dbus bluez keyd iwd
 
 echo "Installing Audio Stack (Pipewire)..."
 sudo xbps-install -y \
@@ -22,7 +22,8 @@ sudo xbps-install -y \
     xdg-desktop-portal-wlr xdg-desktop-portal-gtk slurp \
     nautilus firefox emacs-pgtk \
     cmake libtool gdb git wget xtools wl-clipboard \
-    font-iosevka-nerd nerd-fonts font-logos jq ffmpeg yt-dlp
+    font-iosevka-nerd nerd-fonts font-logos jq ffmpeg yt-dlp \
+    man-pages-devel man-pages-posix mpv
 
 echo "Setting up dotfiles..."
 DOTFILES="$HOME/.dotfiles"

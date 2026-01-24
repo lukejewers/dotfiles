@@ -5,6 +5,7 @@ exec {
   pipewire &
   emacs &
   firefox &
+  keyd-application-mapper &
   dbus-update-activation-environment --all
   gsettings set org.gnome.desktop.interface font-name 'Iosevka 16'
   gsettings set org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 16'
