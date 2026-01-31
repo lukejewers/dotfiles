@@ -64,12 +64,6 @@
 ;; Main Configuration ;;
 ;; ================== ;;
 
-(use-package exec-path-from-shell
-  :ensure t
-  :defer 0.1
-  :if (memq window-system '(mac ns x))
-  :config (exec-path-from-shell-initialize))
-
 (use-package emacs
   :ensure nil
   :custom
