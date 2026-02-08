@@ -18,6 +18,7 @@
       frame-inhibit-implied-resize t
       ns-pop-up-frames nil
       ns-use-proxy-icon nil)
+(add-to-list 'default-frame-alist '(undecorated . t))
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(background-color . "#181818"))
@@ -150,10 +151,10 @@
   :demand t
   :config (ido-mode 1)
   :custom
+  (ido-max-prospects 8)
   (ido-everywhere t)
   (ido-enable-flex-matching t)
-  (ido-use-url-at-point nil)
-  (ido-max-window-height 1))
+  (ido-use-url-at-point nil))
 
 (use-package ido-completing-read+
   :after ido
