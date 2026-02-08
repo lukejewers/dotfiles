@@ -7,10 +7,10 @@ exec {
   firefox &
   keyd-application-mapper &
   dbus-update-activation-environment --all
-  gsettings set org.gnome.desktop.interface font-name 'Iosevka 16'
-  gsettings set org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 16'
-  gsettings set org.gnome.desktop.interface document-font-name 'Iosevka 16'
-  gsettings set org.gnome.desktop.wm.preferences titlebar-font 'Iosevka Bold 16'
+  gsettings set org.gnome.desktop.interface font-name 'Iosevka 18'
+  gsettings set org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 18'
+  gsettings set org.gnome.desktop.interface document-font-name 'Iosevka 18'
+  gsettings set org.gnome.desktop.wm.preferences titlebar-font 'Iosevka Bold 18'
   gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
   gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
   gsettings set org.gnome.desktop.interface gtk-key-theme 'Emacs'

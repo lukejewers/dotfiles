@@ -127,6 +127,7 @@
                   (show-paren-mode 1)
                   (editorconfig-mode 1)
                   (savehist-mode 1)
+                  (pixel-scroll-precision-mode 1)
                   (electric-pair-mode 1)
                   (global-completion-preview-mode 1)
                   (global-auto-revert-mode 1)))
