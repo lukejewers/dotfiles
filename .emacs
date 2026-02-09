@@ -376,6 +376,35 @@
      :typeDefinitionProvider
      :implementationProvider)))
 
+(use-package gptel
+  :ensure t
+  :bind (("C-c <RET>" . gptel-send)
+         ("C-z C-g"     . my/gptel-quick))
+  :config
+  (defun my/get-openrouter-key ()
+    (let ((match (car (auth-source-search :host "openrouter.ai" :user "apikey"))))
+      (if match
+          (let ((secret (plist-get match :secret)))
+            (if (functionp secret) (funcall secret) secret))
+        (error "OpenRouter API key not found in ~/.authinfo"))))
+
+  (defun my/gptel-quick ()
+    (interactive)
+    (if (string= (buffer-name) "*OpenRouter*")
+        (switch-to-buffer nil)
+      (switch-to-buffer (gptel "*OpenRouter*"))))
+
+  (setq-default
+   gptel-backend
+   (gptel-make-openai "OpenRouter"
+     :host "openrouter.ai"
+     :endpoint "/api/v1/chat/completions"
+     :stream t
+     :key #'my/get-openrouter-key
+     :models '("openai/gpt-5.2-codex"
+               "google/gemini-3.1-pro-preview")))
+  (setq-default gptel-model "openai/gpt-5.2-codex"))
+
 (use-package pyvenv :defer t)
 (use-package bluetooth :defer t)
 
