@@ -417,25 +417,4 @@
 (global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell 0.45)))
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell 0.45)))
 
-;;;###autoload
-(defvar my/search-directories '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/"))
-
-;;;###autoload
-(defun find-file-in-my-directories ()
-  (interactive)
-  (let* ((home-dir (expand-file-name "~/"))
-         (fd-cmd (concat "fd --type f --hidden --no-ignore-vcs --exclude .git --exclude eln-cache . "
-                         (mapconcat (lambda (dir)
-                                      (shell-quote-argument (expand-file-name dir)))
-                                    my/search-directories " ")))
-         (full-paths (split-string (shell-command-to-string fd-cmd) "\n" t))
-         (display-paths (mapcar (lambda (path)
-                                  (replace-regexp-in-string
-                                   (regexp-quote home-dir) "~/" path))
-                                full-paths))
-         (file-to-find (completing-read "Find file: " display-paths nil t)))
-    (when file-to-find
-      (find-file (expand-file-name file-to-find)))))
-(global-set-key (kbd "C-z C-f") #'find-file-in-my-directories)
-
 (provide 'init)
