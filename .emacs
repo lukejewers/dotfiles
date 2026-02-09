@@ -377,6 +377,7 @@
      :implementationProvider)))
 
 (use-package pyvenv :defer t)
+(use-package bluetooth :defer t)
 
 ;; ================ ;;
 ;; Custom Functions ;;
