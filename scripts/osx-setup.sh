@@ -22,7 +22,7 @@ brew bundle --file="$HOME/.dotfiles/.brewfile"
 
 echo "Configuring OSX..."
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write -g InitialKeyRepeat -int 15
+defaults write -g InitialKeyRepeat -int 14
 defaults write -g KeyRepeat -int 2
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write NSGlobalDomain NSAutomaticSpellCheckingEnabled -bool false
