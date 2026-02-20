@@ -290,7 +290,7 @@
   :custom (vterm-always-compile-module t)
   :config
   (setq vterm-timer-delay 0.01)
-  (setq vterm-max-scrollback 10000)
+  (setq vterm-max-scrollback 100000)
   (define-key project-prefix-map "t" #'vterm-project)
   (defvar my-original-mode-line-format mode-line-format)
   (defun vterm-update-mode-line ()
