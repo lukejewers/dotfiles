@@ -21,7 +21,10 @@
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(background-color . "#181818"))
+
 (set-face-attribute 'default nil :background "#181818" :foreground "#e4e4ef")
+(prefer-coding-system 'utf-8)
+(set-language-environment "UTF-8")
 
 (setq inhibit-startup-screen t
       inhibit-startup-message t
@@ -31,9 +34,6 @@
       use-short-answers t
       inhibit-compacting-font-caches t
       mode-line-format nil)
-
-(prefer-coding-system 'utf-8)
-(set-language-environment "UTF-8")
 
 (when (eq system-type 'darwin)
   (setq mac-left-control-modifier 'control
@@ -389,7 +389,6 @@
           (let ((secret (plist-get match :secret)))
             (if (functionp secret) (funcall secret) secret))
         (error "OpenRouter API key not found in ~/.authinfo"))))
-
   (defun my/gptel-quick ()
     (interactive)
     (if (string= (buffer-name) "*OpenRouter*")
@@ -408,7 +407,6 @@
   (setq-default gptel-model "openai/gpt-5.2-codex"))
 
 (use-package pyvenv :defer t)
-(use-package bluetooth :defer t)
 
 ;; ================ ;;
 ;; Custom Functions ;;
