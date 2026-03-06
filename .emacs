@@ -237,7 +237,7 @@
   :ensure nil
   :custom
   (org-log-done t)
-  (org-directory "~/.me/org")
+  (org-directory "~/me/org")
   :hook
   (org-mode . visual-line-mode)
   (org-mode . (lambda () (setq tab-width 8))))
@@ -420,7 +420,7 @@
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell 0.45)))
 
 ;;;###autoload
-(defvar my/search-directories '("~/probe/" "~/.emacs.d/" "~/.dotfiles/" "~/.me/"))
+(defvar my/search-directories '("~/me/" "~/.dotfiles/"))
 
 ;;;###autoload
 (defun find-file-in-my-directories ()
