@@ -269,11 +269,11 @@
   ("M-p" . 'move-text-up)
   ("M-n" . 'move-text-down))
 
-(use-package expand-region
+(use-package expreg
   :defer t
   :bind
-  ("C-=" . er/expand-region)
-  ("C--" . er/contract-region))
+  ("C-=" . expreg-expand)
+  ("C--" . expreg-contract))
 
 (use-package multiple-cursors
   :defer t
