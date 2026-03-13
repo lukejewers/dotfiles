@@ -380,6 +380,26 @@
 
 (use-package pyvenv :defer t)
 
+(use-package gptel
+  :ensure t
+  :config
+  (defun my/get-openrouter-key ()
+    (let ((match (car (auth-source-search :host "openrouter.ai"))))
+      (if match
+          (let ((secret (plist-get match :secret)))
+            (if (functionp secret) (funcall secret) secret))
+        (error "API key for openrouter.ai not found in auth-source"))))
+  (setq gptel-backend
+        (gptel-make-openai "OpenRouter"
+          :host "openrouter.ai"
+          :endpoint "/api/v1/chat/completions"
+          :stream t
+          :key #'my/get-openrouter-key
+          :models '("openai/gpt-5.3-codex"
+                    "z-ai/glm-5")))
+  (setq gptel-model "z-ai/glm-5"
+        gptel-default-mode 'org-mode))
+
 ;; ================ ;;
 ;; Custom Functions ;;
 ;; ================ ;;
