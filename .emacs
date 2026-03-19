@@ -414,15 +414,16 @@
 ;;;###autoload
 (with-eval-after-load 'project
   (cl-defmethod project-files :around (project &optional dirs)
-    "Use \\='fd' if available to find all files for PROJECT in DIRS."
+    "Use `fd` to find all files for PROJECT in DIRS."
     (if-let ((fd (executable-find "fd")))
-        (let* ((search-dirs
-                (string-join
-                 (mapcar (lambda (d) (shell-quote-argument (expand-file-name d)))
-                         (or dirs (list (project-root project))))
-                 " "))
-               (command (format "%s --type f --print0 '.*' %s" fd search-dirs)))
-          (split-string (shell-command-to-string command) "\0" t))
+        (let* ((search-dirs (mapcar #'expand-file-name
+                                    (or dirs (list (project-root project)))))
+               (args (append (list "--type" "f" "--print0" ".")
+                             search-dirs)))
+          (with-temp-buffer
+            (if (zerop (apply #'process-file fd nil t nil args))
+                (split-string (buffer-string) "\0" t)
+              (cl-call-next-method project dirs))))
       (cl-call-next-method project dirs))))
 
 ;;;###autoload
