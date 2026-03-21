@@ -414,6 +414,22 @@
 ;; ================ ;;
 
 ;;;###autoload
+(defun gptel-summarise-buffer (buffer)
+    "Summarise buffer using gptel and insert at point."
+    (interactive "bBuffer to summarize: ")
+    (gptel-request
+        (with-current-buffer buffer
+          (buffer-substring-no-properties (point-min) (point-max)))
+      :system "Summarize this in 2 short paragraphs."
+      :callback
+      (lambda (response _info)
+        (when response
+          (save-excursion
+            (let ((beg (point)))
+              (insert response)
+              (fill-region beg (point))))))))
+
+;;;###autoload
 (with-eval-after-load 'project
   (cl-defmethod project-files :around (project &optional dirs)
     "Use `fd` to find all files for PROJECT in DIRS."
