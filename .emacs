@@ -319,6 +319,7 @@
   (eshell-save-history-on-exit nil)
   (eshell-hist-ignoredups t)
   (eshell-history-size 10000)
+  (eshell-destroy-buffer-when-process-dies t)
   :config
   (defun eshell-setup ()
     "Configure eshell environment and settings."
@@ -332,6 +333,12 @@
       (let ((eshell-history-ring (make-ring 1)))
         (ring-insert eshell-history-ring cmd)
         (eshell-write-history eshell-history-file-name t)))))
+
+(use-package eshell-vterm
+  :demand t
+  :after eshell
+  :config
+  (eshell-vterm-mode))
 
 (use-package treesit
   :ensure nil
