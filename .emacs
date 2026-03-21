@@ -97,6 +97,8 @@
   (vc-follow-symlinks t)
   (whitespace-line-column 80)
   (xref-search-program 'ripgrep)
+  (comint-completion-addsuffix nil)
+  (pcomplete-termination-string "")
   :config
   (put 'narrow-to-region 'disabled nil)
   (with-eval-after-load 'c-ts-mode
@@ -457,7 +459,7 @@
                   (window-width . ,window-width)))
              nil)))
       (funcall shell))))
-(global-set-key (kbd "C-z C-z") (lambda () (interactive) (toggle-shell "vterm-mode" #'vterm)))
+(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" #'vterm)))
 (global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell 0.45)))
 (global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell 0.45)))
 
