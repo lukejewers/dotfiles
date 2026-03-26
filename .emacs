@@ -15,6 +15,7 @@
 
 (setq frame-title-format '("%f")
       frame-resize-pixelwise t
+      window-resize-pixelwise t
       frame-inhibit-implied-resize t
       ns-pop-up-frames nil
       ns-use-proxy-icon nil)
@@ -472,19 +473,19 @@
 (global-set-key (kbd "C-,") #'duplicate-line)
 
 ;;;###autoload
-(defun toggle-shell (shell-str shell &optional window-width)
+(defun toggle-shell (shell-mode-symbol shell-func &optional window-width)
   (interactive)
-  (if (string-equal shell-str major-mode)
+  (if (eq major-mode shell-mode-symbol)
       (quit-window)
     (let ((display-buffer-alist
            (if window-width
                `((".*" (display-buffer-pop-up-window)
                   (window-width . ,window-width)))
              nil)))
-      (funcall shell))))
-(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell "vterm-mode" #'vterm)))
-(global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell "shell-mode" #'shell 0.45)))
-(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell "eshell-mode" #'eshell 0.45)))
+      (funcall shell-func))))
+(global-set-key (kbd "C-z C-v") (lambda () (interactive) (toggle-shell 'vterm-mode #'vterm)))
+(global-set-key (kbd "C-z C-s") (lambda () (interactive) (toggle-shell 'shell-mode #'shell 0.45)))
+(global-set-key (kbd "C-z C-e") (lambda () (interactive) (toggle-shell 'eshell-mode #'eshell 0.45)))
 
 ;;;###autoload
 (defvar my/search-directories '("~/me/" "~/.dotfiles/"))
