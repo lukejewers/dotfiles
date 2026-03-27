@@ -392,7 +392,7 @@
 
 (use-package gptel
   :ensure t
-  :bind ("C-z C-g" . #'my/gptel-toggle)
+  :bind ("C-z C-x" . #'my/gptel-toggle)
   :config
   (defun my/gptel-toggle ()
     (interactive)
@@ -413,29 +413,13 @@
           :stream t
           :key #'my/get-openrouter-key
           :models '("openai/gpt-5.3-codex"
-                    "z-ai/glm-5")))
+                    "google/gemini-3.1-pro-preview")))
   (setq gptel-model "openai/gpt-5.3-codex"
         gptel-default-mode 'org-mode))
 
 ;; ================ ;;
 ;; Custom Functions ;;
 ;; ================ ;;
-
-;;;###autoload
-(defun gptel-summarise-buffer (buffer)
-    "Summarise buffer using gptel and insert at point."
-    (interactive "bBuffer to summarize: ")
-    (gptel-request
-        (with-current-buffer buffer
-          (buffer-substring-no-properties (point-min) (point-max)))
-      :system "Summarize this in 2 short paragraphs."
-      :callback
-      (lambda (response _info)
-        (when response
-          (save-excursion
-            (let ((beg (point)))
-              (insert response)
-              (fill-region beg (point))))))))
 
 ;;;###autoload
 (with-eval-after-load 'project
