@@ -2,12 +2,11 @@
 
 ### exec
 exec {
-  pipewire &
-  emacs &
-  firefox &
+  dbus-update-activation-environment --all
+
   syncthing &
   keyd-application-mapper &
-  dbus-update-activation-environment --all
+
   gsettings set org.gnome.desktop.interface font-name 'Iosevka 14'
   gsettings set org.gnome.desktop.interface monospace-font-name 'Iosevka Nerd Font 14'
   gsettings set org.gnome.desktop.interface document-font-name 'Iosevka 14'
@@ -18,7 +17,11 @@ exec {
   gsettings set org.gnome.desktop.interface icon-theme 'Adwaita'
   gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
   gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll true
+
   brightnessctl set 80%
+
+  emacs &
+  firefox &
 }
 
 ### Layout
@@ -45,7 +48,7 @@ set $up up
 set $down down
 
 ### Apps
-set $term ghostty
+set $term foot
 set $menu rofi
 set $emacs emacs
 set $browser firefox
