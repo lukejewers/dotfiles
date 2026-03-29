@@ -37,8 +37,7 @@ fi
 mkdir -p "$HOME/.config/sway" "$HOME/.config/waybar" "$HOME/.config/ghostty" "$HOME/.emacs.d"
 
 ln -sf "$DOTFILES/.sway" "$HOME/.config/sway/config"
-ln -sf "$DOTFILES/.waybar.config" "$HOME/.config/waybar/config.jsonc"
-ln -sf "$DOTFILES/.waybar.style" "$HOME/.config/waybar/style.css"
+ln -sf "$DOTFILES/.i3status-rust" "$HOME/.config/i3status-rust/config.toml"
 ln -sf "$DOTFILES/.ghostty" "$HOME/.config/ghostty/config"
 ln -sf "$DOTFILES/.emacs" "$HOME/.emacs.d/init.el"
 
