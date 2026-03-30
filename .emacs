@@ -190,6 +190,7 @@
   :custom
   (grep-use-null-device nil)
   (grep-save-buffers t)
+  (grep-use-headings t)
   (grep-command "rg -S --no-heading --color=never ")
   :config
   (setq grep-default-command "rg -S --no-heading --color=never ")
