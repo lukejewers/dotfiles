@@ -66,8 +66,8 @@ if [[ "$(uname)" == "Darwin" ]]; then
     alias noiseon="(afplay \"$HOME/Sounds/brown-noise.mp3\" > /dev/null 2>&1 &) && echo 'Brown noise started'"
     alias noiseoff="pkill -f 'afplay.*brown-noise' 2>/dev/null && echo 'Brown noise stopped' || echo 'No brown noise playing'"
 elif [[ "$(uname)" == "Linux" ]]; then
-    alias noiseon="(pw-play \"$HOME/Sounds/brown-noise.mp3\" > /dev/null 2>&1 &) && echo 'Brown noise started'"
-    alias noiseoff="pkill -f 'pw-play.*brown-noise' 2>/dev/null && echo 'Brown noise stopped'"
+    alias noiseon="(paplay \"$HOME/Sounds/brown-noise.mp3\" > /dev/null 2>&1 &) && echo 'Brown noise started'"
+    alias noiseoff="pkill -f 'paplay.*brown-noise' 2>/dev/null && echo 'Brown noise stopped'"
 fi
 alias ytd="$HOME/.dotfiles/scripts/yt-download.sh"
 
