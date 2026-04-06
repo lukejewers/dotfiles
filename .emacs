@@ -333,14 +333,7 @@
 
 (use-package gptel
   :ensure t
-  :bind ("C-z C-a" . #'my/gptel-toggle)
   :config
-  (defun my/gptel-toggle ()
-    (interactive)
-    (if (string= (buffer-name) "*gptel*")
-        (quit-window)
-      (pop-to-buffer (or (get-buffer "*gptel*")
-                         (gptel "*gptel*")))))
   (setq gptel-model "moonshotai/kimi-k2.5"
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "OpenRouter"
