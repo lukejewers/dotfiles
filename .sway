@@ -1,6 +1,6 @@
 # sway config (~/.config/sway/config)
 
-### exec
+# exec
 exec_always {
   dbus-update-activation-environment --all
 
@@ -21,33 +21,34 @@ exec firefox &
 exec keyd-application-mapper &
 exec syncthing &
 
-### Layout
+# Layout
 workspace_layout tabbed
+font pango:Iosevka Nerd Font 10
 
-### title bar
+# title bar
 hide_edge_borders --i3 smart
 
-### Variables
+# Variables
 set $hyper Ctrl+Mod4
 set $left left
 set $right right
 set $up up
 set $down down
 
-### Apps
+# Apps
 set $term foot
 set $menu rofi
 set $emacs emacs
 set $browser firefox
 set $finder nautilus
 
-### Window focus
+# Window focus
 bindsym $hyper+$left focus left
 bindsym $hyper+$right focus right
 bindsym $hyper+$up focus up
 bindsym $hyper+$down focus down
 
-### Layout manipulation
+# Layout manipulation
 bindsym $hyper+t layout tabbed
 bindsym $hyper+e layout toggle split
 bindsym $hyper+f fullscreen
@@ -55,25 +56,47 @@ bindsym $hyper+w kill
 bindsym $hyper+c reload
 bindsym $hyper+z floating toggle
 
-bindsym $hyper+j exec swaymsg [app_id="emacs"] focus || exec $emacs
-bindsym $hyper+k exec swaymsg [app_id="Firefox"] focus || exec $browser
+# Apps
+bindsym $hyper+j exec swaymsg '[app_id="emacs" workspace="__focused__"] focus' || exec $emacs
+bindsym $hyper+k exec swaymsg '[app_id="Firefox" workspace="__focused__"] focus' || exec $browser
 bindsym $hyper+Return exec $term
 bindsym $hyper+Space exec rofi -show drun
 
+# Workspaces
+bindsym $hyper+1 workspace number 1
+bindsym $hyper+2 workspace number 2
+bindsym $hyper+3 workspace number 3
+bindsym $hyper+4 workspace number 4
+bindsym $hyper+5 workspace number 5
+bindsym $hyper+6 workspace number 6
+bindsym $hyper+7 workspace number 7
+bindsym $hyper+8 workspace number 8
+
+# Background
+output * bg #181818 solid_color
+
+# Bar
+bar {
+    position top
+    status_command i3status-rs ~/.config/i3status-rust/config.toml
+    font pango:Iosevka Nerd Font 10
+    tray_output *
+}
+
 # Gestures
-bindgesture swipe:3:left focus prev
+bindgesture swipe:3:left  focus prev
 bindgesture swipe:3:right focus next
 
 # Audio Controls
-bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym --locked XF86AudioMute        exec pactl set-sink-mute   @DEFAULT_SINK@   toggle
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@   -5%
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@   +5%
+bindsym --locked XF86AudioMicMute     exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 # Brightness controls
 exec brightnessctl set 80%
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym --locked XF86MonBrightnessUp   exec brightnessctl set 5%+
 
 # Screenshot
 bindsym Print exec grim
@@ -101,19 +124,10 @@ input "type:touchpad" {
     click_method clickfinger
 }
 
-### Bar
-bar {
-    position top
-    status_command i3status-rs ~/.config/i3status-rust/config.toml
-    font pango:Iosevka Nerd Font 10
-    tray_output *
-}
-
+# Laptop
 set $laptop eDP-1
 bindswitch lid:on output $laptop disable
 bindswitch lid:off output $laptop enable
-
-### Background
-output * bg #181818 solid_color
+output $laptop disable
 
 include /etc/sway/config.d/*
