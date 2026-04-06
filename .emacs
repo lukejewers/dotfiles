@@ -329,7 +329,13 @@
      :typeDefinitionProvider
      :implementationProvider)))
 
-(use-package pyvenv :defer t)
+(use-package pyvenv
+  :defer t)
+
+(use-package emacos
+  :if (eq system-type 'darwin)
+  :vc (:url "https://github.com/lukejewers/emacos.git"
+       :rev :newest))
 
 (use-package gptel
   :ensure t
