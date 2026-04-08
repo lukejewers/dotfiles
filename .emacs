@@ -57,26 +57,23 @@
 
 (use-package emacs
   :ensure nil
-  :init
-  (blink-cursor-mode -1)
-  (tooltip-mode -1)
   :custom
   (auto-save-default nil)
   (c-ts-mode-indent-offset 4)
   (comint-completion-addsuffix nil)
   (comint-process-echoes t)
   (comp-async-report-warnings-errors nil)
-  (comp-deferred-compilation t)
   (completion-auto-select t)
   (create-lockfiles nil)
+  (cursor-in-non-selected-windows nil)
   (delete-by-moving-to-trash t)
   (delete-pair-blink-delay 0.1)
   (delete-pair-push-mark t)
-  (delete-selection-mode 1)
   (duplicate-line-final-position 1)
   (electric-pair-delete-adjacent-pairs t)
   (electric-pair-preserve-balance nil)
   (help-window-select t)
+  (highlight-nonselected-windows nil)
   (indent-tabs-mode nil)
   (lazy-highlight-initial-delay 0)
   (make-backup-files nil)
@@ -86,7 +83,8 @@
   (python-indent-guess-indent-offset-verbose nil)
   (python-shell-completion-native-enable nil)
   (resize-mini-windows nil)
-  (savehist-mode 1)
+  (kill-do-not-save-duplicates t)
+  (save-interprogram-paste-before-kill t)
   (set-mark-command-repeat-pop t)
   (tab-always-indent 'complete)
   (tab-width 4)
@@ -95,15 +93,18 @@
   (whitespace-line-column 80)
   (xref-search-program 'ripgrep)
   :config
-  (put 'narrow-to-region 'disabled nil)
-  (with-eval-after-load 'c-ts-mode (define-key c-ts-mode-map (kbd "C-c .") nil))
-  (show-paren-mode 1)
+  (blink-cursor-mode 0)
+  (delete-selection-mode 1)
   (editorconfig-mode 1)
-  (savehist-mode 1)
-  (pixel-scroll-precision-mode 1)
   (electric-pair-mode 1)
-  (global-completion-preview-mode 1)
   (global-auto-revert-mode 1)
+  (global-completion-preview-mode 1)
+  (pixel-scroll-precision-mode 1)
+  (put 'narrow-to-region 'disabled nil)
+  (savehist-mode 1)
+  (show-paren-mode 1)
+  (tooltip-mode 0)
+  (with-eval-after-load 'c-ts-mode (define-key c-ts-mode-map (kbd "C-c .") nil))
   :bind
   (("<C-wheel-down>" . ignore)
    ("<C-wheel-up>" . ignore)
@@ -133,6 +134,7 @@
   (before-save . whitespace-cleanup)
   (occur-mode . (lambda () (switch-to-buffer-other-window "*Occur*")))
   (html-mode . (lambda () (local-unset-key (kbd "M-o"))))
+  (after-save . executable-make-buffer-file-executable-if-script-p)
   (ibuffer-mode . hl-line-mode)
   (shell-mode . (lambda () (setq-local scroll-margin 1))))
 
@@ -250,8 +252,8 @@
 (use-package move-text
   :defer t
   :bind
-  ("M-p" . 'move-text-up)
-  ("M-n" . 'move-text-down))
+  ("M-p" . move-text-up)
+  ("M-n" . move-text-down))
 
 (use-package expreg
   :defer t
@@ -347,7 +349,7 @@
 (use-package gptel
   :ensure t
   :config
-  (setq gptel-model "moonshotai/kimi-k2.5"
+  (setq gptel-model "z-ai/glm-5.1"
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "OpenRouter"
                         :host "openrouter.ai"
