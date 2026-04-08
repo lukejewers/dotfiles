@@ -120,6 +120,8 @@
    ("M-3" . (lambda () (interactive) (insert "#")))
    ("C-," . duplicate-line)
    ("C-x C-b" . ibuffer)
+   ("C-x 2" . (lambda () (interactive) (split-window-vertically)   (other-window 1)))
+   ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1)))
    ("M-o" . other-window)
    ("C-x p h" . project-dired-home)
    ("C-M-z" . delete-pair)
@@ -129,6 +131,7 @@
    ("C-z C-f" . find-file-in-my-directories))
   :hook
   (before-save . whitespace-cleanup)
+  (occur-mode . (lambda () (switch-to-buffer-other-window "*Occur*")))
   (html-mode . (lambda () (local-unset-key (kbd "M-o"))))
   (ibuffer-mode . hl-line-mode)
   (shell-mode . (lambda () (setq-local scroll-margin 1))))
@@ -353,7 +356,7 @@
                         :key 'gptel-api-key
                         :models '("google/gemini-3.1-pro-preview"
                                   "moonshotai/kimi-k2.5"
-                                  "z-ai/glm-5"))))
+                                  "z-ai/glm-5.1"))))
 
 ;; ================ ;;
 ;; Custom Functions ;;
