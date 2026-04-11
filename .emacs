@@ -70,6 +70,8 @@
   (delete-pair-blink-delay 0.1)
   (delete-pair-push-mark t)
   (duplicate-line-final-position 1)
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
+  (ediff-split-window-function 'split-window-horizontally)
   (electric-pair-delete-adjacent-pairs t)
   (electric-pair-preserve-balance nil)
   (help-window-select t)
@@ -378,7 +380,7 @@
 (with-eval-after-load 'project
   (cl-defmethod project-files :around (project &optional dirs)
     "Use `fd` to find all files for PROJECT in DIRS."
-    (if-let ((fd (executable-find "fd")))
+    (if-let* ((fd (executable-find "fd")))
         (let* ((search-dirs (mapcar #'expand-file-name
                                     (or dirs (list (project-root project)))))
                (args (append (list "--type" "f" "--print0" ".")
