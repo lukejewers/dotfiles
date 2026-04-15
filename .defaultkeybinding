@@ -34,7 +34,7 @@
     "~d"       = "deleteWordForward:";                 /* M-d: Delete next word */
     "^\177"    = "deleteWordBackward:";                /* C-delete: Delete previous word */
     "^/"       = "undo:";                              /* C-/: Undo */
-    "~c"       = "capitalizeWord";                     /* M-c: Capitalize word */
+    "~c"       = "capitalizeWord:";                    /* M-c: Capitalize word */
     "~u"       = "uppercaseWord:";                     /* M-u: Uppercase word */
     "~l"       = "lowercaseWord:";                     /* M-l: Lowercase word */
     "^t"       = "transpose:";                         /* C-t: Transpose characters */
