@@ -353,7 +353,7 @@
   :config
   (setq gptel-model "z-ai/glm-5.1"
         gptel-default-mode 'org-mode
-        gptel-backend (gptel-make-openai "OpenRouter"
+        gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
                         :endpoint "/api/v1/chat/completions"
                         :stream t
