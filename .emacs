@@ -153,6 +153,7 @@
   :demand t
   :config (ido-mode 1)
   :custom
+  (ido-auto-merge-work-directories-length -1)
   (ido-max-prospects 10)
   (ido-everywhere t)
   (ido-enable-flex-matching t)
