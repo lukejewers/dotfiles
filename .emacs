@@ -341,7 +341,7 @@
   :defer t
   :ensure t
   :config
-  (setq gptel-model "z-ai/glm-5.1"
+  (setq gptel-model "moonshotai/kimi-k2.6"
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -349,7 +349,7 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("google/gemini-3.1-pro-preview"
-                                  "moonshotai/kimi-k2.5"
+                                  "moonshotai/kimi-k2.6"
                                   "z-ai/glm-5.1"))))
 
 ;; ================ ;;
