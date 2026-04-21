@@ -335,9 +335,6 @@
      :typeDefinitionProvider
      :implementationProvider)))
 
-(use-package pyvenv
-  :defer t)
-
 (use-package gptel
   :ensure t
   :config
@@ -366,6 +363,37 @@
                   (window-width . ,window-width)))
              nil)))
       (funcall shell-func))))
+
+(defvar my-venv--initial-path nil)
+(defvar my-venv--initial-exec-path nil)
+
+(defun my-venv-activate (directory)
+  "Activate a Python virtual environment."
+  (interactive "DActivate venv: ")
+  (unless my-venv--initial-path
+    (setq my-venv--initial-path (getenv "PATH"))
+    (setq my-venv--initial-exec-path exec-path))
+  (let* ((venv-dir (expand-file-name directory))
+         (bin-dir  (expand-file-name "bin" venv-dir)))
+    (setenv "PATH" my-venv--initial-path)
+    (setq exec-path my-venv--initial-exec-path)
+    (setenv "VIRTUAL_ENV" venv-dir)
+    (setenv "PATH" (concat bin-dir path-separator (getenv "PATH")))
+    (setq exec-path (cons bin-dir exec-path))
+    (setq python-shell-virtualenv-root venv-dir)
+    (setq eshell-path-env (getenv "PATH"))
+    (message "Activated venv: %s" venv-dir)))
+
+(defun my-venv-deactivate ()
+  "Deactivate the current Python virtual environment."
+  (interactive)
+  (when my-venv--initial-path
+    (setenv "PATH" my-venv--initial-path)
+    (setq exec-path my-venv--initial-exec-path)
+    (setenv "VIRTUAL_ENV" nil)
+    (setq python-shell-virtualenv-root nil)
+    (setq eshell-path-env (getenv "PATH"))
+    (message "Deactivated venv.")))
 
 (defun my-toggle-split-direction ()
   "Toggle between a horizontal and vertical split for two windows."
