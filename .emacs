@@ -128,6 +128,7 @@
    ("M-o" . other-window)
    ("C-x p h" . project-dired-home)
    ("C-M-z" . delete-pair)
+   ("C-z C-t" . my-toggle-split-direction)
    ("C-z C-v" . (lambda () (interactive) (toggle-shell 'vterm-mode #'vterm)))
    ("C-z C-s" . (lambda () (interactive) (toggle-shell 'shell-mode #'shell 0.45)))
    ("C-z C-e" . (lambda () (interactive) (toggle-shell 'eshell-mode #'eshell 0.45)))
@@ -247,10 +248,6 @@
   (interactive)
   (let ((root (project-root (project-current t))))
     (dired root)))
-
-(use-package transpose-frame
-  :defer t
-  :bind ("C-z C-t" . transpose-frame))
 
 (use-package move-text
   :defer t
@@ -391,5 +388,18 @@
                 (split-string (buffer-string) "\0" t)
               (cl-call-next-method project dirs))))
       (cl-call-next-method project dirs))))
+
+(defun my-toggle-split-direction ()
+  "Toggle between a horizontal and vertical split for two windows."
+  (interactive)
+  (unless (= (count-windows) 2)
+    (user-error "This function only works with exactly 2 windows"))
+  (let* ((this-win (selected-window))
+         (next-win (next-window this-win))
+         (next-buf (window-buffer next-win))
+         (is-vertical (window-combined-p this-win)))
+    (delete-window next-win)
+    (let ((new-win (if is-vertical (split-window-right) (split-window-below))))
+      (set-window-buffer new-win next-buf))))
 
 (provide 'init)
