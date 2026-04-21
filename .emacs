@@ -375,20 +375,6 @@
              nil)))
       (funcall shell-func))))
 
-(with-eval-after-load 'project
-  (cl-defmethod project-files :around (project &optional dirs)
-    "Use `fd` to find all files for PROJECT in DIRS."
-    (if-let* ((fd (executable-find "fd")))
-        (let* ((search-dirs (mapcar #'expand-file-name
-                                    (or dirs (list (project-root project)))))
-               (args (append (list "--type" "f" "--print0" ".")
-                             search-dirs)))
-          (with-temp-buffer
-            (if (zerop (apply #'process-file fd nil t nil args))
-                (split-string (buffer-string) "\0" t)
-              (cl-call-next-method project dirs))))
-      (cl-call-next-method project dirs))))
-
 (defun my-toggle-split-direction ()
   "Toggle between a horizontal and vertical split for two windows."
   (interactive)
