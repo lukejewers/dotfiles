@@ -240,13 +240,11 @@
   (dired-do-revert-buffer t)
   (dired-auto-revert-buffer t)
   (dired-dwim-target t)
+  :bind
+  (:map dired-mode-map
+        ("V" . my-reveal-file-at-point-in-finder))
   :config
   (put 'dired-find-alternate-file 'disabled nil))
-
-(defun my-project-dired-home()
-  (interactive)
-  (let ((root (project-root (project-current t))))
-    (dired root)))
 
 (use-package move-text
   :defer t
@@ -340,11 +338,6 @@
 (use-package pyvenv
   :defer t)
 
-(use-package emacos
-  :if (eq system-type 'darwin)
-  :vc (:url "https://github.com/lukejewers/emacos.git"
-       :rev :newest))
-
 (use-package gptel
   :ensure t
   :config
@@ -386,5 +379,28 @@
     (delete-window next-win)
     (let ((new-win (if is-vertical (split-window-right) (split-window-below))))
       (set-window-buffer new-win next-buf))))
+
+(defun my-project-dired-home()
+  "Open Dired at the root of the current project."
+  (interactive)
+  (let ((root (project-root (project-current t))))
+    (dired root)))
+
+(defun my-reveal-file-at-point-in-finder ()
+  "Reveal the current file in macOS Finder."
+  (interactive)
+  (unless (eq system-type 'darwin)
+    (user-error "This command is only available on macOS"))
+  (let (filename)
+    (cond
+     ((derived-mode-p 'dired-mode)
+      (setq filename (or (dired-get-filename nil t) (dired-current-directory))))
+     ((buffer-file-name)
+      (setq filename (buffer-file-name)))
+     (t (user-error "Not in a file or dired buffer")))
+    (unless (file-exists-p filename)
+      (user-error "File does not exist: %s" filename))
+    (start-process "reveal-in-finder" nil "open" "-R" filename)
+    (message "Revealing %s in Finder" (file-name-nondirectory filename))))
 
 (provide 'init)
