@@ -6,10 +6,10 @@
       gc-cons-percentage 0.6
       package-enable-at-startup nil)
 
-(defun my/display-startup-time ()
+(defun my-display-startup-time ()
   (message "Emacs loaded in %.2f seconds with %d garbage collections"
            (float-time (time-subtract after-init-time before-init-time)) gcs-done))
-(add-hook 'emacs-startup-hook #'my/display-startup-time)
+(add-hook 'emacs-startup-hook #'my-display-startup-time)
 (add-hook 'emacs-startup-hook (lambda () (setq gc-cons-threshold (* 1024 1024 16))))
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
@@ -126,13 +126,12 @@
    ("C-x 2" . (lambda () (interactive) (split-window-vertically)   (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1)))
    ("M-o" . other-window)
-   ("C-x p h" . project-dired-home)
    ("C-M-z" . delete-pair)
+   ("C-x p h" . my-project-dired-home)
    ("C-z C-t" . my-toggle-split-direction)
-   ("C-z C-v" . (lambda () (interactive) (toggle-shell 'vterm-mode #'vterm)))
-   ("C-z C-s" . (lambda () (interactive) (toggle-shell 'shell-mode #'shell 0.45)))
-   ("C-z C-e" . (lambda () (interactive) (toggle-shell 'eshell-mode #'eshell 0.45)))
-   ("C-z C-f" . find-file-in-my-directories))
+   ("C-z C-v" . (lambda () (interactive) (my-toggle-shell 'vterm-mode #'vterm)))
+   ("C-z C-s" . (lambda () (interactive) (my-toggle-shell 'shell-mode #'shell 0.45)))
+   ("C-z C-e" . (lambda () (interactive) (my-toggle-shell 'eshell-mode #'eshell 0.45))))
   :hook
   (before-save . whitespace-cleanup)
   (occur-mode . (lambda () (switch-to-buffer-other-window "*Occur*")))
@@ -197,9 +196,9 @@
   :defer t
   :bind
   ("C-c s s" . grep)
-  ("C-c s p" . grep-project)
-  ("C-c s ." . grep-dwim)
-  ("C-c s r" . replace-regexp-no-move)
+  ("C-c s p" . my-grep-project)
+  ("C-c s ." . my-grep-dwim)
+  ("C-c s r" . my-replace-regexp-no-move)
   :custom
   (grep-use-null-device nil)
   (grep-save-buffers t)
@@ -207,20 +206,20 @@
   (grep-command "rg -S --no-heading --color=never ")
   :config
   (setq grep-default-command "rg -S --no-heading --color=never ")
-  (defun grep-project (&optional initial-input)
+  (defun my-grep-project (&optional initial-input)
     (interactive)
     (let ((default-directory (project-root (project-current))))
       (grep (read-shell-command "Grep project: "
                                 (concat grep-default-command "" (or initial-input ""))
                                 'grep-history))))
-  (defun grep-dwim ()
+  (defun my-grep-dwim ()
     (interactive)
     (if-let* ((symbol (thing-at-point 'symbol t)))
         (let ((default-directory (project-root (project-current)))
               (command (concat grep-default-command (shell-quote-argument symbol) " .")))
           (grep command))
-      (call-interactively 'grep-project)))
-  (defun replace-regexp-no-move ()
+      (call-interactively 'my-grep-project)))
+  (defun my-replace-regexp-no-move ()
     (interactive)
     (save-excursion
       (call-interactively 'replace-regexp))))
@@ -244,7 +243,7 @@
   :config
   (put 'dired-find-alternate-file 'disabled nil))
 
-(defun project-dired-home()
+(defun my-project-dired-home()
   (interactive)
   (let ((root (project-root (project-current t))))
     (dired root)))
@@ -271,19 +270,19 @@
 
 (use-package vterm
   :defer t
-  :bind (("C-x p v" . vterm-project)
+  :bind (("C-x p v" . my-vterm-project)
          :map vterm-mode-map ("C-z" . nil))
   :custom (vterm-always-compile-module t)
   :config
   (setq vterm-timer-delay 0.01)
   (setq vterm-max-scrollback 100000)
   (defvar my-original-mode-line-format mode-line-format)
-  (defun vterm-update-mode-line ()
+  (defun my-vterm-update-mode-line ()
     (if vterm-copy-mode
         (setq-local mode-line-format
                     (append my-original-mode-line-format '(" [COPY-MODE]")))
       (setq-local mode-line-format my-original-mode-line-format)))
-  (defun vterm-project ()
+  (defun my-vterm-project ()
     (interactive)
     (let* ((default-directory (project-root (project-current t)))
            (project-name (file-name-nondirectory (directory-file-name default-directory)))
@@ -291,7 +290,7 @@
       (if (get-buffer buffer-name)
           (switch-to-buffer buffer-name)
         (vterm buffer-name))))
-  (add-hook 'vterm-copy-mode-hook #'vterm-update-mode-line))
+  (add-hook 'vterm-copy-mode-hook #'my-vterm-update-mode-line))
 
 (use-package treesit
   :ensure nil
@@ -364,7 +363,7 @@
 ;; Custom Functions ;;
 ;; ================ ;;
 
-(defun toggle-shell (shell-mode-symbol shell-func &optional window-width)
+(defun my-toggle-shell (shell-mode-symbol shell-func &optional window-width)
   (interactive)
   (if (eq major-mode shell-mode-symbol)
       (quit-window)
