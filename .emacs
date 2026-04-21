@@ -141,12 +141,14 @@
   (shell-mode . (lambda () (setq-local scroll-margin 1))))
 
 (use-package recentf
+  :defer t
   :config
   (recentf-mode 1)
   :bind ("C-x C-r" . 'recentf-open))
 
 (use-package gruber-darker-theme
-  :config (load-theme 'gruber-darker :no-confirm))
+  :defer t
+  :hook (after-init . (lambda () (load-theme 'gruber-darker :no-confirm))))
 
 (use-package ido
   :ensure nil
@@ -164,7 +166,7 @@
   :config (ido-ubiquitous-mode 1))
 
 (use-package amx
-  :init (amx-mode 1))
+  :hook (after-init . amx-mode))
 
 (use-package isearch
   :ensure nil
@@ -336,6 +338,7 @@
      :implementationProvider)))
 
 (use-package gptel
+  :defer t
   :ensure t
   :config
   (setq gptel-model "z-ai/glm-5.1"
