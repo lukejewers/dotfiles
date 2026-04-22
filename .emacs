@@ -321,22 +321,6 @@
   (when (eq system-type 'darwin)
     (magit-git-executable "/opt/homebrew/bin/git")))
 
-(use-package eglot
-  :custom
-  (eglot-stay-out-of '(flymake eldoc completion-at-point))
-  (eglot-ignored-server-capabilities
-   '(:documentHighlightProvider
-     :completionProvider
-     :hoverProvider
-     :signatureHelpProvider
-     :codeActionProvider
-     :documentFormattingProvider
-     :renameProvider
-     :inlayHintProvider
-     :referencesProvider
-     :typeDefinitionProvider
-     :implementationProvider)))
-
 (use-package gptel
   :defer t
   :ensure t
