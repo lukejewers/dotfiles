@@ -62,7 +62,6 @@
   (c-ts-mode-indent-offset 4)
   (comint-completion-addsuffix nil)
   (comint-process-echoes t)
-  (comp-async-report-warnings-errors nil)
   (completion-auto-select t)
   (create-lockfiles nil)
   (cursor-in-non-selected-windows nil)
@@ -123,8 +122,8 @@
    ("M-3" . (lambda () (interactive) (insert "#")))
    ("C-," . duplicate-line)
    ("C-x C-b" . ibuffer)
-   ("C-x 2" . (lambda () (interactive) (split-window-vertically)   (other-window 1)))
-   ("C-x 3" . (lambda () (interactive) (split-window-horizontally) (other-window 1)))
+   ("C-x 2" . (lambda () (interactive) (split-window-below)   (other-window 1)))
+   ("C-x 3" . (lambda () (interactive) (split-window-right) (other-window 1)))
    ("M-o" . other-window)
    ("C-M-z" . delete-pair)
    ("C-x p h" . my-project-dired-home)
@@ -295,6 +294,8 @@
 (use-package treesit
   :ensure nil
   :custom
+  (treesit-extra-load-path '("~/.emacs.d/tree-sitter/"))
+  (treesit-font-lock-level 4)
   (major-mode-remap-alist
    '((c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
@@ -307,9 +308,7 @@
      (python-mode     . python-ts-mode)
      (rust-mode       . rust-ts-mode)
      (typescript-mode . typescript-ts-mode)
-     (yaml-mode       . yaml-ts-mode)))
-  (treesit-extra-load-path '("~/.emacs.d/tree-sitter/"))
-  (treesit-font-lock-level 4))
+     (yaml-mode       . yaml-ts-mode))))
 
 (use-package magit
   :defer t
@@ -417,5 +416,3 @@
       (user-error "File does not exist: %s" filename))
     (start-process "reveal-in-finder" nil "open" "-R" filename)
     (message "Revealing %s in Finder" (file-name-nondirectory filename))))
-
-(provide 'init)
