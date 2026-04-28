@@ -37,7 +37,7 @@ EOF
 LIST_COUNT=3
 OUTPUT_DIR="${HOME}/Videos"
 MODE="download"
-WATCHED_FILE="${HOME}/Videos/.yt-watched"
+WATCHED_FILE="${HOME}/Videos/yt-watched.log"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
