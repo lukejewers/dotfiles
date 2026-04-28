@@ -176,10 +176,13 @@
   :hook (compilation-filter . ansi-color-compilation-filter))
 
 (use-package cape
-  :config
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-keyword))
+  :preface
+  (defun my-cape-setup-capf ()
+    (add-hook 'completion-at-point-functions #'cape-file nil t)
+    (add-hook 'completion-at-point-functions #'cape-dabbrev nil t)
+    (add-hook 'completion-at-point-functions #'cape-keyword nil t))
+  :hook
+  ((prog-mode text-mode conf-mode) . my-cape-setup-capf))
 
 (use-package compile
   :ensure nil
