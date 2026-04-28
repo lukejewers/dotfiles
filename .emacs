@@ -69,10 +69,14 @@
   (delete-pair-blink-delay 0.1)
   (delete-pair-push-mark t)
   (duplicate-line-final-position 1)
-  (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-split-window-function 'split-window-horizontally)
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
   (electric-pair-delete-adjacent-pairs t)
   (electric-pair-preserve-balance nil)
+  (grep-command "rg -S --no-heading --color=never ")
+  (grep-save-buffers t)
+  (grep-use-headings t)
+  (grep-use-null-device nil)
   (help-window-select t)
   (highlight-nonselected-windows nil)
   (indent-tabs-mode nil)
@@ -122,11 +126,12 @@
    ("M-3" . (lambda () (interactive) (insert "#")))
    ("C-," . duplicate-line)
    ("C-x C-b" . ibuffer)
-   ("C-x 2" . (lambda () (interactive) (split-window-below)   (other-window 1)))
+   ("C-x 2" . (lambda () (interactive) (split-window-below) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-right) (other-window 1)))
    ("M-o" . other-window)
    ("C-M-z" . delete-pair)
-   ("C-x p h" . my-project-dired-home)
+   ("C-c s s" . grep)
+   ("C-z C-r" . my-replace-regexp-no-move)
    ("C-z C-t" . my-toggle-split-direction)
    ("C-z C-v" . (lambda () (interactive) (my-toggle-shell 'vterm-mode #'vterm)))
    ("C-z C-s" . (lambda () (interactive) (my-toggle-shell 'shell-mode #'shell 0.45)))
@@ -192,38 +197,41 @@
   ("C-c c" . compile)
   ("C-c r" . recompile))
 
-(use-package grep
+(use-package project
   :ensure nil
-  :defer t
-  :bind
-  ("C-c s s" . grep)
-  ("C-c s p" . my-grep-project)
-  ("C-c s ." . my-grep-dwim)
-  ("C-c s r" . my-replace-regexp-no-move)
-  :custom
-  (grep-use-null-device nil)
-  (grep-save-buffers t)
-  (grep-use-headings t)
-  (grep-command "rg -S --no-heading --color=never ")
+  :bind (("C-x p h" . my-project-dired-home)
+         ("C-x p v" . my-project-vterm)
+         ("C-x p g" . my-project-grep)
+         ("C-x p ." . my-project-grep-dwim))
   :config
-  (setq grep-default-command "rg -S --no-heading --color=never ")
-  (defun my-grep-project (&optional initial-input)
+  (defun my-project-dired-home()
     (interactive)
-    (let ((default-directory (project-root (project-current))))
-      (grep (read-shell-command "Grep project: "
-                                (concat grep-default-command "" (or initial-input ""))
-                                'grep-history))))
-  (defun my-grep-dwim ()
+    (let ((root (project-root (project-current t))))
+      (dired root)))
+  (defun my-project-vterm ()
+    (interactive)
+    (let* ((default-directory (project-root (project-current t)))
+           (project-name (file-name-nondirectory (directory-file-name default-directory)))
+           (buffer-name (format "*vterm-%s*" project-name)))
+      (if (get-buffer buffer-name)
+          (switch-to-buffer buffer-name)
+        (vterm buffer-name))))
+  (defun my-project-grep (&optional initial-input)
+    (interactive)
+    (let ((default-directory (project-root (project-current t))))
+      (pop-to-buffer
+       (grep (read-shell-command "Grep project: "
+                                 (concat grep-command (or initial-input ""))
+                                 'grep-history)))))
+  (defun my-project-grep-dwim ()
     (interactive)
     (if-let* ((symbol (thing-at-point 'symbol t)))
-        (let ((default-directory (project-root (project-current)))
-              (command (concat grep-default-command (shell-quote-argument symbol) " .")))
-          (grep command))
-      (call-interactively 'my-grep-project)))
-  (defun my-replace-regexp-no-move ()
-    (interactive)
-    (save-excursion
-      (call-interactively 'replace-regexp))))
+        (let ((default-directory (project-root (project-current t))))
+          (pop-to-buffer
+           (grep (concat grep-command
+                         (shell-quote-argument symbol)
+                         " ."))))
+      (call-interactively #'my-project-grep))))
 
 (use-package org
   :ensure nil
@@ -269,8 +277,7 @@
 
 (use-package vterm
   :defer t
-  :bind (("C-x p v" . my-vterm-project)
-         :map vterm-mode-map ("C-z" . nil))
+  :bind (:map vterm-mode-map ("C-z" . nil))
   :custom (vterm-always-compile-module t)
   :config
   (setq vterm-timer-delay 0.01)
@@ -281,14 +288,6 @@
         (setq-local mode-line-format
                     (append my-original-mode-line-format '(" [COPY-MODE]")))
       (setq-local mode-line-format my-original-mode-line-format)))
-  (defun my-vterm-project ()
-    (interactive)
-    (let* ((default-directory (project-root (project-current t)))
-           (project-name (file-name-nondirectory (directory-file-name default-directory)))
-           (buffer-name (format "*vterm-%s*" project-name)))
-      (if (get-buffer buffer-name)
-          (switch-to-buffer buffer-name)
-        (vterm buffer-name))))
   (add-hook 'vterm-copy-mode-hook #'my-vterm-update-mode-line))
 
 (use-package treesit
@@ -340,6 +339,7 @@
 ;; ================ ;;
 
 (defun my-toggle-shell (shell-mode-symbol shell-func &optional window-width)
+  "toggle a shell buffer matching shell-mode-symbol using shell-func."
   (interactive)
   (if (eq major-mode shell-mode-symbol)
       (quit-window)
@@ -349,6 +349,11 @@
                   (window-width . ,window-width)))
              nil)))
       (funcall shell-func))))
+
+(defun my-replace-regexp-no-move ()
+  "Call `replace-regexp` interactively without moving point."
+  (interactive)
+  (save-excursion (call-interactively 'replace-regexp)))
 
 (defvar my-venv--initial-path nil)
 (defvar my-venv--initial-exec-path nil)
@@ -393,12 +398,6 @@
     (delete-window next-win)
     (let ((new-win (if is-vertical (split-window-right) (split-window-below))))
       (set-window-buffer new-win next-buf))))
-
-(defun my-project-dired-home()
-  "Open Dired at the root of the current project."
-  (interactive)
-  (let ((root (project-root (project-current t))))
-    (dired root)))
 
 (defun my-reveal-file-at-point-in-finder ()
   "Reveal the current file in macOS Finder."
