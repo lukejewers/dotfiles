@@ -144,12 +144,6 @@
   (ibuffer-mode . hl-line-mode)
   (shell-mode . (lambda () (setq-local scroll-margin 1))))
 
-(use-package recentf
-  :defer t
-  :config
-  (recentf-mode 1)
-  :bind ("C-x C-r" . 'recentf-open))
-
 (use-package gruber-darker-theme
   :defer t
   :hook (after-init . (lambda () (load-theme 'gruber-darker :no-confirm))))
@@ -322,6 +316,10 @@
 (use-package gptel
   :defer t
   :ensure t
+  :bind
+  (("C-c g g" . gptel)
+   ("C-c g a" . gptel-add)
+   ("C-c g m" . gptel-menu))
   :config
   (setq gptel-model "moonshotai/kimi-k2.6"
         gptel-default-mode 'org-mode
