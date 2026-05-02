@@ -1,5 +1,12 @@
 #!/bin/bash
 
+set -euo pipefail
+
+echo "Authenticating sudo..."
+sudo -v
+
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
 echo "Updating system and adding non-free repo..."
 sudo xbps-install -Syu
 sudo xbps-install -y void-repo-nonfree
@@ -7,47 +14,48 @@ sudo xbps-install -Syu
 
 echo "Installing Drivers and Core Services..."
 sudo xbps-install -y \
-    linux-firmware-amd \
-    mesa-dri mesa-vaapi mesa-vdpau vulkan-radeon libgbm \
-    tlp elogind dbus bluez keyd iwd
-
-echo "Installing Audio Stack (Pipewire)..."
-sudo xbps-install -y \
+    linux-firmware tlp elogind dbus libspa-bluetooth bluez keyd iwd \
     pipewire wireplumber pipewire-pulse alsa-pipewire \
-    pavucontrol sof-firmware alsa-utils
+    pavucontrol alsa-utils
 
 echo "Installing Desktop Environment and Apps..."
 sudo xbps-install -y \
-    gsettings-desktop-schemas sway waybar ghostty rofi \
+    sway i3status-rust rofi \
     xdg-desktop-portal-wlr xdg-desktop-portal-gtk slurp \
     nautilus firefox emacs-pgtk \
     cmake libtool gdb git wget xtools wl-clipboard \
     font-iosevka-nerd nerd-fonts font-logos jq ffmpeg yt-dlp \
-    man-pages-devel man-pages-posix mpv
+    man-pages-devel man-pages-posix mpv zsh
+
+echo "Rebuilding font cache..."
+fc-cache -fv
 
 echo "Setting up dotfiles..."
 DOTFILES="$HOME/.dotfiles"
 if [ -d "$DOTFILES" ]; then
     echo "Dotfiles dir exists, pulling latest..."
-    cd "$DOTFILES" && git pull
+    git -C "$DOTFILES" pull
 else
     git clone https://github.com/lukejewers/dotfiles.git "$DOTFILES"
 fi
 
-mkdir -p "$HOME/.config/sway" "$HOME/.config/waybar" "$HOME/.config/ghostty" "$HOME/.emacs.d"
+echo "Symlinking user configs..."
+mkdir -p "$HOME/.config/sway" "$HOME/.config/i3status-rust" \
+         "$HOME/.config/keyd" "$HOME/.emacs.d"
 
 ln -sf "$DOTFILES/.sway" "$HOME/.config/sway/config"
 ln -sf "$DOTFILES/.i3status-rust" "$HOME/.config/i3status-rust/config.toml"
-ln -sf "$DOTFILES/.ghostty" "$HOME/.config/ghostty/config"
 ln -sf "$DOTFILES/.emacs" "$HOME/.emacs.d/init.el"
+ln -sf "$DOTFILES/.keyd-application-mapper" "$HOME/.config/keyd/app.conf"
 
 echo "Enabling key remap..."
+sudo mkdir -p /etc/udev/hwdb.d /etc/keyd
+
 sudo cp "$DOTFILES/.hwdb" /etc/udev/hwdb.d/90-keyboard-custom.hwdb
 sudo udevadm hwdb --update
 sudo udevadm trigger
 
-ln -sf "$DOTFILES/.keyd" "/etc/keyd/default.conf"
-ln -sf "$DOTFILES/.keyd-application-mapper" "$HOME/.config/.keyd/app.conf"
+sudo ln -sf "$DOTFILES/.keyd" /etc/keyd/default.conf
 
 echo "Enabling services..."
 sudo ln -sf /etc/sv/dbus /var/service/
@@ -58,7 +66,7 @@ sudo ln -sf /etc/sv/keyd /var/service/
 
 echo "Adding user to groups..."
 for group in video audio bluetooth; do
-    sudo gpasswd -a "$USER" $group
+    sudo gpasswd -a "$USER" "$group"
 done
 
 echo "Configuring Pipewire ALSA..."
@@ -67,11 +75,12 @@ sudo ln -sf /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d/
 sudo ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/
 
 echo "Setting environment variables..."
-if ! grep -q "MOZ_ENABLE_WAYLAND" $HOME/.bashrc; then
+touch "$HOME/.zprofile"
+if ! grep -q "MOZ_ENABLE_WAYLAND" "$HOME/.zprofile"; then
     {
       echo 'export MOZ_ENABLE_WAYLAND=1'
       echo 'export XDG_CURRENT_DESKTOP=sway'
-    } >> $HOME/.bashrc
+    } >> "$HOME/.zprofile"
 fi
 
 echo "Done! Please reboot."
