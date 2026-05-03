@@ -24,6 +24,15 @@
         (tool-bar-lines . 0)
         (vertical-scroll-bars . nil)))
 
+(add-to-list 'display-buffer-alist
+             '((or . ((derived-mode . occur-mode)
+                      (derived-mode . grep-mode)
+                      (derived-mode . compilation-mode)
+                      (derived-mode . log-view-mode)
+                      (derived-mode . help-mode)))
+               (display-buffer-reuse-mode-window display-buffer-below-selected)
+               (body-function . select-window)))
+
 (setq frame-title-format '("%f")
       frame-resize-pixelwise t
       window-resize-pixelwise t
@@ -138,7 +147,6 @@
    ("C-z C-e" . (lambda () (interactive) (my-toggle-shell 'eshell-mode #'eshell 0.45))))
   :hook
   (before-save . whitespace-cleanup)
-  (occur-mode . (lambda () (switch-to-buffer-other-window "*Occur*")))
   (html-mode . (lambda () (local-unset-key (kbd "M-o"))))
   (after-save . executable-make-buffer-file-executable-if-script-p)
   (ibuffer-mode . hl-line-mode)
@@ -216,18 +224,16 @@
   (defun my-project-grep (&optional initial-input)
     (interactive)
     (let ((default-directory (project-root (project-current t))))
-      (pop-to-buffer
-       (grep (read-shell-command "Grep project: "
-                                 (concat grep-command (or initial-input ""))
-                                 'grep-history)))))
+      (grep (read-shell-command "Grep project: "
+                                (concat grep-command (or initial-input ""))
+                                'grep-history))))
   (defun my-project-grep-dwim ()
     (interactive)
     (if-let* ((symbol (thing-at-point 'symbol t)))
         (let ((default-directory (project-root (project-current t))))
-          (pop-to-buffer
-           (grep (concat grep-command
-                         (shell-quote-argument symbol)
-                         " ."))))
+          (grep (concat grep-command
+                        (shell-quote-argument symbol)
+                        " .")))
       (call-interactively #'my-project-grep))))
 
 (use-package org
@@ -244,7 +250,8 @@
   :custom
   (dired-kill-when-opening-new-dired-buffer t)
   (dired-do-revert-buffer t)
-  (dired-auto-revert-buffer t)
+  (dired-auto-revert-buffer #'dired-directory-changed-p)
+  (dired-create-destination-dirs 'ask)
   (dired-dwim-target t)
   :bind
   (:map dired-mode-map
@@ -331,8 +338,7 @@
                         :endpoint "/api/v1/chat/completions"
                         :stream t
                         :key 'gptel-api-key
-                        :models '("google/gemini-3.1-pro-preview"
-                                  "moonshotai/kimi-k2.6"
+                        :models '("moonshotai/kimi-k2.6"
                                   "z-ai/glm-5.1"))))
 
 ;; ================ ;;
