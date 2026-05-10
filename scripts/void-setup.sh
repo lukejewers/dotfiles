@@ -31,7 +31,7 @@ echo "Rebuilding font cache..."
 fc-cache -fv
 
 echo "Setting up dotfiles..."
-DOTFILES="$HOME/.dotfiles"
+DOTFILES="$HOME/dotfiles"
 if [ -d "$DOTFILES" ]; then
     echo "Dotfiles dir exists, pulling latest..."
     git -C "$DOTFILES" pull
@@ -78,14 +78,14 @@ if ! grep -q "MOZ_ENABLE_WAYLAND" "$HOME/.zprofile"; then
 fi
 
 echo "Creating .zshrc loader..."
-cat > "$HOME/.zshrc" << 'EOF'
+cat > "$HOME/.zshrc" << EOF
 #!/bin/zsh
 #
 # Machine-specific zsh configuration loader
 # This file is NOT version controlled
 
 # Load shared base configuration
-[ -f $HOME/.dotfiles/.zshrc.base ] && source $HOME/.dotfiles/.zshrc.base
+[ -f $DOTFILES/.zshrc.base ] && source $DOTFILES/.zshrc.base
 
 # --- Machine-Specific Settings Below This Line ---
 EOF

@@ -2,23 +2,23 @@
 
 set -xe
 
+DOTFILES="$HOME/dotfiles"
+
 echo "Cloning dotfiles..."
-if [ ! -d "$HOME/.dotfiles" ]; then
-    git clone https://github.com/lukejewers/dotfiles.git "$HOME/.dotfiles"
+if [ ! -d "$DOTFILES" ]; then
+    git clone https://github.com/lukejewers/dotfiles.git "$DOTFILES"
 else
     echo "Dotfiles already exist, pulling latest changes..."
-    cd "$HOME/.dotfiles" && git pull
+    cd "$DOTFILES" && git pull
 fi
 
 mkdir -p "$HOME/.emacs.d"
-mkdir -p "$HOME/.config/ghostty"
-mkdir -p "$HOME/.hammerspoon"
 mkdir -p "$HOME/Library/KeyBindings"
 mkdir -p "$HOME/Screenshots"
 
 echo "Installing system deps..."
 command -v brew >/dev/null 2>&1 || { echo "Homebrew not found. Install it first."; exit 1; }
-brew bundle --file="$HOME/.dotfiles/.brewfile"
+brew bundle --file="$DOTFILES/.brewfile"
 
 echo "Configuring OSX..."
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
@@ -41,24 +41,22 @@ for app in "Finder" "Dock" "SystemUIServer"; do
 done
 
 echo "Setting symlinks..."
-ln -sf "$HOME/.dotfiles/.defaultkeybinding" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
-ln -sf "$HOME/.dotfiles/.emacs" "$HOME/.emacs.d/init.el"
-ln -sf "$HOME/.dotfiles/.ghostty" "$HOME/.config/ghostty/config"
-ln -sf "$HOME/.dotfiles/.hammerspoon" "$HOME/.hammerspoon/init.lua"
-ln -sf "$HOME/.dotfiles/.keyremapping" "$HOME/Library/LaunchAgents/com.local.KeyRemapping.plist"
-ln -sf "$HOME/.dotfiles/.vimrc" "$HOME/.vimrc"
+ln -sf "$DOTFILES/.defaultkeybinding" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
+ln -sf "$DOTFILES/.emacs" "$HOME/.emacs.d/init.el"
+ln -sf "$DOTFILES/.keyremapping" "$HOME/Library/LaunchAgents/com.local.KeyRemapping.plist"
+ln -sf "$DOTFILES/.vimrc" "$HOME/.vimrc"
 
 [ -e /opt/homebrew/opt/emacs-plus@31/Emacs.app ] && ln -sf /opt/homebrew/opt/emacs-plus@31/Emacs.app /Applications
 
 echo "Creating .zshrc loader..."
-cat > "$HOME/.zshrc" << 'EOF'
+cat > "$HOME/.zshrc" << EOF
 #!/bin/zsh
 #
 # Machine-specific zsh configuration loader
 # This file is NOT version controlled
 
 # Load shared base configuration
-[ -f $HOME/.dotfiles/.zshrc.base ] && source $HOME/.dotfiles/.zshrc.base
+[ -f $DOTFILES/.zshrc.base ] && source $DOTFILES/.zshrc.base
 
 # --- Machine-Specific Settings Below This Line ---
 EOF
