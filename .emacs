@@ -146,15 +146,15 @@
    ("C-z C-s" . (lambda () (interactive) (my-toggle-buffer 'shell-mode #'shell 0.45)))
    ("C-z C-e" . (lambda () (interactive) (my-toggle-buffer 'eshell-mode #'eshell 0.45))))
   :hook
-  (before-save . whitespace-cleanup)
-  (html-mode . (lambda () (local-unset-key (kbd "M-o"))))
   (after-save . executable-make-buffer-file-executable-if-script-p)
+  (before-save . whitespace-cleanup)
+  (compilation-filter . ansi-color-compilation-filter)
+  (html-mode . (lambda () (local-unset-key (kbd "M-o"))))
   (ibuffer-mode . hl-line-mode)
   (shell-mode . (lambda () (setq-local scroll-margin 1))))
 
 (use-package gruber-darker-theme
-  :defer t
-  :hook (after-init . (lambda () (load-theme 'gruber-darker :no-confirm))))
+  :hook (after-init . (lambda () (load-theme 'gruber-darker t))))
 
 (use-package ido
   :ensure nil
@@ -178,10 +178,6 @@
   :ensure nil
   :custom (isearch-lazy-count t)
   :bind (:map isearch-mode-map ("C-q" . isearch-query-replace-regexp)))
-
-(use-package ansi-color
-  :ensure nil
-  :hook (compilation-filter . ansi-color-compilation-filter))
 
 (use-package cape
   :preface
