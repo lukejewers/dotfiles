@@ -19,7 +19,7 @@
 (setq default-frame-alist
       `((ns-transparent-titlebar . t)
         (background-color . "#181818")
-        (font . ,(if (eq system-type 'darwin) "Iosevka 20" "Iosevka 16"))
+        (font . ,(if (eq system-type 'darwin) "Iosevka 20" "Iosevka 18"))
         (menu-bar-lines . 0)
         (tool-bar-lines . 0)
         (vertical-scroll-bars . nil)))
@@ -142,9 +142,9 @@
    ("C-c s s" . grep)
    ("C-z C-r" . my-replace-regexp-no-move)
    ("C-z C-t" . my-toggle-split-direction)
-   ("C-z C-v" . (lambda () (interactive) (my-toggle-shell 'vterm-mode #'vterm)))
-   ("C-z C-s" . (lambda () (interactive) (my-toggle-shell 'shell-mode #'shell 0.45)))
-   ("C-z C-e" . (lambda () (interactive) (my-toggle-shell 'eshell-mode #'eshell 0.45))))
+   ("C-z C-v" . (lambda () (interactive) (my-toggle-buffer 'vterm-mode #'vterm)))
+   ("C-z C-s" . (lambda () (interactive) (my-toggle-buffer 'shell-mode #'shell 0.45)))
+   ("C-z C-e" . (lambda () (interactive) (my-toggle-buffer 'eshell-mode #'eshell 0.45))))
   :hook
   (before-save . whitespace-cleanup)
   (html-mode . (lambda () (local-unset-key (kbd "M-o"))))
@@ -345,17 +345,17 @@
 ;; Custom Functions ;;
 ;; ================ ;;
 
-(defun my-toggle-shell (shell-mode-symbol shell-func &optional window-width)
-  "toggle a shell buffer matching shell-mode-symbol using shell-func."
+(defun my-toggle-buffer (mode create-fn &optional window-width)
+"Toggle a buffer whose major mode derives from MODE, create it with CREATE-FN if absent.
+If WINDOW-WIDTH is a number, display the buffer in a popup window of that width."
   (interactive)
-  (if (eq major-mode shell-mode-symbol)
+  (if (derived-mode-p mode)
       (quit-window)
     (let ((display-buffer-alist
-           (if window-width
-               `((".*" (display-buffer-pop-up-window)
-                  (window-width . ,window-width)))
-             nil)))
-      (funcall shell-func))))
+           (when window-width
+             `((".*" (display-buffer-pop-up-window)
+                (window-width . ,window-width))))))
+      (funcall create-fn))))
 
 (defun my-replace-regexp-no-move ()
   "Call `replace-regexp` interactively without moving point."
