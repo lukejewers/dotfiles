@@ -253,9 +253,6 @@
   (dired-auto-revert-buffer #'dired-directory-changed-p)
   (dired-create-destination-dirs 'ask)
   (dired-dwim-target t)
-  :bind
-  (:map dired-mode-map
-        ("V" . my-reveal-file-at-point-in-finder))
   :config
   (put 'dired-find-alternate-file 'disabled nil))
 
@@ -405,20 +402,3 @@ If WINDOW-WIDTH is a number, display the buffer in a popup window of that width.
     (delete-window next-win)
     (let ((new-win (if is-vertical (split-window-right) (split-window-below))))
       (set-window-buffer new-win next-buf))))
-
-(defun my-reveal-file-at-point-in-finder ()
-  "Reveal the current file in macOS Finder."
-  (interactive)
-  (unless (eq system-type 'darwin)
-    (user-error "This command is only available on macOS"))
-  (let (filename)
-    (cond
-     ((derived-mode-p 'dired-mode)
-      (setq filename (or (dired-get-filename nil t) (dired-current-directory))))
-     ((buffer-file-name)
-      (setq filename (buffer-file-name)))
-     (t (user-error "Not in a file or dired buffer")))
-    (unless (file-exists-p filename)
-      (user-error "File does not exist: %s" filename))
-    (start-process "reveal-in-finder" nil "open" "-R" filename)
-    (message "Revealing %s in Finder" (file-name-nondirectory filename))))
