@@ -82,10 +82,6 @@
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (electric-pair-delete-adjacent-pairs t)
   (electric-pair-preserve-balance nil)
-  (grep-command "rg -S --no-heading --color=never ")
-  (grep-save-buffers t)
-  (grep-use-headings t)
-  (grep-use-null-device nil)
   (help-window-select t)
   (highlight-nonselected-windows nil)
   (indent-tabs-mode nil)
@@ -123,28 +119,25 @@
   (("<C-wheel-down>" . ignore)
    ("<C-wheel-up>" . ignore)
    ("<pinch>" . ignore)
-   ("C-x C-c" . nil)
-   ("C-x f" . find-file-at-point)
-   ("C-x m" . nil)
-   ("C-z" . nil)
-   ("C-c q" . query-replace-regexp)
-   ("C-c Q" . my-replace-regexp-no-move)
+   ("C-'" . (lambda () (interactive) (my-toggle-buffer 'shell-mode #'shell 0.45)))
+   ("C-," . duplicate-line)
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
-   ("M-3" . (lambda () (interactive) (insert "#")))
-   ("C-," . duplicate-line)
-   ("C-x C-b" . ibuffer)
+   ("C-c Q" . my-replace-regexp-no-move)
+   ("C-c d p" . delete-pair)
+   ("C-c q" . query-replace-regexp)
    ("C-x 2" . (lambda () (interactive) (split-window-below) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-right) (other-window 1)))
-   ("M-o" . other-window)
-   ("C-M-z" . delete-pair)
-   ("C-c s s" . grep)
-   ("C-z C-t" . my-toggle-split-direction)
-   ("C-z C-v" . (lambda () (interactive) (my-toggle-buffer 'vterm-mode #'vterm)))
-   ("C-z C-s" . (lambda () (interactive) (my-toggle-buffer 'shell-mode #'shell 0.45)))
-   ("C-z C-e" . (lambda () (interactive) (my-toggle-buffer 'eshell-mode #'eshell 0.45))))
+   ("C-x C-b" . ibuffer)
+   ("C-x C-c" . nil)
+   ("C-x f" . find-file-at-point)
+   ("C-x m" . nil)
+   ("C-z" . nil)
+   ("M-'" . (lambda () (interactive) (my-toggle-buffer 'ghostel-mode #'ghostel)))
+   ("M-3" . (lambda () (interactive) (insert "#")))
+   ("M-o" . other-window))
   :hook
   (after-save . executable-make-buffer-file-executable-if-script-p)
   (before-save . whitespace-cleanup)
@@ -166,6 +159,12 @@
   (ido-everywhere t)
   (ido-enable-flex-matching t)
   (ido-use-url-at-point nil))
+
+(use-package transpose-frame
+  :defer t
+  :bind
+  ("C-c w t" . transpose-frame)
+  ("C-c w f" . flop-frame))
 
 (use-package ido-completing-read+
   :after ido
@@ -198,25 +197,18 @@
   ("C-c c" . compile)
   ("C-c r" . recompile))
 
-(use-package project
+(use-package grep
   :ensure nil
-  :bind (("C-x p h" . my-project-dired-home)
-         ("C-x p v" . my-project-vterm)
-         ("C-x p g" . my-project-grep)
-         ("C-x p ." . my-project-grep-dwim))
+  :bind (("C-c s g" . grep)
+         ("C-c s p" . my-project-grep)
+         ("C-c s ." . my-project-grep-dwim))
+  :custom
+  (grep-command "rg -S --no-heading --color=never ")
+  (grep-save-buffers t)
+  (grep-use-headings t)
+  (grep-use-null-device nil)
   :config
-  (defun my-project-dired-home()
-    (interactive)
-    (let ((root (project-root (project-current t))))
-      (dired root)))
-  (defun my-project-vterm ()
-    (interactive)
-    (let* ((default-directory (project-root (project-current t)))
-           (project-name (file-name-nondirectory (directory-file-name default-directory)))
-           (buffer-name (format "*vterm-%s*" project-name)))
-      (if (get-buffer buffer-name)
-          (switch-to-buffer buffer-name)
-        (vterm buffer-name))))
+  (require 'project)
   (defun my-project-grep (&optional initial-input)
     (interactive)
     (let ((default-directory (project-root (project-current t))))
@@ -272,20 +264,8 @@
   ("C-c ." . mc/mark-all-like-this)
   ("C-c ," . mc/edit-lines))
 
-(use-package vterm
-  :defer t
-  :bind (:map vterm-mode-map ("C-z" . nil))
-  :custom (vterm-always-compile-module t)
-  :config
-  (setq vterm-timer-delay 0.01)
-  (setq vterm-max-scrollback 100000)
-  (defvar my-original-mode-line-format mode-line-format)
-  (defun my-vterm-update-mode-line ()
-    (if vterm-copy-mode
-        (setq-local mode-line-format
-                    (append my-original-mode-line-format '(" [COPY-MODE]")))
-      (setq-local mode-line-format my-original-mode-line-format)))
-  (add-hook 'vterm-copy-mode-hook #'my-vterm-update-mode-line))
+(use-package ghostel
+  :defer t)
 
 (use-package treesit
   :ensure nil
@@ -296,13 +276,12 @@
    '((c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
      (css-mode        . css-ts-mode)
+     (go-mode         . go-ts-mode)
      (js-mode         . js-ts-mode)
      (json-mode       . json-ts-mode)
-     (go-mode         . go-ts-mode)
-     (swift-mode      . swift-ts-mode)
-     (lua-mode        . lua-ts-mode)
      (python-mode     . python-ts-mode)
      (rust-mode       . rust-ts-mode)
+     (swift-mode      . swift-ts-mode)
      (typescript-mode . typescript-ts-mode)
      (yaml-mode       . yaml-ts-mode))))
 
@@ -332,6 +311,7 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("moonshotai/kimi-k2.6"
+                                  "openai/gpt-5.5"
                                   "z-ai/glm-5.1"))))
 
 ;; ================ ;;
@@ -339,7 +319,7 @@
 ;; ================ ;;
 
 (defun my-toggle-buffer (mode create-fn &optional window-width)
-"Toggle a buffer whose major mode derives from MODE, create it with CREATE-FN if absent.
+"Toggle a buffer matching MODE, creating it with CREATE-FN if absent.
 If WINDOW-WIDTH is a number, display the buffer in a popup window of that width."
   (interactive)
   (if (derived-mode-p mode)
@@ -354,47 +334,3 @@ If WINDOW-WIDTH is a number, display the buffer in a popup window of that width.
   "Call `replace-regexp` interactively without moving point."
   (interactive)
   (save-excursion (call-interactively 'replace-regexp)))
-
-(defvar my-venv--initial-path nil)
-(defvar my-venv--initial-exec-path nil)
-
-(defun my-venv-activate (directory)
-  "Activate a Python virtual environment."
-  (interactive "DActivate venv: ")
-  (unless my-venv--initial-path
-    (setq my-venv--initial-path (getenv "PATH"))
-    (setq my-venv--initial-exec-path exec-path))
-  (let* ((venv-dir (expand-file-name directory))
-         (bin-dir  (expand-file-name "bin" venv-dir)))
-    (setenv "PATH" my-venv--initial-path)
-    (setq exec-path my-venv--initial-exec-path)
-    (setenv "VIRTUAL_ENV" venv-dir)
-    (setenv "PATH" (concat bin-dir path-separator (getenv "PATH")))
-    (setq exec-path (cons bin-dir exec-path))
-    (setq python-shell-virtualenv-root venv-dir)
-    (setq eshell-path-env (getenv "PATH"))
-    (message "Activated venv: %s" venv-dir)))
-
-(defun my-venv-deactivate ()
-  "Deactivate the current Python virtual environment."
-  (interactive)
-  (when my-venv--initial-path
-    (setenv "PATH" my-venv--initial-path)
-    (setq exec-path my-venv--initial-exec-path)
-    (setenv "VIRTUAL_ENV" nil)
-    (setq python-shell-virtualenv-root nil)
-    (setq eshell-path-env (getenv "PATH"))
-    (message "Deactivated venv.")))
-
-(defun my-toggle-split-direction ()
-  "Toggle between a horizontal and vertical split for two windows."
-  (interactive)
-  (unless (= (count-windows) 2)
-    (user-error "This function only works with exactly 2 windows"))
-  (let* ((this-win (selected-window))
-         (next-win (next-window this-win))
-         (next-buf (window-buffer next-win))
-         (is-vertical (window-combined-p this-win)))
-    (delete-window next-win)
-    (let ((new-win (if is-vertical (split-window-right) (split-window-below))))
-      (set-window-buffer new-win next-buf))))
