@@ -36,8 +36,15 @@ bindkey -e  # emacs keybindings
 autoload -Uz compinit
 compinit
 
-# ghostel integration (for Emacs)
-[[ "${${INSIDE_EMACS-}%%,*}" = 'ghostel' ]] && source "$EMACS_GHOSTEL_PATH/etc/shell/ghostel.zsh"
+if [[ "${INSIDE_EMACS%%,*}" = 'ghostel' ]]; then
+   source "$EMACS_GHOSTEL_PATH/etc/shell/ghostel.zsh"
+
+    # Open a file in Emacs from the terminal
+    e()   { ghostel_cmd find-file-other-window "$@"; }
+
+    # Open dired, defaulting to the current directory
+    d() { ghostel_cmd dired "${1:-$PWD}"; }
+fi
 
 # aliases
 if [[ "$(uname)" == "Darwin" ]]; then

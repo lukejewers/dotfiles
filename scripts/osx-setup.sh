@@ -41,10 +41,10 @@ for app in "Finder" "Dock" "SystemUIServer"; do
 done
 
 echo "Setting symlinks..."
-ln -sf "$DOTFILES/.defaultkeybinding" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
-ln -sf "$DOTFILES/.emacs" "$HOME/.emacs.d/init.el"
-ln -sf "$DOTFILES/.keyremapping" "$HOME/Library/LaunchAgents/com.local.KeyRemapping.plist"
-ln -sf "$DOTFILES/.vimrc" "$HOME/.vimrc"
+ln -sf "$DOTFILES/defaultkeybinding" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
+ln -sf "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
+ln -sf "$DOTFILES/keyremapping" "$HOME/Library/LaunchAgents/com.local.KeyRemapping.plist"
+ln -sf "$DOTFILES/vimrc" "$HOME/.vimrc"
 
 [ -e /opt/homebrew/opt/emacs-plus@31/Emacs.app ] && ln -sf /opt/homebrew/opt/emacs-plus@31/Emacs.app /Applications
 
@@ -56,7 +56,7 @@ cat > "$HOME/.zshrc" << EOF
 # This file is NOT version controlled
 
 # Load shared base configuration
-[ -f $DOTFILES/.zshrc.base ] && source $DOTFILES/.zshrc.base
+[ -f $DOTFILES/zshrc ] && source $DOTFILES/zshrc
 
 # --- Machine-Specific Settings Below This Line ---
 EOF

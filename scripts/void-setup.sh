@@ -20,8 +20,8 @@ sudo xbps-install -y \
 
 echo "Installing Desktop Environment and Apps..."
 sudo xbps-install -y \
-    sway i3status-rust rofi \
-    xdg-desktop-portal-wlr xdg-desktop-portal-gtk slurp \
+    sway i3status-rust rofi grim slurp \
+    xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
     nautilus emacs-pgtk foot zsh firefox \
     cmake libtool gdb git wget ripgrep xtools wl-clipboard \
     nerd-fonts font-iosevka jq ffmpeg yt-dlp \
@@ -40,14 +40,14 @@ else
 fi
 
 echo "Symlinking user configs..."
-mkdir -p "$HOME/.config/sway" "$HOME/.config/i3status-rust" \
-ln -sf "$DOTFILES/.sway" "$HOME/.config/sway/config"
-ln -sf "$DOTFILES/.i3status-rust" "$HOME/.config/i3status-rust/config.toml"
-ln -sf "$DOTFILES/.emacs" "$HOME/.emacs.d/init.el"
+mkdir -p "$HOME/.config/sway" "$HOME/.config/i3status-rust"
+ln -sf "$DOTFILES/sway" "$HOME/.config/sway/config"
+ln -sf "$DOTFILES/i3status-rust" "$HOME/.config/i3status-rust/config.toml"
+ln -sf "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
 
 echo "Enabling key remap..."
 sudo mkdir -p /etc/udev/hwdb.d
-sudo cp "$DOTFILES/.hwdb" /etc/udev/hwdb.d/90-keyboard-custom.hwdb
+sudo cp "$DOTFILES/hwdb" /etc/udev/hwdb.d/90-keyboard-custom.hwdb
 sudo udevadm hwdb --update
 sudo udevadm trigger
 
@@ -85,7 +85,7 @@ cat > "$HOME/.zshrc" << EOF
 # This file is NOT version controlled
 
 # Load shared base configuration
-[ -f $DOTFILES/.zshrc.base ] && source $DOTFILES/.zshrc.base
+[ -f $DOTFILES/zshrc ] && source $DOTFILES/zshrc
 
 # --- Machine-Specific Settings Below This Line ---
 EOF

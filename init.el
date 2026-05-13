@@ -119,15 +119,15 @@
   (("<C-wheel-down>" . ignore)
    ("<C-wheel-up>" . ignore)
    ("<pinch>" . ignore)
-   ("C-'" . (lambda () (interactive) (my-toggle-buffer 'shell-mode #'shell 0.45)))
    ("C-," . duplicate-line)
+   ("C-." . (lambda () (interactive) (my-toggle-buffer 'ghostel-mode #'ghostel 0.45)))
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
-   ("C-c Q" . my-replace-regexp-no-move)
    ("C-c d p" . delete-pair)
    ("C-c q" . query-replace-regexp)
+   ("C-c Q" . my-replace-regexp-no-move)
    ("C-x 2" . (lambda () (interactive) (split-window-below) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-right) (other-window 1)))
    ("C-x C-b" . ibuffer)
@@ -135,7 +135,6 @@
    ("C-x f" . find-file-at-point)
    ("C-x m" . nil)
    ("C-z" . nil)
-   ("M-'" . (lambda () (interactive) (my-toggle-buffer 'ghostel-mode #'ghostel)))
    ("M-3" . (lambda () (interactive) (insert "#")))
    ("M-o" . other-window))
   :hook
@@ -160,18 +159,18 @@
   (ido-enable-flex-matching t)
   (ido-use-url-at-point nil))
 
-(use-package transpose-frame
-  :defer t
-  :bind
-  ("C-c w t" . transpose-frame)
-  ("C-c w f" . flop-frame))
-
 (use-package ido-completing-read+
   :after ido
   :config (ido-ubiquitous-mode 1))
 
 (use-package amx
   :hook (after-init . amx-mode))
+
+(use-package transpose-frame
+  :defer t
+  :bind
+  ("C-c w t" . transpose-frame)
+  ("C-c w f" . flop-frame))
 
 (use-package isearch
   :ensure nil
@@ -265,7 +264,14 @@
   ("C-c ," . mc/edit-lines))
 
 (use-package ghostel
-  :defer t)
+  :defer t
+  :config
+  (defun my-ghostel-send-backward-kill-word ()
+    (interactive)
+    (ghostel-send-string "\C-w"))
+  (define-key ghostel-semi-char-mode-map
+              (kbd "C-<backspace>")
+              #'my-ghostel-send-backward-kill-word))
 
 (use-package treesit
   :ensure nil
@@ -319,7 +325,7 @@
 ;; ================ ;;
 
 (defun my-toggle-buffer (mode create-fn &optional window-width)
-"Toggle a buffer matching MODE, creating it with CREATE-FN if absent.
+  "Toggle a buffer matching MODE, creating it with CREATE-FN if absent.
 If WINDOW-WIDTH is a number, display the buffer in a popup window of that width."
   (interactive)
   (if (derived-mode-p mode)
