@@ -36,30 +36,8 @@ bindkey -e  # emacs keybindings
 autoload -Uz compinit
 compinit
 
-# vterm integration (for Emacs)
-if [[ -n "$INSIDE_EMACS" && "$INSIDE_EMACS" =~ "vterm" ]]; then
-    # Define vterm functions if not already defined
-    if ! typeset -f vterm_printf >/dev/null; then
-        vterm_printf() {
-            if [ -n "$TMUX" ] \
-                && { [ "${TERM%%-*}" = "tmux" ] \
-                    || [ "${TERM%%-*}" = "screen" ]; }; then
-                printf "\ePtmux;\e\e]%s\007\e\\" "$1"
-            elif [ "${TERM%%-*}" = "screen" ]; then
-                printf "\eP\e]%s\007\e\\" "$1"
-            else
-                printf "\e]%s\e\\" "$1"
-            fi
-        }
-
-        vterm_prompt_end() {
-            vterm_printf "51;A${USER}@${HOST}:$(pwd)"
-        }
-    fi
-
-    setopt PROMPT_SUBST
-    PS1="$PS1"'%{$(vterm_prompt_end)%}'
-fi
+# ghostel integration (for Emacs)
+[[ "${${INSIDE_EMACS-}%%,*}" = 'ghostel' ]] && source "$EMACS_GHOSTEL_PATH/etc/shell/ghostel.zsh"
 
 # aliases
 if [[ "$(uname)" == "Darwin" ]]; then
