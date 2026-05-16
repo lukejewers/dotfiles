@@ -120,14 +120,13 @@
    ("<C-wheel-up>" . ignore)
    ("<pinch>" . ignore)
    ("C-," . duplicate-line)
-   ("C-." . (lambda () (interactive) (my-toggle-buffer 'ghostel-mode #'ghostel 0.45)))
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
    ("C-M-9" . enlarge-window)
    ("C-c d p" . delete-pair)
    ("C-c q" . query-replace-regexp)
-   ("C-c Q" . my-replace-regexp-no-move)
+   ("C-c Q" . (lambda () (interactive) (save-excursion (call-interactively 'replace-regexp))))
    ("C-x 2" . (lambda () (interactive) (split-window-below) (other-window 1)))
    ("C-x 3" . (lambda () (interactive) (split-window-right) (other-window 1)))
    ("C-x C-b" . ibuffer)
@@ -265,13 +264,22 @@
 
 (use-package ghostel
   :defer t
+  :bind (("C-." . (lambda () (interactive)
+                    (if (derived-mode-p 'ghostel-mode)
+                        (quit-window)
+                      (let ((display-buffer-alist
+                             '((".*" (display-buffer-pop-up-window)
+                                (window-width . 0.45)))))
+                        (ghostel)))))
+         :map ghostel-semi-char-mode-map
+         ("C-<backspace>" . my-ghostel-backward-kill-word)
+         :map project-prefix-map
+         ("." . ghostel-project))
   :config
-  (defun my-ghostel-send-backward-kill-word ()
+  (defun my-ghostel-backward-kill-word ()
     (interactive)
-    (ghostel-send-string "\C-w"))
-  (define-key ghostel-semi-char-mode-map
-              (kbd "C-<backspace>")
-              #'my-ghostel-send-backward-kill-word))
+    (kill-ring-save (save-excursion (backward-word) (point)) (point))
+    (ghostel-send-key "backspace" "alt")))
 
 (use-package treesit
   :ensure nil
@@ -305,11 +313,14 @@
   :defer t
   :ensure t
   :bind
-  (("C-c g g" . gptel)
+  (("C-c g g" . (lambda () (interactive)
+                  (if (bound-and-true-p gptel-mode)
+                      (quit-window)
+                    (gptel "*gptel*" nil nil t))))
    ("C-c g a" . gptel-add)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model "moonshotai/kimi-k2.6"
+  (setq gptel-model 'moonshotai/kimi-k2.6
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -317,26 +328,4 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("moonshotai/kimi-k2.6"
-                                  "openai/gpt-5.5"
-                                  "z-ai/glm-5.1"))))
-
-;; ================ ;;
-;; Custom Functions ;;
-;; ================ ;;
-
-(defun my-toggle-buffer (mode create-fn &optional window-width)
-  "Toggle a buffer matching MODE, creating it with CREATE-FN if absent.
-If WINDOW-WIDTH is a number, display the buffer in a popup window of that width."
-  (interactive)
-  (if (derived-mode-p mode)
-      (quit-window)
-    (let ((display-buffer-alist
-           (when window-width
-             `((".*" (display-buffer-pop-up-window)
-                (window-width . ,window-width))))))
-      (funcall create-fn))))
-
-(defun my-replace-regexp-no-move ()
-  "Call `replace-regexp` interactively without moving point."
-  (interactive)
-  (save-excursion (call-interactively 'replace-regexp)))
+                                  "openai/gpt-5.5"))))
