@@ -137,21 +137,20 @@
 
 (use-package ido
   :ensure nil
-  :hook (after-init . ido-mode)
+  :hook (after-init . (lambda () (ido-mode 'file)))
   :custom
   (ido-auto-merge-work-directories-length -1)
   (ido-max-prospects 10)
-  (ido-everywhere t)
   (ido-enable-flex-matching t)
   (ido-use-url-at-point nil))
 
-(use-package ido-completing-read+
-  :after ido
+(use-package icomplete
+  :ensure nil
+  :custom
+  (icomplete-sorting-function #'icomplete-cycling-sort)
+  (icomplete-compute-delay 0.0)
   :config
-  (ido-ubiquitous-mode 1))
-
-(use-package amx
-  :hook (after-init . amx-mode))
+  (fido-mode 1))
 
 (use-package transpose-frame
   :defer t
