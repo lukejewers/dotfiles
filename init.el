@@ -94,6 +94,13 @@
    ("<C-wheel-up>" . ignore)
    ("<pinch>" . ignore)
    ("C-," . duplicate-line)
+   ("C-." . (lambda () (interactive)
+                    (if (derived-mode-p 'shell-mode)
+                        (quit-window)
+                      (let ((display-buffer-alist
+                             '((".*" (display-buffer-pop-up-window)
+                                (window-width . 0.45)))))
+                        (shell)))))
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
@@ -245,17 +252,8 @@
 
 (use-package ghostel
   :defer t
-  :bind (("C-." . (lambda () (interactive)
-                    (if (derived-mode-p 'ghostel-mode)
-                        (quit-window)
-                      (let ((display-buffer-alist
-                             '((".*" (display-buffer-pop-up-window)
-                                (window-width . 0.45)))))
-                        (ghostel)))))
-         :map ghostel-semi-char-mode-map
-         ("C-<backspace>" . my-ghostel-backward-kill-word)
-         :map project-prefix-map
-         ("." . ghostel-project))
+  :bind (:map ghostel-semi-char-mode-map
+         ("C-<backspace>" . my-ghostel-backward-kill-word))
   :config
   (defun my-ghostel-backward-kill-word ()
     (interactive)
