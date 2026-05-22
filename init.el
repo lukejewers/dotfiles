@@ -150,7 +150,13 @@
   (icomplete-sorting-function #'icomplete-cycling-sort)
   (icomplete-compute-delay 0.0)
   :config
-  (fido-mode 1))
+  (fido-mode 1)
+  (with-eval-after-load 'gruber-darker-theme
+    (custom-theme-set-faces
+     'gruber-darker
+     '(icomplete-first-match ((t (:foreground "#ffdd33" :weight bold))))
+     '(icomplete-selected-match ((t (:foreground "#000000" :background "#ffdd33" :weight bold))))
+     '(completions-highlight ((t (:background "#453d41")))))))
 
 (use-package transpose-frame
   :defer t
