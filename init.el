@@ -182,6 +182,24 @@
   ("C-c c" . compile)
   ("C-c r" . recompile))
 
+(use-package project
+  :ensure nil
+  :bind ("C-c f p" . my-project-fd-files)
+  :config
+  (defun my-project-fd-files (cmd)
+    "Run an async fd command in the current project with clickable file results."
+    (interactive
+     (let* ((root (project-root (project-current t)))
+            (default-directory root))
+       (list (read-shell-command "fd project: " "fd --type f --color=never " 'shell-command-history))))
+    (let* ((root (project-root (project-current t)))
+           (default-directory root)
+           (buf (compilation-start cmd 'compilation-mode (lambda (_) "*project fd*"))))
+      (with-current-buffer buf
+        (setq-local compilation-error-regexp-alist '(("^\\(.+\\)$" 1 nil nil 0)))
+        (setq-local compilation-skip-threshold 0)
+        (goto-char (point-min))))))
+
 (use-package grep
   :ensure nil
   :bind (("C-c s g" . grep)
