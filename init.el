@@ -190,10 +190,18 @@
 
 (use-package project
   :ensure nil
-  :bind ("C-c f p" . my-project-fd-files)
+  :bind (("C-c f d" . my-fd-files)
+         ("C-c f p" . my-project-fd-files))
   :config
+  (defun my-fd-files (cmd)
+    (interactive
+     (list (read-shell-command "fd: " "fd --type f --color=never " 'shell-command-history)))
+    (let ((buf (compilation-start cmd 'compilation-mode (lambda (_) "*fd*"))))
+      (with-current-buffer buf
+        (setq-local compilation-error-regexp-alist '(("^\\(.+\\)$" 1 nil nil 0)))
+        (setq-local compilation-skip-threshold 0)
+        (goto-char (point-min)))))
   (defun my-project-fd-files (cmd)
-    "Run an async fd command in the current project with clickable file results."
     (interactive
      (let* ((root (project-root (project-current t)))
             (default-directory root))
@@ -322,7 +330,7 @@
    ("C-c g a" . gptel-add)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model 'moonshotai/kimi-k2.6
+  (setq gptel-model 'z-ai/glm-5.1
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -330,4 +338,5 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("moonshotai/kimi-k2.6"
+                                  "z-ai/glm-5.1"
                                   "openai/gpt-5.5"))))
