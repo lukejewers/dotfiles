@@ -21,7 +21,7 @@
                         (derived-mode . help-mode)))
                  (display-buffer-reuse-mode-window display-buffer-below-selected)
                  (body-function . select-window)))
-  (setq frame-title-format '("Emacs - %f")
+  (setq frame-title-format '("%f — Emacs")
         frame-resize-pixelwise t
         window-resize-pixelwise t
         frame-inhibit-implied-resize t
