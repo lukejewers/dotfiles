@@ -9,7 +9,7 @@ exec pipewire-pulse
 
 # Layout
 workspace_layout tabbed
-font pango:Iosevka Nerd Font 10
+font pango:Iosevka Nerd Font 12
 
 # Title Bar
 hide_edge_borders smart
