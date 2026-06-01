@@ -94,13 +94,6 @@
    ("<C-wheel-up>" . ignore)
    ("<pinch>" . ignore)
    ("C-," . duplicate-line)
-   ("C-." . (lambda () (interactive)
-                    (if (derived-mode-p 'shell-mode)
-                        (quit-window)
-                      (let ((display-buffer-alist
-                             '((".*" (display-buffer-pop-up-window)
-                                (window-width . 0.45)))))
-                        (shell)))))
    ("C-M--" . shrink-window-horizontally)
    ("C-M-0" . shrink-window)
    ("C-M-8" . enlarge-window-horizontally)
@@ -283,9 +276,21 @@
 
 (use-package ghostel
   :defer t
-  :bind (:map ghostel-semi-char-mode-map
-         ("C-<backspace>" . my-ghostel-backward-kill-word))
+  :bind (("C-." . (lambda () (interactive)
+                    (if (derived-mode-p 'ghostel-mode)
+                        (quit-window)
+                      (let ((display-buffer-alist
+                             '((".*" (display-buffer-pop-up-window)
+                                (window-width . 0.45)))))
+                        (ghostel)))))
+         :map ghostel-semi-char-mode-map
+         ("C-<backspace>" . my-ghostel-backward-kill-word)
+         :map project-prefix-map
+         ("." . ghostel-project))
   :config
+  (ghostel-comint-global-mode 1)
+  (setopt ghostel-keymap-exceptions
+        (cons "M-o" ghostel-keymap-exceptions))
   (defun my-ghostel-backward-kill-word ()
     (interactive)
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
@@ -330,7 +335,7 @@
    ("C-c g a" . gptel-add)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model 'z-ai/glm-5.1
+  (setq gptel-model 'deepseek/deepseek-v4-pro
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -338,5 +343,6 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("moonshotai/kimi-k2.6"
+                                  "deepseek/deepseek-v4-pro"
                                   "z-ai/glm-5.1"
                                   "openai/gpt-5.5"))))
