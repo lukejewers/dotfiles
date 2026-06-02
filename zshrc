@@ -43,7 +43,7 @@ if [[ "${INSIDE_EMACS%%,*}" = 'ghostel' ]]; then
     e()   { ghostel_cmd find-file-other-window "$@"; }
 
     # Open dired, defaulting to the current directory
-    d() { ghostel_cmd dired "${1:-$PWD}"; }
+    d() { ghostel_cmd dired-other-window "${1:-$PWD}"; }
 fi
 
 # aliases
