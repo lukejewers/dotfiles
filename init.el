@@ -289,12 +289,18 @@
          ("." . ghostel-project))
   :config
   (ghostel-comint-global-mode 1)
-  (setopt ghostel-keymap-exceptions
-        (cons "M-o" ghostel-keymap-exceptions))
+  (setopt ghostel-keymap-exceptions (cons "M-o" ghostel-keymap-exceptions))
   (defun my-ghostel-backward-kill-word ()
     (interactive)
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
-    (ghostel-send-key "backspace" "alt")))
+    (ghostel-send-key "backspace" "alt"))
+  (defun my-ghostel--pixel-scroll-off (&rest _)
+    (pixel-scroll-precision-mode -1))
+  (defun my-ghostel--pixel-scroll-on (&rest _)
+    (pixel-scroll-precision-mode 1))
+  (advice-add 'ghostel-line-mode :after #'my-ghostel--pixel-scroll-off)
+  (advice-add 'ghostel-char-mode :after #'my-ghostel--pixel-scroll-on)
+  (advice-add 'ghostel-semi-char-mode :after #'my-ghostel--pixel-scroll-on))
 
 (use-package treesit
   :ensure nil
