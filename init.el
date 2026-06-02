@@ -188,7 +188,7 @@
   :config
   (defun my-fd-files (cmd)
     (interactive
-     (list (read-shell-command "fd: " "fd --type f --color=never " 'shell-command-history)))
+     (list (read-shell-command "fd: " "fd -tf -p " 'shell-command-history)))
     (let ((buf (compilation-start cmd 'compilation-mode (lambda (_) "*fd*"))))
       (with-current-buffer buf
         (setq-local compilation-error-regexp-alist '(("^\\(.+\\)$" 1 nil nil 0)))
@@ -198,7 +198,7 @@
     (interactive
      (let* ((root (project-root (project-current t)))
             (default-directory root))
-       (list (read-shell-command "fd project: " "fd --type f --color=never " 'shell-command-history))))
+       (list (read-shell-command "fd project: " "fd -tf -p " 'shell-command-history))))
     (let* ((root (project-root (project-current t)))
            (default-directory root)
            (buf (compilation-start cmd 'compilation-mode (lambda (_) "*project fd*"))))
