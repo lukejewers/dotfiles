@@ -1,5 +1,12 @@
 # sway config (~/.config/sway/config)
 
+# Variables
+set $hyper Ctrl+Mod4
+set $left left
+set $right right
+set $up up
+set $down down
+
 # Exec
 exec emacs
 exec firefox
@@ -7,19 +14,9 @@ exec syncthing
 exec pipewire
 exec pipewire-pulse
 
-# Layout
-workspace_layout tabbed
-font pango:Iosevka Nerd Font 12
-
 # Title Bar
+font pango:Iosevka Nerd Font 12
 hide_edge_borders smart
-
-# Variables
-set $hyper Ctrl+Mod4
-set $left left
-set $right right
-set $up up
-set $down down
 
 # Apps
 set $term foot
@@ -29,24 +26,28 @@ set $browser firefox
 set $finder nautilus
 
 # Window Focus
-bindsym $hyper+$left focus left
+bindsym $hyper+$left  focus left
 bindsym $hyper+$right focus right
-bindsym $hyper+$up focus up
-bindsym $hyper+$down focus down
+bindsym $hyper+$up    focus up
+bindsym $hyper+$down  focus down
 
-# Layout Manipulation
+# Layout
+workspace_layout tabbed
 bindsym $hyper+t layout tabbed
 bindsym $hyper+e layout toggle split
 bindsym $hyper+f fullscreen
 bindsym $hyper+w kill
 bindsym $hyper+c reload
 bindsym $hyper+z floating toggle
+bindsym $hyper+b splith
+bindsym $hyper+v splitv
+bindsym $hyper+a focus parent
 
 # Apps
-bindsym $hyper+j exec swaymsg '[app_id="emacs" workspace="__focused__"] focus' || exec $emacs
-bindsym $hyper+k exec swaymsg '[app_id="Firefox" workspace="__focused__"] focus' || exec $browser
+bindsym $hyper+j      exec swaymsg '[app_id="emacs" workspace="__focused__"] focus' || exec $emacs
+bindsym $hyper+k      exec swaymsg '[app_id="Firefox" workspace="__focused__"] focus' || exec $browser
 bindsym $hyper+Return exec $term
-bindsym $hyper+Space exec rofi -show drun
+bindsym $hyper+Space  exec rofi -show drun
 
 # Workspaces
 bindsym $hyper+1 workspace number 1
@@ -58,15 +59,31 @@ bindsym $hyper+6 workspace number 6
 bindsym $hyper+7 workspace number 7
 bindsym $hyper+8 workspace number 8
 
+# Theme
+client.focused          #181818 #565f73 #e4e4ef
+client.unfocused        #181818 #282828 #e4e4ef
+client.focused_inactive #181818 #282828 #e4e4ef
+client.urgent           #453d41 #f43841 #ffffff
+
 # Background
 output * bg #181818 solid_color
 
 # Bar
 bar {
-    position bottom
-    status_command i3status-rs ~/.config/i3status-rust/config.toml
+    position top
+    status_command i3status-rs
     font pango:Iosevka Nerd Font 10
-    tray_output *
+
+    colors {
+        background          #181818
+        statusline          #e4e4ef
+        separator           #453d41
+        focused_workspace   #181818 #565f73 #e4e4ef
+        active_workspace    #181818 #453d41 #e4e4ef
+        inactive_workspace  #181818 #453d41 #e4e4ef
+        urgent_workspace    #453d41 #f43841 #ffffff
+        binding_mode        #282828 #96a6c8 #e4e4ef
+    }
 }
 
 # Gestures
