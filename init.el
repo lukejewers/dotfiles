@@ -9,7 +9,7 @@
   (setq default-frame-alist
         `((ns-transparent-titlebar . t)
           (background-color . "#181818")
-          (font . ,(if (eq system-type 'darwin) "Iosevka 20" "Iosevka 18"))
+          (font . "Iosevka 20")
           (menu-bar-lines . 0)
           (tool-bar-lines . 0)
           (vertical-scroll-bars . nil)))
@@ -174,7 +174,7 @@
 (use-package compile
   :ensure nil
   :custom
-  (compilation-scroll-output 'first-error)
+  (compilation-scroll-output nil)
   (compilation-always-kill t)
   (compilation-ask-about-save nil)
   :bind
