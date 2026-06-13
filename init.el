@@ -349,6 +349,4 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("moonshotai/kimi-k2.6"
-                                  "deepseek/deepseek-v4-pro"
-                                  "z-ai/glm-5.1"
-                                  "openai/gpt-5.5"))))
+                                  "deepseek/deepseek-v4-pro"))))
