@@ -77,6 +77,9 @@
   (set-mark-command-repeat-pop t)
   (tab-always-indent 'complete)
   (tab-width 4)
+  (treesit-auto-install-grammar t)
+  (treesit-enabled-modes t)
+  (treesit-font-lock-level 4)
   (use-package-always-ensure t)
   (use-package-compute-statistics nil)
   (whitespace-line-column 80)
@@ -150,12 +153,6 @@
      '(icomplete-first-match ((t (:foreground "#ffdd33" :weight bold))))
      '(icomplete-selected-match ((t (:foreground "#000000" :background "#ffdd33" :weight bold))))
      '(completions-highlight ((t (:background "#453d41")))))))
-
-(use-package transpose-frame
-  :defer t
-  :bind
-  ("C-c w t" . transpose-frame)
-  ("C-c w f" . flop-frame))
 
 (use-package isearch
   :ensure nil
@@ -302,24 +299,6 @@
   (advice-add 'ghostel-char-mode :after #'my-ghostel--pixel-scroll-on)
   (advice-add 'ghostel-semi-char-mode :after #'my-ghostel--pixel-scroll-on))
 
-(use-package treesit
-  :ensure nil
-  :custom
-  (treesit-extra-load-path '("~/.emacs.d/tree-sitter/"))
-  (treesit-font-lock-level 4)
-  (major-mode-remap-alist
-   '((c-mode          . c-ts-mode)
-     (c++-mode        . c++-ts-mode)
-     (css-mode        . css-ts-mode)
-     (go-mode         . go-ts-mode)
-     (js-mode         . js-ts-mode)
-     (json-mode       . json-ts-mode)
-     (python-mode     . python-ts-mode)
-     (rust-mode       . rust-ts-mode)
-     (swift-mode      . swift-ts-mode)
-     (typescript-mode . typescript-ts-mode)
-     (yaml-mode       . yaml-ts-mode))))
-
 (use-package magit
   :defer t
   :bind
@@ -341,12 +320,13 @@
    ("C-c g a" . gptel-add)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model 'deepseek/deepseek-v4-pro
+  (setq gptel-model 'z-ai/glm-5.2
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
                         :endpoint "/api/v1/chat/completions"
                         :stream t
                         :key 'gptel-api-key
-                        :models '("moonshotai/kimi-k2.6"
+                        :models '("z-ai/glm-5.2"
+                                  "moonshotai/kimi-k2.7-code"
                                   "deepseek/deepseek-v4-pro"))))
