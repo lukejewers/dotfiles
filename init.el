@@ -282,6 +282,7 @@
                         (ghostel)))))
          :map ghostel-semi-char-mode-map
          ("C-<backspace>" . my-ghostel-backward-kill-word)
+         ("C-k"  . my-ghostel-send-C-k-and-kill)
          :map project-prefix-map
          ("." . ghostel-project))
   :config
@@ -291,6 +292,10 @@
     (interactive)
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
     (ghostel-send-key "backspace" "alt"))
+  (defun my-ghostel-send-C-k-and-kill ()
+    (interactive)
+    (kill-ring-save (point) (line-end-position))
+    (ghostel-send-key "k" "ctrl"))
   (defun my-ghostel--pixel-scroll-off (&rest _)
     (pixel-scroll-precision-mode -1))
   (defun my-ghostel--pixel-scroll-on (&rest _)
