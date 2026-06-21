@@ -295,14 +295,7 @@
   (defun my-ghostel-send-C-k-and-kill ()
     (interactive)
     (kill-ring-save (point) (line-end-position))
-    (ghostel-send-key "k" "ctrl"))
-  (defun my-ghostel--pixel-scroll-off (&rest _)
-    (pixel-scroll-precision-mode -1))
-  (defun my-ghostel--pixel-scroll-on (&rest _)
-    (pixel-scroll-precision-mode 1))
-  (advice-add 'ghostel-line-mode :after #'my-ghostel--pixel-scroll-off)
-  (advice-add 'ghostel-char-mode :after #'my-ghostel--pixel-scroll-on)
-  (advice-add 'ghostel-semi-char-mode :after #'my-ghostel--pixel-scroll-on))
+    (ghostel-send-key "k" "ctrl")))
 
 (use-package magit
   :defer t
