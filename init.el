@@ -77,7 +77,7 @@
   (set-mark-command-repeat-pop t)
   (tab-always-indent 'complete)
   (tab-width 4)
-  (treesit-auto-install-grammar t)
+  (treesit-auto-install-grammar 'always)
   (treesit-enabled-modes t)
   (treesit-font-lock-level 4)
   (use-package-always-ensure t)
