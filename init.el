@@ -131,15 +131,6 @@
 (use-package gruber-darker-theme
   :hook (after-init . (lambda () (load-theme 'gruber-darker t))))
 
-(use-package ido
-  :ensure nil
-  :hook (after-init . (lambda () (ido-mode 'file)))
-  :custom
-  (ido-auto-merge-work-directories-length -1)
-  (ido-max-prospects 10)
-  (ido-enable-flex-matching t)
-  (ido-use-url-at-point nil))
-
 (use-package icomplete
   :ensure nil
   :custom
