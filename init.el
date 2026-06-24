@@ -115,7 +115,7 @@
    ("M-o" . other-window))
   :hook
   ((after-save . executable-make-buffer-file-executable-if-script-p)
-   (before-save . whitespace-cleanup)
+   (before-save . delete-trailing-whitespace)
    (compilation-filter . ansi-color-compilation-filter)
    (emacs-startup . (lambda () (message "Emacs loaded in %.2f seconds with %d garbage collections"
                                (float-time (time-subtract after-init-time before-init-time)) gcs-done)))
@@ -134,7 +134,6 @@
 (use-package icomplete
   :ensure nil
   :custom
-  (icomplete-sorting-function #'icomplete-cycling-sort)
   (icomplete-compute-delay 0.0)
   :config
   (fido-mode 1)
@@ -295,8 +294,8 @@
    ("C-c m l" . magit-log)
    ("C-c m b" . magit-blame))
   :custom
-  (when (eq system-type 'darwin)
-    (magit-git-executable "/opt/homebrew/bin/git")))
+  (magit-git-executable
+   (if (eq system-type 'darwin) "/opt/homebrew/bin/git" "git")))
 
 (use-package gptel
   :defer t
