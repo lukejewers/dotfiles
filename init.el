@@ -309,7 +309,6 @@
    ("C-c g m" . gptel-menu))
   :config
   (setq gptel-model 'z-ai/glm-5.2
-        gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
                         :endpoint "/api/v1/chat/completions"
