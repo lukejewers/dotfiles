@@ -308,7 +308,8 @@
    ("C-c g a" . gptel-add)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model 'z-ai/glm-5.2
+  (setq gptel-model 'deepseek/deepseek-v4-flash
+        gptel-default-mode 'markdown-ts-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
                         :endpoint "/api/v1/chat/completions"
@@ -316,4 +317,5 @@
                         :key 'gptel-api-key
                         :models '("z-ai/glm-5.2"
                                   "moonshotai/kimi-k2.7-code"
+                                  "deepseek/deepseek-v4-flash"
                                   "deepseek/deepseek-v4-pro"))))
