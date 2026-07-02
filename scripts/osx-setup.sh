@@ -45,6 +45,7 @@ ln -sf "$DOTFILES/defaultkeybinding" "$HOME/Library/KeyBindings/DefaultKeyBindin
 ln -sf "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
 ln -sf "$DOTFILES/keyremapping" "$HOME/Library/LaunchAgents/com.local.KeyRemapping.plist"
 ln -sf "$DOTFILES/vimrc" "$HOME/.vimrc"
+ln -sf "$DOTFILES/config.ghostty" "$HOME/.config/ghostty/config"
 
 [ -e /opt/homebrew/opt/emacs-plus@31/Emacs.app ] && ln -sf /opt/homebrew/opt/emacs-plus@31/Emacs.app /Applications
 

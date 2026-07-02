@@ -22,7 +22,7 @@ echo "Installing Desktop Environment and Apps..."
 sudo xbps-install -y \
     sway i3status-rust rofi grim slurp \
     xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
-    nautilus emacs-pgtk foot zsh firefox \
+    nautilus emacs-pgtk ghostty zsh firefox \
     cmake libtool gdb git wget ripgrep xtools wl-clipboard \
     nerd-fonts font-iosevka jq ffmpeg yt-dlp \
     man-pages-devel man-pages-posix mpv
@@ -44,6 +44,7 @@ mkdir -p "$HOME/.config/sway" "$HOME/.config/i3status-rust"
 ln -sf "$DOTFILES/sway" "$HOME/.config/sway/config"
 ln -sf "$DOTFILES/i3status-rust" "$HOME/.config/i3status-rust/config.toml"
 ln -sf "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
+ln -sf "$DOTFILES/config.ghostty" "$HOME/.config/ghostty/config"
 
 echo "Enabling key remap..."
 sudo mkdir -p /etc/udev/hwdb.d

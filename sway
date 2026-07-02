@@ -19,7 +19,7 @@ font pango:Iosevka Nerd Font 12
 hide_edge_borders smart
 
 # Apps
-set $term foot
+set $term ghostty
 set $menu rofi
 set $emacs emacs
 set $browser firefox
@@ -46,7 +46,7 @@ bindsym $hyper+a focus parent
 # Apps
 bindsym $hyper+j      exec swaymsg '[app_id="emacs" workspace="__focused__"] focus' || exec $emacs
 bindsym $hyper+k      exec swaymsg '[app_id="Firefox" workspace="__focused__"] focus' || exec $browser
-bindsym $hyper+Return exec $term
+bindsym $hyper+l      exec swaymsg '[app_id="ghostty" workspace="__focused__"] focus' || exec $term
 bindsym $hyper+Space  exec rofi -show drun
 
 # Workspaces
