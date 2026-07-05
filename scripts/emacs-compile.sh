@@ -2,6 +2,10 @@
 
 set -xe
 
+./autogen.sh
+
+make distclean
+
 ./configure \
   --without-x \
   --with-pgtk \
@@ -27,3 +31,7 @@ set -xe
   --with-native-compilation \
   --with-file-notification=inotify \
   --without-compress-install
+
+make -j$(nproc)
+
+make install-strip
