@@ -9,7 +9,7 @@
   (setq default-frame-alist
         `((ns-transparent-titlebar . t)
           (background-color . "#181818")
-          (font . "Iosevka 20")
+          (font .,(if (eq system-type 'darwin) "Iosevka 20" "Iosevka 18"))
           (menu-bar-lines . 0)
           (tool-bar-lines . 0)
           (vertical-scroll-bars . nil)))
@@ -129,7 +129,7 @@
    (ibuffer-mode . hl-line-mode)))
 
 (use-package gruber-darker-theme
-  :hook (after-init . (lambda () (load-theme 'gruber-darker t))))
+  :config (load-theme 'gruber-darker t))
 
 (use-package icomplete
   :ensure nil
@@ -309,7 +309,7 @@
    ("C-c g m" . gptel-menu))
   :config
   (setq gptel-model 'deepseek/deepseek-v4-flash
-        gptel-default-mode 'markdown-ts-mode
+        gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
                         :endpoint "/api/v1/chat/completions"
