@@ -45,6 +45,33 @@
           mac-left-control-modifier 'control
           mac-option-modifier 'meta
           mac-command-modifier 'super))
+  (defvar-keymap my-overrides-map
+    :doc "Keymap for `my-overrides-mode'."
+    "C-<wheel-down>"  #'ignore
+    "C-<wheel-up>"    #'ignore
+    "<pinch>"         #'ignore
+    "C-x C-c"         #'ignore
+    "C-x m"           #'ignore
+    "C-z"             #'ignore
+    "C-,"             #'duplicate-line
+    "C-M--"           #'shrink-window-horizontally
+    "C-M-0"           #'shrink-window
+    "C-M-8"           #'enlarge-window-horizontally
+    "C-M-9"           #'enlarge-window
+    "C-c d p"         #'delete-pair
+    "C-c q"           #'query-replace-regexp
+    "C-c Q"           #'my-query-replace-save-excursion
+    "C-x 2"           #'my-split-below-and-focus
+    "C-x 3"           #'my-split-right-and-focus
+    "C-x C-b"         #'ibuffer
+    "C-x f"           #'find-file-at-point
+    "M-3"             #'my-insert-hash
+    "M-o"             #'other-window)
+  (define-minor-mode my-overrides-mode
+    "Global minor mode overriding default Emacs keybindings."
+    :global t
+    :init-value t
+    :keymap my-overrides-map)
   :custom
   (auto-save-default nil)
   (c-ts-mode-indent-offset 4)
@@ -85,6 +112,20 @@
   (whitespace-line-column 80)
   (xref-search-program 'ripgrep)
   :config
+  (defun my-query-replace-save-excursion ()
+    (interactive)
+    (save-excursion (call-interactively 'replace-regexp)))
+  (defun my-split-below-and-focus ()
+    (interactive)
+    (split-window-below)
+    (other-window 1))
+  (defun my-split-right-and-focus ()
+    (interactive)
+    (split-window-right)
+    (other-window 1))
+  (defun my-insert-hash ()
+    (interactive)
+    (insert "#"))
   (blink-cursor-mode 0)
   (delete-selection-mode 1)
   (electric-pair-mode 1)
@@ -92,40 +133,19 @@
   (show-paren-mode 1)
   (tooltip-mode 0)
   (with-eval-after-load 'c-ts-mode (define-key c-ts-mode-map (kbd "C-c .") nil))
-  :bind
-  (("<C-wheel-down>" . ignore)
-   ("<C-wheel-up>" . ignore)
-   ("<pinch>" . ignore)
-   ("C-," . duplicate-line)
-   ("C-M--" . shrink-window-horizontally)
-   ("C-M-0" . shrink-window)
-   ("C-M-8" . enlarge-window-horizontally)
-   ("C-M-9" . enlarge-window)
-   ("C-c d p" . delete-pair)
-   ("C-c q" . query-replace-regexp)
-   ("C-c Q" . (lambda () (interactive) (save-excursion (call-interactively 'replace-regexp))))
-   ("C-x 2" . (lambda () (interactive) (split-window-below) (other-window 1)))
-   ("C-x 3" . (lambda () (interactive) (split-window-right) (other-window 1)))
-   ("C-x C-b" . ibuffer)
-   ("C-x C-c" . nil)
-   ("C-x f" . find-file-at-point)
-   ("C-x m" . nil)
-   ("C-z" . nil)
-   ("M-3" . (lambda () (interactive) (insert "#")))
-   ("M-o" . other-window))
   :hook
   ((after-save . executable-make-buffer-file-executable-if-script-p)
    (before-save . delete-trailing-whitespace)
    (compilation-filter . ansi-color-compilation-filter)
    (emacs-startup . (lambda () (message "Emacs loaded in %.2f seconds with %d garbage collections"
-                               (float-time (time-subtract after-init-time before-init-time)) gcs-done)))
+                                        (float-time (time-subtract after-init-time before-init-time)) gcs-done)))
    (emacs-startup . (lambda () (setq gc-cons-threshold (* 1024 1024 16))))
    (emacs-startup . editorconfig-mode)
    (emacs-startup . global-auto-revert-mode)
    (emacs-startup . global-completion-preview-mode)
    (emacs-startup . pixel-scroll-precision-mode)
    (emacs-startup . savehist-mode)
-   (html-mode . (lambda () (local-unset-key (kbd "M-o"))))
+   (emacs-startup . my-overrides-mode)
    (ibuffer-mode . hl-line-mode)))
 
 (use-package gruber-darker-theme
@@ -277,7 +297,6 @@
          ("." . ghostel-project))
   :config
   (ghostel-comint-global-mode 1)
-  (setopt ghostel-keymap-exceptions (cons "M-o" ghostel-keymap-exceptions))
   (defun my-ghostel-backward-kill-word ()
     (interactive)
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
@@ -308,7 +327,7 @@
    ("C-c g a" . gptel-add)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model 'deepseek/deepseek-v4-flash
+  (setq gptel-model 'deepseek/deepseek-v4-pro
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -316,6 +335,5 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("z-ai/glm-5.2"
-                                  "moonshotai/kimi-k2.7-code"
                                   "deepseek/deepseek-v4-flash"
                                   "deepseek/deepseek-v4-pro"))))
