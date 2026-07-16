@@ -78,6 +78,7 @@
   (comint-completion-addsuffix nil)
   (comint-process-echoes t)
   (completion-auto-select t)
+  (completion-preview-minimum-symbol-length 2)
   (create-lockfiles nil)
   (cursor-in-non-selected-windows nil)
   (delete-by-moving-to-trash t)
