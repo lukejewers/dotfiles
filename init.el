@@ -260,7 +260,10 @@
   (dired-create-destination-dirs 'ask)
   (dired-dwim-target t)
   :config
-  (put 'dired-find-alternate-file 'disabled nil))
+  (put 'dired-find-alternate-file 'disabled nil)
+  (define-key dired-mode-map "."
+    (lambda () (interactive)
+      (kill-new (abbreviate-file-name default-directory)))))
 
 (use-package move-text
   :defer t
