@@ -38,7 +38,7 @@ compinit
 
 if [[ "${INSIDE_EMACS%%,*}" = 'ghostel' ]]; then
     # Open a file in Emacs from the terminal
-    e()   { ghostel_cmd find-file-other-window "$@"; }
+    e() { ghostel_cmd find-file-other-window "$@"; }
 
     # Open dired, defaulting to the current directory
     d() { ghostel_cmd dired-other-window "${1:-$PWD}"; }

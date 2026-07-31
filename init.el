@@ -277,13 +277,14 @@
 
 (use-package ghostel
   :defer t
-  :bind (("C-." . (lambda () (interactive)
+  :bind (("C-." . (lambda (&optional arg)
+                    (interactive "P")
                     (if (derived-mode-p 'ghostel-mode)
                         (quit-window)
                       (let ((display-buffer-alist
                              '((".*" (display-buffer-pop-up-window)
                                 (window-width . 0.45)))))
-                        (ghostel)))))
+                        (ghostel arg)))))
          :map ghostel-semi-char-mode-map
          ("C-<backspace>" . my-ghostel-backward-kill-word)
          ("C-k"  . my-ghostel-send-C-k-and-kill)
