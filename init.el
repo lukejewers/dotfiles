@@ -61,8 +61,6 @@
     "C-c d p"         #'delete-pair
     "C-c q"           #'query-replace-regexp
     "C-c Q"           #'my-query-replace-save-excursion
-    "C-x 2"           #'my-split-below-and-focus
-    "C-x 3"           #'my-split-right-and-focus
     "C-x C-b"         #'ibuffer
     "C-x f"           #'find-file-at-point
     "M-3"             #'my-insert-hash
@@ -116,14 +114,6 @@
   (defun my-query-replace-save-excursion ()
     (interactive)
     (save-excursion (call-interactively 'replace-regexp)))
-  (defun my-split-below-and-focus ()
-    (interactive)
-    (split-window-below)
-    (other-window 1))
-  (defun my-split-right-and-focus ()
-    (interactive)
-    (split-window-right)
-    (other-window 1))
   (defun my-insert-hash ()
     (interactive)
     (insert "#"))
