@@ -252,8 +252,8 @@
   :config
   (put 'dired-find-alternate-file 'disabled nil)
   (define-key dired-mode-map "."
-    (lambda () (interactive)
-      (kill-new (abbreviate-file-name default-directory)))))
+              (lambda () (interactive)
+                (kill-new (abbreviate-file-name default-directory)))))
 
 (use-package move-text
   :defer t
@@ -322,7 +322,7 @@
    ("C-c g a" . gptel-add)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model 'deepseek/deepseek-v4-pro
+  (setq gptel-model '~deepseek/deepseek-v4-flash-latest
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -330,5 +330,5 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("z-ai/glm-5.2"
-                                  "deepseek/deepseek-v4-flash"
+                                  "~deepseek/deepseek-v4-flash-latest"
                                   "deepseek/deepseek-v4-pro"))))
