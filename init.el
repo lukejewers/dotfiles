@@ -87,6 +87,10 @@
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (electric-pair-delete-adjacent-pairs t)
   (electric-pair-preserve-balance nil)
+  (grep-command "rg -S --no-heading --color=never ")
+  (grep-save-buffers t)
+  (grep-use-headings t)
+  (grep-use-null-device nil)
   (help-window-select t)
   (highlight-nonselected-windows nil)
   (indent-tabs-mode nil)
@@ -126,6 +130,7 @@
   (with-eval-after-load 'c-ts-mode (define-key c-ts-mode-map (kbd "C-c .") nil))
   :hook
   ((after-save . executable-make-buffer-file-executable-if-script-p)
+   (comint-mode . (lambda () (setq-local scroll-margin 1)))
    (before-save . delete-trailing-whitespace)
    (compilation-filter . ansi-color-compilation-filter)
    (emacs-startup . (lambda () (message "Emacs loaded in %.2f seconds with %d garbage collections"
@@ -181,17 +186,10 @@
 
 (use-package project
   :ensure nil
-  :bind (("C-c f d" . my-fd-files)
-         ("C-c f p" . my-project-fd-files))
+  :bind (("C-x p F" . my-project-fd-files)
+         ("C-x p g" . my-project-grep)
+         ("C-x p ." . my-project-grep-dwim))
   :config
-  (defun my-fd-files (cmd)
-    (interactive
-     (list (read-shell-command "fd: " "fd -tf -p " 'shell-command-history)))
-    (let ((buf (compilation-start cmd 'compilation-mode (lambda (_) "*fd*"))))
-      (with-current-buffer buf
-        (setq-local compilation-error-regexp-alist '(("^\\(.+\\)$" 1 nil nil 0)))
-        (setq-local compilation-skip-threshold 0)
-        (goto-char (point-min)))))
   (defun my-project-fd-files (cmd)
     (interactive
      (let* ((root (project-root (project-current t)))
@@ -203,26 +201,7 @@
       (with-current-buffer buf
         (setq-local compilation-error-regexp-alist '(("^\\(.+\\)$" 1 nil nil 0)))
         (setq-local compilation-skip-threshold 0)
-        (goto-char (point-min))))))
-
-(use-package grep
-  :ensure nil
-  :bind (("C-c s g" . grep)
-         ("C-c s p" . my-project-grep)
-         ("C-c s ." . my-project-grep-dwim))
-  :custom
-  (grep-command "rg -S --no-heading --color=never ")
-  (grep-save-buffers t)
-  (grep-use-headings t)
-  (grep-use-null-device nil)
-  :config
-  (require 'project)
-  (defun my-project-grep (&optional initial-input)
-    (interactive)
-    (let ((default-directory (project-root (project-current t))))
-      (grep (read-shell-command "Grep project: "
-                                (concat grep-command (or initial-input ""))
-                                'grep-history))))
+        (goto-char (point-min)))))
   (defun my-project-grep-dwim ()
     (interactive)
     (if-let* ((symbol (thing-at-point 'symbol t)))
@@ -230,7 +209,13 @@
           (grep (concat grep-command
                         (shell-quote-argument symbol)
                         " .")))
-      (call-interactively #'my-project-grep))))
+      (call-interactively #'my-project-grep)))
+  (defun my-project-grep (&optional initial-input)
+    (interactive)
+    (let ((default-directory (project-root (project-current t))))
+      (grep (read-shell-command "Grep project: "
+                                (concat grep-command (or initial-input ""))
+                                'grep-history)))))
 
 (use-package org
   :ensure nil
@@ -277,19 +262,19 @@
 
 (use-package ghostel
   :defer t
-  :bind (("C-." . (lambda (&optional arg)
-                    (interactive "P")
+  :bind (("C-." . (lambda ()
+                    (interactive)
                     (if (derived-mode-p 'ghostel-mode)
                         (quit-window)
                       (let ((display-buffer-alist
                              '((".*" (display-buffer-pop-up-window)
                                 (window-width . 0.45)))))
-                        (ghostel arg)))))
+                        (ghostel)))))
          :map ghostel-semi-char-mode-map
          ("C-<backspace>" . my-ghostel-backward-kill-word)
          ("C-k"  . my-ghostel-send-C-k-and-kill)
          :map project-prefix-map
-         ("." . ghostel-project))
+         ("s" . ghostel-project))
   :config
   (ghostel-comint-global-mode 1)
   (defun my-ghostel-backward-kill-word ()
