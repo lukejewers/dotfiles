@@ -145,25 +145,29 @@
    (ibuffer-mode . hl-line-mode)))
 
 (use-package gruber-darker-theme
-  :config (load-theme 'gruber-darker t))
+  :ensure t
+  :custom-face
+  (icomplete-first-match ((t (:foreground "#ffdd33" :weight regular))))
+  (icomplete-selected-match ((t (:foreground "#000000" :background "#ffdd33" :weight regular))))
+  (completions-highlight ((t (:background "#453d41"))))
+  :config
+  (load-theme 'gruber-darker t))
 
 (use-package icomplete
   :ensure nil
-  :custom
-  (icomplete-compute-delay 0.0)
-  :config
-  (fido-mode 1)
-  (with-eval-after-load 'gruber-darker-theme
-    (custom-theme-set-faces
-     'gruber-darker
-     '(icomplete-first-match ((t (:foreground "#ffdd33" :weight bold))))
-     '(icomplete-selected-match ((t (:foreground "#000000" :background "#ffdd33" :weight bold))))
-     '(completions-highlight ((t (:background "#453d41")))))))
+  :custom (icomplete-compute-delay 0.0)
+  :config (fido-mode 1))
 
 (use-package isearch
   :ensure nil
   :custom (isearch-lazy-count t)
   :bind (:map isearch-mode-map ("C-q" . isearch-query-replace-regexp)))
+
+(use-package prescient
+  :config
+  (prescient-persist-mode 1)
+  (setopt completion-preview-sort-function
+          #'prescient-completion-sort))
 
 (use-package cape
   :preface
