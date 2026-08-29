@@ -144,14 +144,13 @@
    (emacs-startup . my-overrides-mode)
    (ibuffer-mode . hl-line-mode)))
 
-(use-package gruber-darker-theme
+(use-package tokyo-night
   :ensure t
-  :custom-face
-  (icomplete-first-match ((t (:foreground "#ffdd33" :weight regular))))
-  (icomplete-selected-match ((t (:foreground "#000000" :background "#ffdd33" :weight regular))))
-  (completions-highlight ((t (:background "#453d41"))))
+  :custom
+  (tokyo-night-italic-comments nil)
+  (tokyo-night-italic-keywords nil)
   :config
-  (load-theme 'gruber-darker t))
+  (load-theme 'tokyo-night-storm t))
 
 (use-package icomplete
   :ensure nil
