@@ -299,6 +299,24 @@
   (magit-git-executable
    (if (eq system-type 'darwin) "/opt/homebrew/bin/git" "git")))
 
+(use-package eglot
+  :ensure nil
+  :hook (prog-mode . eglot-ensure)
+  :custom
+  (eglot-stay-out-of '(flymake eldoc))
+  (eglot-ignored-server-capabilities
+   '(:documentHighlightProvider
+     :completionProvider
+     :hoverProvider
+     :signatureHelpProvider
+     :codeActionProvider
+     :documentFormattingProvider
+     :renameProvider
+     :inlayHintProvider
+     :referencesProvider
+     :typeDefinitionProvider
+     :implementationProvider)))
+
 (use-package gptel
   :defer t
   :ensure t
