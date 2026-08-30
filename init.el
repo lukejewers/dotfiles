@@ -4,7 +4,6 @@
   (setq gc-cons-threshold (* 1024 1024 100)
         gc-cons-percentage 0.6)
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-  (set-face-attribute 'default nil :background "#181818" :foreground "#e4e4ef")
   (set-language-environment "UTF-8")
   (setq default-frame-alist
         `((ns-transparent-titlebar . t)
@@ -75,8 +74,6 @@
   (c-ts-mode-indent-offset 4)
   (comint-completion-addsuffix nil)
   (comint-process-echoes t)
-  (completion-auto-select t)
-  (completion-preview-minimum-symbol-length 2)
   (create-lockfiles nil)
   (cursor-in-non-selected-windows nil)
   (delete-by-moving-to-trash t)
@@ -94,6 +91,7 @@
   (help-window-select t)
   (highlight-nonselected-windows nil)
   (indent-tabs-mode nil)
+  (kill-do-not-save-duplicates t)
   (lazy-highlight-initial-delay 0)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes t)
@@ -102,7 +100,6 @@
   (python-indent-guess-indent-offset-verbose nil)
   (python-shell-completion-native-enable nil)
   (resize-mini-windows nil)
-  (kill-do-not-save-duplicates t)
   (save-interprogram-paste-before-kill t)
   (set-mark-command-repeat-pop t)
   (tab-always-indent 'complete)
@@ -138,19 +135,19 @@
    (emacs-startup . (lambda () (setq gc-cons-threshold (* 1024 1024 16))))
    (emacs-startup . editorconfig-mode)
    (emacs-startup . global-auto-revert-mode)
-   (emacs-startup . global-completion-preview-mode)
    (emacs-startup . pixel-scroll-precision-mode)
    (emacs-startup . savehist-mode)
    (emacs-startup . my-overrides-mode)
    (ibuffer-mode . hl-line-mode)))
 
-(use-package tokyo-night
+(use-package gruber-darker-theme
   :ensure t
-  :custom
-  (tokyo-night-italic-comments nil)
-  (tokyo-night-italic-keywords nil)
+  :custom-face
+  (icomplete-first-match ((t (:foreground "#ffdd33" :weight regular))))
+  (icomplete-selected-match ((t (:foreground "#000000" :background "#ffdd33" :weight regular))))
+  (completions-highlight ((t (:background "#453d41"))))
   :config
-  (load-theme 'tokyo-night-storm t))
+  (load-theme 'gruber-darker t))
 
 (use-package icomplete
   :ensure nil
@@ -176,6 +173,35 @@
     (add-hook 'completion-at-point-functions #'cape-keyword nil t))
   :hook
   ((prog-mode text-mode conf-mode) . my-cape-setup-capf))
+
+(use-package completion-preview
+  :ensure nil
+  :demand t
+  :bind
+  ( :map completion-preview-active-mode-map
+    ("<tab>" . completion-preview-insert-word)
+    ("M-n" . completion-preview-next-candidate)
+    ("M-p" . completion-preview-prev-candidate)
+    ("M-<return>" . completion-preview-insert)
+    ("M-i" . completion-preview-complete))
+  :custom (completion-preview-minimum-symbol-length 2)
+  :config (global-completion-preview-mode 1))
+
+(use-package minibuffer
+  :ensure nil
+  :demand t
+  :bind
+  ( :map completion-in-region-mode-map
+    ("M-i" . minibuffer-choose-completion)
+    ("M-n" . minibuffer-next-completion)
+    ("M-p" . minibuffer-previous-completion))
+  :custom
+  (completions-format 'one-column)
+  (completions-max-height 12)
+  (completion-auto-help t)
+  (completion-auto-select nil)
+  (minibuffer-visible-completions t)
+  (completion-eager-update t))
 
 (use-package compile
   :ensure nil
@@ -279,7 +305,6 @@
          :map project-prefix-map
          ("s" . ghostel-project))
   :config
-  (ghostel-comint-global-mode 1)
   (defun my-ghostel-backward-kill-word ()
     (interactive)
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
@@ -301,21 +326,24 @@
 
 (use-package eglot
   :ensure nil
-  :hook (prog-mode . eglot-ensure)
+  :hook
+  (prog-mode . eglot-ensure)
+  (eglot-managed-mode . (lambda () (flymake-mode -1)))
   :custom
   (eglot-stay-out-of '(flymake eldoc))
   (eglot-ignored-server-capabilities
-   '(:documentHighlightProvider
+   '(:codeActionProvider
      :completionProvider
-     :hoverProvider
-     :signatureHelpProvider
-     :codeActionProvider
+     :declarationProvider
      :documentFormattingProvider
-     :renameProvider
+     :documentHighlightProvider
+     :documentSymbolProvider
+     :hoverProvider
+     :implementationProvider
      :inlayHintProvider
-     :referencesProvider
-     :typeDefinitionProvider
-     :implementationProvider)))
+     :renameProvider
+     :signatureHelpProvider
+     :typeDefinitionProvider)))
 
 (use-package gptel
   :defer t
@@ -326,6 +354,7 @@
                       (quit-window)
                     (gptel "*gptel*" nil nil t))))
    ("C-c g a" . gptel-add)
+   ("C-c g b" . gptel-abort)
    ("C-c g m" . gptel-menu))
   :config
   (setq gptel-model '~deepseek/deepseek-v4-flash-latest
