@@ -42,6 +42,9 @@ if [[ "${INSIDE_EMACS%%,*}" = 'ghostel' ]]; then
 
     # Open dired, defaulting to the current directory
     d() { ghostel_cmd dired-other-window "${1:-$PWD}"; }
+
+    # Open file using sudo
+    sedit() { ghostel_cmd find-file-other-window "/sudo::$@"; }
 fi
 
 # aliases
