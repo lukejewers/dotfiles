@@ -330,11 +330,17 @@
   (prog-mode . eglot-ensure)
   (eglot-managed-mode . (lambda () (flymake-mode -1)))
   :custom
+  (eglot-autoshutdown t)
+  (eglot-code-action-indications nil)
+  (eglot-events-buffer-config '(:size 0 :format short))
+  (eglot-report-progress nil)
   (eglot-stay-out-of '(flymake eldoc))
+  (eglot-sync-connect nil)
   (eglot-ignored-server-capabilities
    '(:codeActionProvider
-     :completionProvider
+     :codeLensProvider
      :declarationProvider
+     :diagnosticProvider
      :documentFormattingProvider
      :documentHighlightProvider
      :documentSymbolProvider
@@ -343,6 +349,7 @@
      :inlayHintProvider
      :renameProvider
      :signatureHelpProvider
+     :semanticTokensProvider
      :typeDefinitionProvider)))
 
 (use-package gptel
