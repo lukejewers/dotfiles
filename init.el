@@ -140,14 +140,11 @@
    (emacs-startup . my-overrides-mode)
    (ibuffer-mode . hl-line-mode)))
 
-(use-package gruber-darker-theme
+(use-package my-gruber-darker-theme
   :ensure t
-  :custom-face
-  (icomplete-first-match ((t (:foreground "#ffdd33" :weight regular))))
-  (icomplete-selected-match ((t (:foreground "#000000" :background "#ffdd33" :weight regular))))
-  (completions-highlight ((t (:background "#453d41"))))
+  :vc (:url "https://github.com/lukejewers/my-gruber-darker")
   :config
-  (load-theme 'gruber-darker t))
+  (load-theme 'my-gruber-darker :no-confirm))
 
 (use-package icomplete
   :ensure nil
