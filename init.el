@@ -1,3 +1,5 @@
+;;; init.el --- Emacs configuration -*- lexical-binding: t; -*-
+
 (use-package emacs
   :ensure nil
   :init
@@ -31,7 +33,6 @@
         use-short-answers t
         inhibit-compacting-font-caches t
         mode-line-format nil
-        warning-minimum-level :error
         warning-suppress-types '((lexical-binding))
         custom-file (locate-user-emacs-file "custom-vars.el")
         package-archives '(("melpa"  . "https://melpa.org/packages/")
@@ -163,13 +164,12 @@
           #'prescient-completion-sort))
 
 (use-package cape
-  :preface
-  (defun my-cape-setup-capf ()
-    (add-hook 'completion-at-point-functions #'cape-file nil t)
-    (add-hook 'completion-at-point-functions #'cape-dabbrev nil t)
-    (add-hook 'completion-at-point-functions #'cape-keyword nil t))
-  :hook
-  ((prog-mode text-mode conf-mode) . my-cape-setup-capf))
+  :defer t
+  :init
+  (add-hook 'completion-at-point-functions #'cape-keyword)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-history)
+  (add-hook 'completion-at-point-functions #'cape-file))
 
 (use-package completion-preview
   :ensure nil
@@ -215,17 +215,21 @@
   :bind (("C-x p F" . my-project-fd-files)
          ("C-x p g" . my-project-grep)
          ("C-x p ." . my-project-grep-dwim))
+  :custom (project-mode-line t)
   :config
   (defun my-project-fd-files (cmd)
     (interactive
      (let* ((root (project-root (project-current t)))
-            (default-directory root))
-       (list (read-shell-command "fd project: " "fd -tf -p " 'shell-command-history))))
+            (default-directory root)
+            (command "fd -tf -p ''"))
+       (list (read-shell-command "fd project: "
+                                 (cons (concat command " .") (length command))
+                                 'shell-command-history))))
     (let* ((root (project-root (project-current t)))
            (default-directory root)
            (buf (compilation-start cmd 'compilation-mode (lambda (_) "*project fd*"))))
       (with-current-buffer buf
-        (setq-local compilation-error-regexp-alist '(("^\\(.+\\)$" 1 nil nil 0)))
+        (setq-local compilation-error-regexp-alist '(("^\\(\\./.+\\)$" 1 nil nil 0)))
         (setq-local compilation-skip-threshold 0)
         (goto-char (point-min)))))
   (defun my-project-grep-dwim ()
@@ -233,15 +237,27 @@
     (if-let* ((symbol (thing-at-point 'symbol t)))
         (let ((default-directory (project-root (project-current t))))
           (grep (concat grep-command
+                        "-F -e "
                         (shell-quote-argument symbol)
                         " .")))
       (call-interactively #'my-project-grep)))
   (defun my-project-grep (&optional initial-input)
     (interactive)
-    (let ((default-directory (project-root (project-current t))))
+    (let* ((default-directory (project-root (project-current t)))
+           (command (concat grep-command "-e "
+                            (shell-quote-argument (or initial-input "")))))
       (grep (read-shell-command "Grep project: "
-                                (concat grep-command (or initial-input ""))
+                                (cons (concat command " .")
+                                      (if initial-input
+                                          (1+ (length command))
+                                        (length command)))
                                 'grep-history)))))
+
+(use-package etags-regen
+  :config
+  (setq etags-regen-ignores
+        '("*.pyc" ".git" ".venv" "venv" "node_modules"))
+  (etags-regen-mode 1))
 
 (use-package org
   :ensure nil
@@ -323,7 +339,6 @@
 
 (use-package gptel
   :defer t
-  :ensure t
   :bind
   (("C-c g g" . (lambda () (interactive)
                   (if (bound-and-true-p gptel-mode)
