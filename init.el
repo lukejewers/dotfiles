@@ -253,12 +253,6 @@
                                         (length command)))
                                 'grep-history)))))
 
-(use-package etags-regen
-  :config
-  (setq etags-regen-ignores
-        '("*.pyc" ".git" ".venv" "venv" "node_modules"))
-  (etags-regen-mode 1))
-
 (use-package org
   :ensure nil
   :custom
@@ -345,10 +339,10 @@
                       (quit-window)
                     (gptel "*gptel*" nil nil t))))
    ("C-c g a" . gptel-add)
-   ("C-c g b" . gptel-abort)
+   ("C-c g k" . gptel-abort)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model '~deepseek/deepseek-v4-flash-latest
+  (setq gptel-model 'deepseek/deepseek-v4.1-flash
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -356,5 +350,5 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("z-ai/glm-5.2"
-                                  "~deepseek/deepseek-v4-flash-latest"
+                                  "deepseek/deepseek-v4.1-flash"
                                   "deepseek/deepseek-v4-pro"))))
