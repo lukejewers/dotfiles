@@ -168,7 +168,6 @@
   :init
   (add-hook 'completion-at-point-functions #'cape-keyword)
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-history)
   (add-hook 'completion-at-point-functions #'cape-file))
 
 (use-package completion-preview
@@ -215,7 +214,6 @@
   :bind (("C-x p F" . my-project-fd-files)
          ("C-x p g" . my-project-grep)
          ("C-x p ." . my-project-grep-dwim))
-  :custom (project-mode-line t)
   :config
   (defun my-project-fd-files (cmd)
     (interactive
@@ -252,12 +250,6 @@
                                           (1+ (length command))
                                         (length command)))
                                 'grep-history)))))
-
-(use-package etags-regen
-  :config
-  (setq etags-regen-ignores
-        '("*.pyc" ".git" ".venv" "venv" "node_modules"))
-  (etags-regen-mode 1))
 
 (use-package org
   :ensure nil
@@ -345,10 +337,10 @@
                       (quit-window)
                     (gptel "*gptel*" nil nil t))))
    ("C-c g a" . gptel-add)
-   ("C-c g b" . gptel-abort)
+   ("C-c g k" . gptel-abort)
    ("C-c g m" . gptel-menu))
   :config
-  (setq gptel-model '~deepseek/deepseek-v4-flash-latest
+  (setq gptel-model 'deepseek/deepseek-v4.1-flash
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
@@ -356,5 +348,4 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("z-ai/glm-5.2"
-                                  "~deepseek/deepseek-v4-flash-latest"
-                                  "deepseek/deepseek-v4-pro"))))
+                                  "deepseek/deepseek-v4.1-flash"))))
