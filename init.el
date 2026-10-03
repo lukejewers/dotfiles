@@ -164,11 +164,13 @@
           #'prescient-completion-sort))
 
 (use-package cape
-  :defer t
-  :init
-  (add-hook 'completion-at-point-functions #'cape-keyword)
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file))
+  :preface
+  (defun my-cape-setup-capf ()
+    (add-hook 'completion-at-point-functions #'cape-file    nil t)
+    (add-hook 'completion-at-point-functions #'cape-keyword nil t)
+    (add-hook 'completion-at-point-functions #'cape-dabbrev nil t))
+  :hook
+  ((prog-mode text-mode conf-mode) . my-cape-setup-capf))
 
 (use-package completion-preview
   :ensure nil
