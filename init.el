@@ -7,6 +7,11 @@
         gc-cons-percentage 0.6)
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))
   (set-language-environment "UTF-8")
+  (let ((local-bin (expand-file-name "~/.local/bin")))
+    (unless (member local-bin exec-path)
+      (push local-bin exec-path)
+      (setenv "PATH" (concat local-bin path-separator (getenv "PATH")))))
+  (setenv "EDITOR" "emacsclient")
   (setq default-frame-alist
         `((ns-transparent-titlebar . t)
           (background-color . "#181818")
@@ -295,6 +300,15 @@
   ("C-<" . mc/mark-previous-like-this)
   ("C-c ." . mc/mark-all-like-this)
   ("C-c ," . mc/edit-lines))
+
+(use-package server
+  :ensure nil
+  :config
+  (define-minor-mode my-server-edit-mode
+    "Finish editing an emacsclient buffer with \\[server-edit]."
+    :keymap (define-keymap "C-c C-c" #'server-edit))
+  :hook
+  (server-visit . my-server-edit-mode))
 
 (use-package ghostel
   :defer t
