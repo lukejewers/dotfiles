@@ -7,10 +7,10 @@
         gc-cons-percentage 0.6)
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))
   (set-language-environment "UTF-8")
-  (let ((local-bin (expand-file-name "~/.local/bin")))
-    (unless (member local-bin exec-path)
-      (push local-bin exec-path)
-      (setenv "PATH" (concat local-bin path-separator (getenv "PATH")))))
+  (dolist (dir (list "/opt/homebrew/bin" (expand-file-name "~/.local/bin")))
+    (when (and (file-directory-p dir) (not (member dir exec-path)))
+      (push dir exec-path)
+      (setenv "PATH" (concat dir path-separator (getenv "PATH")))))
   (setenv "EDITOR" "emacsclient")
   (setq default-frame-alist
         `((ns-transparent-titlebar . t)
@@ -32,12 +32,10 @@
         window-resize-pixelwise t
         frame-inhibit-implied-resize t
         inhibit-startup-screen t
-        inhibit-startup-message t
         ring-bell-function 'ignore
         use-dialog-box nil
         use-short-answers t
         inhibit-compacting-font-caches t
-        mode-line-format nil
         warning-suppress-types '((lexical-binding))
         custom-file (locate-user-emacs-file "custom-vars.el")
         package-archives '(("melpa"  . "https://melpa.org/packages/")
@@ -65,7 +63,7 @@
     "C-M-9"           #'enlarge-window
     "C-c d p"         #'delete-pair
     "C-c q"           #'query-replace-regexp
-    "C-c Q"           #'my-query-replace-save-excursion
+    "C-c Q"           #'my-replace-regexp-in-place
     "C-x C-b"         #'ibuffer
     "C-x f"           #'find-file-at-point
     "M-3"             #'my-insert-hash
@@ -114,11 +112,10 @@
   (treesit-enabled-modes t)
   (treesit-font-lock-level 4)
   (use-package-always-ensure t)
-  (use-package-compute-statistics nil)
   (whitespace-line-column 80)
   (xref-search-program 'ripgrep)
   :config
-  (defun my-query-replace-save-excursion ()
+  (defun my-replace-regexp-in-place ()
     (interactive)
     (save-excursion (call-interactively 'replace-regexp)))
   (defun my-insert-hash ()
@@ -128,9 +125,8 @@
   (delete-selection-mode 1)
   (electric-pair-mode 1)
   (put 'narrow-to-region 'disabled nil)
-  (show-paren-mode 1)
   (tooltip-mode 0)
-  (with-eval-after-load 'c-ts-mode (define-key c-ts-mode-map (kbd "C-c .") nil))
+  (with-eval-after-load 'c-ts-mode (keymap-unset c-ts-base-mode-map "C-c ." t))
   :hook
   ((after-save . executable-make-buffer-file-executable-if-script-p)
    (comint-mode . (lambda () (setq-local scroll-margin 1)))
@@ -138,16 +134,14 @@
    (compilation-filter . ansi-color-compilation-filter)
    (emacs-startup . (lambda () (message "Emacs loaded in %.2f seconds with %d garbage collections"
                                         (float-time (time-subtract after-init-time before-init-time)) gcs-done)))
-   (emacs-startup . (lambda () (setq gc-cons-threshold (* 1024 1024 16))))
+   (emacs-startup . (lambda () (setq gc-cons-threshold (* 1024 1024 16) gc-cons-percentage 0.1)))
    (emacs-startup . editorconfig-mode)
    (emacs-startup . global-auto-revert-mode)
    (emacs-startup . pixel-scroll-precision-mode)
    (emacs-startup . savehist-mode)
-   (emacs-startup . my-overrides-mode)
    (ibuffer-mode . hl-line-mode)))
 
 (use-package my-gruber-darker-theme
-  :ensure t
   :vc (:url "https://github.com/lukejewers/my-gruber-darker")
   :config
   (load-theme 'my-gruber-darker :no-confirm))
@@ -246,16 +240,12 @@
                         (shell-quote-argument symbol)
                         " .")))
       (call-interactively #'my-project-grep)))
-  (defun my-project-grep (&optional initial-input)
+  (defun my-project-grep ()
     (interactive)
     (let* ((default-directory (project-root (project-current t)))
-           (command (concat grep-command "-e "
-                            (shell-quote-argument (or initial-input "")))))
+           (command (concat grep-command "-e '' .")))
       (grep (read-shell-command "Grep project: "
-                                (cons (concat command " .")
-                                      (if initial-input
-                                          (1+ (length command))
-                                        (length command)))
+                                (cons command (- (length command) 2))
                                 'grep-history)))))
 
 (use-package org
@@ -264,8 +254,7 @@
   (org-log-done t)
   (org-directory "~/me/org")
   :hook
-  (org-mode . visual-line-mode)
-  (org-mode . (lambda () (setq tab-width 8))))
+  (org-mode . visual-line-mode))
 
 (use-package dired
   :ensure nil
@@ -282,19 +271,16 @@
                 (kill-new (abbreviate-file-name default-directory)))))
 
 (use-package move-text
-  :defer t
   :bind
   ("M-p" . move-text-up)
   ("M-n" . move-text-down))
 
 (use-package expreg
-  :defer t
   :bind
   ("C-=" . expreg-expand)
   ("C--" . expreg-contract))
 
 (use-package multiple-cursors
-  :defer t
   :bind
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this)
@@ -311,7 +297,6 @@
   (server-visit . my-server-edit-mode))
 
 (use-package ghostel
-  :defer t
   :bind (("C-." . (lambda ()
                     (interactive)
                     (if (derived-mode-p 'ghostel-mode)
@@ -336,17 +321,12 @@
     (ghostel-send-key "k" "ctrl")))
 
 (use-package magit
-  :defer t
   :bind
   (("C-c m s" . magit-status)
    ("C-c m l" . magit-log)
-   ("C-c m b" . magit-blame))
-  :custom
-  (magit-git-executable
-   (if (eq system-type 'darwin) "/opt/homebrew/bin/git" "git")))
+   ("C-c m b" . magit-blame)))
 
 (use-package gptel
-  :defer t
   :bind
   (("C-c g g" . (lambda () (interactive)
                   (if (bound-and-true-p gptel-mode)
