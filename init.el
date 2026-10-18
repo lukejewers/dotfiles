@@ -264,11 +264,12 @@
   (dired-auto-revert-buffer #'dired-directory-changed-p)
   (dired-create-destination-dirs 'ask)
   (dired-dwim-target t)
+  :bind (:map dired-mode-map ("." . my-dired-copy-directory))
   :config
   (put 'dired-find-alternate-file 'disabled nil)
-  (define-key dired-mode-map "."
-              (lambda () (interactive)
-                (kill-new (abbreviate-file-name default-directory)))))
+  (defun my-dired-copy-directory ()
+    (interactive)
+    (kill-new (abbreviate-file-name default-directory))))
 
 (use-package move-text
   :bind
