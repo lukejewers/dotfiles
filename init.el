@@ -335,7 +335,9 @@
                     (gptel "*gptel*" nil nil t))))
    ("C-c g a" . gptel-add)
    ("C-c g k" . gptel-abort)
-   ("C-c g m" . gptel-menu))
+   ("C-c g m" . gptel-menu)
+   :map gptel-mode-map
+   ("C-c C-c" . gptel-send))
   :config
   (setq gptel-model 'deepseek/deepseek-v4.1-flash
         gptel-default-mode 'org-mode
