@@ -38,7 +38,7 @@ bindsym $hyper+e layout toggle split
 bindsym $hyper+f fullscreen
 bindsym $hyper+w kill
 bindsym $hyper+c reload
-bindsym $hyper+z floating toggle
+bindsym $hyper+d floating toggle
 bindsym $hyper+b splith
 bindsym $hyper+v splitv
 bindsym $hyper+a focus parent
