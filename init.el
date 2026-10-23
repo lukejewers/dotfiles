@@ -248,6 +248,13 @@
                                 (cons command (- (length command) 2))
                                 'grep-history)))))
 
+(use-package quick-sdcv
+  :bind (("M-s d" . quick-sdcv-search-at-point)
+         ("M-s D" . quick-sdcv-search-input)
+         :map quick-sdcv-mode-map
+         ("TAB" . outline-cycle)
+         ("<backtab>" . outline-cycle-buffer)))
+
 (use-package org
   :ensure nil
   :custom
