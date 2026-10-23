@@ -339,12 +339,11 @@
    :map gptel-mode-map
    ("C-c C-c" . gptel-send))
   :config
-  (setq gptel-model 'deepseek/deepseek-v4.1-flash
+  (setq gptel-model '~deepseek/deepseek-flash-latest
         gptel-default-mode 'org-mode
         gptel-backend (gptel-make-openai "gptel"
                         :host "openrouter.ai"
                         :endpoint "/api/v1/chat/completions"
                         :stream t
                         :key 'gptel-api-key
-                        :models '("z-ai/glm-5.2"
-                                  "deepseek/deepseek-v4.1-flash"))))
+                        :models '("~deepseek/deepseek-flash-latest"))))
