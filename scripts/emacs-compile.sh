@@ -4,7 +4,7 @@ set -xe
 
 ./autogen.sh
 
-make distclean
+[ -f Makefile ] && make distclean
 
 ./configure \
   --without-x \

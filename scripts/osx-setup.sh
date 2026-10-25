@@ -14,11 +14,13 @@ fi
 
 mkdir -p "$HOME/.emacs.d"
 mkdir -p "$HOME/Library/KeyBindings"
+mkdir -p "$HOME/Library/LaunchAgents"
+mkdir -p "$HOME/.config/ghostty"
 mkdir -p "$HOME/Screenshots"
 
 echo "Installing system deps..."
 command -v brew >/dev/null 2>&1 || { echo "Homebrew not found. Install it first."; exit 1; }
-brew bundle --file="$DOTFILES/.brewfile"
+brew bundle --file="$DOTFILES/brewfile"
 
 echo "Configuring OSX..."
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
@@ -50,6 +52,7 @@ ln -sf "$DOTFILES/config.ghostty" "$HOME/.config/ghostty/config"
 [ -e /opt/homebrew/opt/emacs-plus@31/Emacs.app ] && ln -sf /opt/homebrew/opt/emacs-plus@31/Emacs.app /Applications
 
 echo "Creating .zshrc loader..."
+if [ ! -f "$HOME/.zshrc" ]; then
 cat > "$HOME/.zshrc" << EOF
 #!/bin/zsh
 #
@@ -61,5 +64,6 @@ cat > "$HOME/.zshrc" << EOF
 
 # --- Machine-Specific Settings Below This Line ---
 EOF
+fi
 
 echo "Configuration complete."

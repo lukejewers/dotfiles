@@ -10,14 +10,14 @@ setopt HIST_IGNORE_ALL_DUPS  # Remove duplicate commands from history
 setopt HIST_IGNORE_SPACE     # Don't save commands starting with space
 setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks before recording entry.
 setopt HIST_SAVE_NO_DUPS     # Don't write duplicate entries in the history file.
-setopt INC_APPEND_HISTORY    # Write immediately, not on exit
-setopt SHARE_HISTORY         # Share history between all zsh sessions
+setopt SHARE_HISTORY         # Write immediately and share history between sessions
 
 # editor
 export EDITOR="emacsclient"
 
 # colors
-if [[ -z "$INSIDE_EMACS" ]]; then
+# fall back when the terminal is unknown here, e.g. xterm-ghostty over ssh
+if ! infocmp "$TERM" > /dev/null 2>&1; then
     export TERM=xterm-256color
 fi
 if ls --color > /dev/null 2>&1; then

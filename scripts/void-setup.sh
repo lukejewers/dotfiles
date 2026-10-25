@@ -8,6 +8,7 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 echo "Updating system and adding non-free repo..."
+sudo xbps-install -Syu xbps
 sudo xbps-install -Syu
 sudo xbps-install -y void-repo-nonfree
 sudo xbps-install -Syu
@@ -20,10 +21,10 @@ sudo xbps-install -y \
 
 echo "Installing Desktop Environment and Apps..."
 sudo xbps-install -y \
-    sway i3status-rust rofi grim slurp \
+    sway fuzzel grim slurp brightnessctl syncthing \
     xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
     nautilus emacs-pgtk ghostty zsh firefox \
-    cmake libtool gdb git wget ripgrep xtools wl-clipboard \
+    cmake libtool gcc gdb git wget ripgrep fd sdcv xtools wl-clipboard \
     nerd-fonts font-iosevka jq ffmpeg yt-dlp \
     man-pages-devel man-pages-posix mpv
 
@@ -40,9 +41,10 @@ else
 fi
 
 echo "Symlinking user configs..."
-mkdir -p "$HOME/.config/sway" "$HOME/.config/i3status-rust"
+mkdir -p "$HOME/.config/sway" "$HOME/.config/fuzzel" \
+         "$HOME/.config/ghostty" "$HOME/.emacs.d" "$HOME/Screenshots"
 ln -sf "$DOTFILES/sway" "$HOME/.config/sway/config"
-ln -sf "$DOTFILES/i3status-rust" "$HOME/.config/i3status-rust/config.toml"
+ln -sf "$DOTFILES/fuzzel" "$HOME/.config/fuzzel/fuzzel.ini"
 ln -sf "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
 ln -sf "$DOTFILES/config.ghostty" "$HOME/.config/ghostty/config"
 
@@ -69,6 +71,10 @@ sudo mkdir -p /etc/alsa/conf.d
 sudo ln -sf /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d/
 sudo ln -sf /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d/
 
+echo "Configuring Pipewire session manager..."
+sudo mkdir -p /etc/pipewire/pipewire.conf.d
+sudo ln -sf /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
+
 echo "Setting environment variables..."
 touch "$HOME/.zprofile"
 if ! grep -q "MOZ_ENABLE_WAYLAND" "$HOME/.zprofile"; then
@@ -79,6 +85,7 @@ if ! grep -q "MOZ_ENABLE_WAYLAND" "$HOME/.zprofile"; then
 fi
 
 echo "Creating .zshrc loader..."
+if [ ! -f "$HOME/.zshrc" ]; then
 cat > "$HOME/.zshrc" << EOF
 #!/bin/zsh
 #
@@ -90,5 +97,6 @@ cat > "$HOME/.zshrc" << EOF
 
 # --- Machine-Specific Settings Below This Line ---
 EOF
+fi
 
 echo "Done! Please reboot."

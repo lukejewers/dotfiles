@@ -1,0 +1,27 @@
+# fuzzel config (~/.config/fuzzel/fuzzel.ini)
+
+[main]
+font=Iosevka:size=14
+prompt="> "
+terminal=ghostty -e
+icons-enabled=no
+width=50
+lines=12
+horizontal-pad=12
+vertical-pad=8
+
+[colors]
+background=181818ff
+text=e4e4efff
+prompt=96a6c8ff
+input=f4f4ffff
+placeholder=737373ff
+match=ffdd33ff
+selection=ffdd33ff
+selection-text=000000ff
+selection-match=000000ff
+border=453d41ff
+
+[border]
+width=1
+radius=0

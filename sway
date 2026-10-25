@@ -20,7 +20,7 @@ hide_edge_borders smart
 
 # Apps
 set $term ghostty
-set $menu rofi
+set $menu fuzzel
 set $emacs emacs
 set $browser firefox
 set $finder nautilus
@@ -47,7 +47,7 @@ bindsym $hyper+a focus parent
 bindsym $hyper+j      exec swaymsg '[app_id="emacs" workspace="__focused__"] focus' || exec $emacs
 bindsym $hyper+k      exec swaymsg '[app_id="firefox" workspace="__focused__"] focus' || exec $browser
 bindsym $hyper+l      exec swaymsg '[app_id="ghostty" workspace="__focused__"] focus' || exec $term
-bindsym $hyper+Space  exec rofi -show drun
+bindsym $hyper+Space  exec $menu
 
 # Workspaces
 bindsym $hyper+1 workspace number 1
@@ -60,10 +60,13 @@ bindsym $hyper+7 workspace number 7
 bindsym $hyper+8 workspace number 8
 
 # Theme
-client.focused          #181818 #565f73 #e4e4ef
-client.unfocused        #181818 #282828 #e4e4ef
-client.focused_inactive #181818 #282828 #e4e4ef
-client.urgent           #453d41 #f43841 #ffffff
+# class                 border  bg      text    indicator child_border
+client.focused          #565f73 #565f73 #ffffff #ffdd33   #565f73
+client.focused_inactive #282828 #181818 #95a99f #282828   #282828
+client.unfocused        #282828 #181818 #737373 #282828   #282828
+client.urgent           #f43841 #3b2022 #ff4f58 #f43841   #f43841
+client.placeholder      #101010 #101010 #737373 #101010   #101010
+client.background       #181818
 
 # Background
 output * bg #181818 solid_color
@@ -71,18 +74,18 @@ output * bg #181818 solid_color
 # Bar
 bar {
     position top
-    status_command i3status-rs
+    status_command ~/dotfiles/scripts/swaybar-status.sh
     font pango:Iosevka Nerd Font 10
 
     colors {
         background          #181818
         statusline          #e4e4ef
         separator           #453d41
-        focused_workspace   #181818 #565f73 #e4e4ef
-        active_workspace    #181818 #453d41 #e4e4ef
-        inactive_workspace  #181818 #453d41 #e4e4ef
-        urgent_workspace    #453d41 #f43841 #ffffff
-        binding_mode        #282828 #96a6c8 #e4e4ef
+        focused_workspace   #565f73 #565f73 #ffffff
+        active_workspace    #282828 #181818 #e4e4ef
+        inactive_workspace  #181818 #181818 #737373
+        urgent_workspace    #f43841 #3b2022 #ff4f58
+        binding_mode        #ffdd33 #ffdd33 #000000
     }
 }
 
@@ -90,16 +93,17 @@ bar {
 bindgesture swipe:3:left  focus prev
 bindgesture swipe:3:right focus next
 
-# Audio Controls
-bindsym --locked XF86AudioMute        exec wpctl set-mute   @DEFAULT_AUDIO_SINK@ toggle
-bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
-bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+# Audio Controls (signal the bar to refresh)
+set $refresh kill -USR1 $(cat $XDG_RUNTIME_DIR/swaybar-status.pid)
+bindsym --locked XF86AudioMute        exec wpctl set-mute   @DEFAULT_AUDIO_SINK@ toggle && $refresh
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && $refresh
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && $refresh
 bindsym --locked XF86AudioMicMute     exec wpctl set-mute   @DEFAULT_AUDIO_SOURCE@ toggle
 
 # Brightness Controls
 exec brightnessctl set 90%
-bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym --locked XF86MonBrightnessUp   exec brightnessctl set 5%+
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%- && $refresh
+bindsym --locked XF86MonBrightnessUp   exec brightnessctl set 5%+ && $refresh
 
 # Screenshot
 bindsym Print exec grim ~/Screenshots/screenshot-$(date +%Y%m%d-%H%M%S).png
