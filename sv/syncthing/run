@@ -1,0 +1,5 @@
+#!/bin/sh
+# SYNCTHING_USER is set in ./conf
+[ -r ./conf ] && . ./conf
+export HOME=$(getent passwd "$SYNCTHING_USER" | cut -d: -f6)
+exec chpst -u "$SYNCTHING_USER:$SYNCTHING_USER" syncthing serve --no-browser --no-restart 2>&1

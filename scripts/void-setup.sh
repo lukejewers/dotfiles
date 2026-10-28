@@ -61,6 +61,11 @@ sudo ln -sf /etc/sv/tlp /var/service/
 sudo ln -sf /etc/sv/bluetoothd /var/service/
 sudo ln -sf /etc/sv/iwd /var/service/
 
+echo "Installing syncthing service..."
+sudo cp -r "$DOTFILES/sv/syncthing" /etc/sv/
+echo "SYNCTHING_USER=$USER" | sudo tee /etc/sv/syncthing/conf > /dev/null
+sudo ln -sf /etc/sv/syncthing /var/service/
+
 echo "Adding user to groups..."
 for group in video audio bluetooth; do
     sudo gpasswd -a "$USER" "$group"

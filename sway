@@ -10,7 +10,6 @@ set $down down
 # Exec
 exec emacs
 exec firefox
-exec syncthing
 exec pipewire
 exec pipewire-pulse
 
