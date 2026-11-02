@@ -153,7 +153,9 @@
 
 (use-package isearch
   :ensure nil
-  :custom (isearch-lazy-count t)
+  :custom
+  (isearch-lazy-count t)
+  (isearch-allow-motion t)
   :bind (:map isearch-mode-map ("C-q" . isearch-query-replace-regexp)))
 
 (use-package prescient
