@@ -53,19 +53,19 @@
     "C-<wheel-down>"  #'ignore
     "C-<wheel-up>"    #'ignore
     "<pinch>"         #'ignore
-    "C-x C-c"         #'ignore
-    "C-x m"           #'ignore
-    "C-z"             #'ignore
     "C-,"             #'duplicate-line
     "C-M--"           #'shrink-window-horizontally
     "C-M-0"           #'shrink-window
     "C-M-8"           #'enlarge-window-horizontally
     "C-M-9"           #'enlarge-window
+    "C-c Q"           #'my-replace-regexp-in-place
     "C-c d p"         #'delete-pair
     "C-c q"           #'query-replace-regexp
-    "C-c Q"           #'my-replace-regexp-in-place
     "C-x C-b"         #'ibuffer
+    "C-x C-c"         #'ignore
     "C-x f"           #'find-file-at-point
+    "C-x m"           #'ignore
+    "C-z"             #'ignore
     "M-3"             #'my-insert-hash
     "M-o"             #'other-window)
   (define-minor-mode my-overrides-mode
@@ -306,20 +306,37 @@
   :hook
   (server-visit . my-server-edit-mode))
 
+(use-package shell
+  :ensure nil
+  :bind
+  (("C-." . my-shell-pop-up)
+   :map shell-mode-map
+   ("M-r" . my-shell-history))
+  :custom
+  (ghostel-comint-global-mode t)
+  (read-process-output-max (* 1024 1024))
+  (shell-fontify-input-enable nil)
+  :config
+  (defun my-shell-pop-up ()
+    (interactive)
+    (if (derived-mode-p 'shell-mode)
+        (quit-window)
+      (let ((display-buffer-alist
+             '((".*" (display-buffer-pop-up-window)
+                (window-width . 0.45)))))
+        (shell))))
+  (defun my-shell-history ()
+    (interactive)
+    (let* ((entries   (ring-elements comint-input-ring))
+           (candidates (delete-dups (copy-sequence entries)))
+           (choice     (completing-read "Shell history: " candidates nil nil)))
+      (goto-char (point-max))
+      (insert choice))))
+
 (use-package ghostel
-  :bind (("C-." . (lambda ()
-                    (interactive)
-                    (if (derived-mode-p 'ghostel-mode)
-                        (quit-window)
-                      (let ((display-buffer-alist
-                             '((".*" (display-buffer-pop-up-window)
-                                (window-width . 0.45)))))
-                        (ghostel)))))
-         :map ghostel-semi-char-mode-map
-         ("C-<backspace>" . my-ghostel-backward-kill-word)
-         ("C-k"  . my-ghostel-send-C-k-and-kill)
-         :map project-prefix-map
-         ("s" . ghostel-project))
+  :bind (:map ghostel-semi-char-mode-map
+              ("C-<backspace>" . my-ghostel-backward-kill-word)
+              ("C-k"  . my-ghostel-send-C-k-and-kill))
   :config
   (defun my-ghostel-backward-kill-word ()
     (interactive)
