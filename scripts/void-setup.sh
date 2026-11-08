@@ -15,7 +15,7 @@ sudo xbps-install -Syu
 
 echo "Installing Drivers and Core Services..."
 sudo xbps-install -y \
-    mesa-dri linux-firmware tlp elogind dbus iwd \
+    mesa-dri linux-firmware tlp elogind dbus iwd avahi nss-mdns \
     pipewire wireplumber alsa-pipewire libspa-bluetooth bluez \
     pavucontrol alsa-utils
 
@@ -60,8 +60,8 @@ sudo ln -sf /etc/sv/elogind /var/service/
 sudo ln -sf /etc/sv/tlp /var/service/
 sudo ln -sf /etc/sv/bluetoothd /var/service/
 sudo ln -sf /etc/sv/iwd /var/service/
-
-echo "Installing syncthing service..."
+[ "$(hostname)" = "p14s" ] || sudo sed -i 's/^#\?disable-publishing=.*/disable-publishing=yes/' /etc/avahi/avahi-daemon.conf
+sudo ln -sf /etc/sv/avahi-daemon /var/service/
 sudo cp -r "$DOTFILES/sv/syncthing" /etc/sv/
 echo "SYNCTHING_USER=$USER" | sudo tee /etc/sv/syncthing/conf > /dev/null
 sudo ln -sf /etc/sv/syncthing /var/service/
