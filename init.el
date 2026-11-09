@@ -128,7 +128,8 @@
   (tooltip-mode 0)
   (with-eval-after-load 'c-ts-mode (keymap-unset c-ts-base-mode-map "C-c ." t))
   :hook
-  ((after-save . executable-make-buffer-file-executable-if-script-p)
+  ((after-init . (lambda () (load (expand-file-name "local.el" user-emacs-directory) t t)))
+   (after-save . executable-make-buffer-file-executable-if-script-p)
    (comint-mode . (lambda () (setq-local scroll-margin 1)))
    (before-save . delete-trailing-whitespace)
    (compilation-filter . ansi-color-compilation-filter)
