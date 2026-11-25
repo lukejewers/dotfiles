@@ -374,3 +374,10 @@
                         :stream t
                         :key 'gptel-api-key
                         :models '("~deepseek/deepseek-flash-latest"))))
+
+(use-package seance
+  :vc (:url "https://github.com/lukejewers/seance")
+  :after ghostel
+  :bind-keymap ("C-c a" . seance-command-map)
+  :config
+  (seance-mode 1))
