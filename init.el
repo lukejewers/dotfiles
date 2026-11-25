@@ -61,7 +61,7 @@
     "C-c Q"           #'my-replace-regexp-in-place
     "C-c d p"         #'delete-pair
     "C-c q"           #'query-replace-regexp
-    "C-x C-b"         #'ibuffer
+    "C-x C-b"         #'bs-show
     "C-x C-c"         #'ignore
     "C-x f"           #'find-file-at-point
     "C-x m"           #'ignore
@@ -75,6 +75,8 @@
     :keymap my-overrides-map)
   :custom
   (auto-save-default nil)
+  (bs-default-configuration "all-intern-last")
+  (bs-max-window-height 15)
   (c-ts-mode-indent-offset 4)
   (comint-completion-addsuffix nil)
   (comint-process-echoes t)
@@ -140,7 +142,7 @@
    (emacs-startup . global-auto-revert-mode)
    (emacs-startup . pixel-scroll-precision-mode)
    (emacs-startup . savehist-mode)
-   (ibuffer-mode . hl-line-mode)))
+   (bs-mode . hl-line-mode)))
 
 (use-package my-gruber-darker-theme
   :vc (:url "https://github.com/lukejewers/my-gruber-darker")
