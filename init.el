@@ -372,27 +372,6 @@
    ("C-c m l" . magit-log)
    ("C-c m b" . magit-blame)))
 
-(use-package gptel
-  :bind
-  (("C-c g g" . (lambda () (interactive)
-                  (if (bound-and-true-p gptel-mode)
-                      (quit-window)
-                    (gptel "*gptel*" nil nil t))))
-   ("C-c g a" . gptel-add)
-   ("C-c g k" . gptel-abort)
-   ("C-c g m" . gptel-menu)
-   :map gptel-mode-map
-   ("C-c C-c" . gptel-send))
-  :config
-  (setq gptel-model '~deepseek/deepseek-flash-latest
-        gptel-default-mode 'org-mode
-        gptel-backend (gptel-make-openai "gptel"
-                        :host "openrouter.ai"
-                        :endpoint "/api/v1/chat/completions"
-                        :stream t
-                        :key 'gptel-api-key
-                        :models '("~deepseek/deepseek-flash-latest"))))
-
 (use-package agent-shell
   :bind (("C-c s s" . agent-shell)
          ("C-c s t" . agent-shell-toggle)
