@@ -218,8 +218,7 @@
   (compilation-always-kill t)
   (compilation-ask-about-save nil)
   :bind
-  ("C-c c" . compile)
-  ("C-c r" . recompile))
+  ("C-c c" . compile))
 
 (use-package project
   :ensure nil
