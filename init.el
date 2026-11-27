@@ -199,6 +199,7 @@
   (completion-auto-help t)
   (completion-auto-select nil)
   (minibuffer-visible-completions t)
+  (minibuffer-default-prompt-format "")
   (completion-eager-update t))
 
 (use-package grep
