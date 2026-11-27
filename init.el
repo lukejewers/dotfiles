@@ -302,10 +302,18 @@
 
 (use-package server
   :ensure nil
+  :demand t
+  :functions server-running-p
   :config
+  (defun my-server-save-and-edit ()
+    "Save the buffer, then finish with it as `server-edit' does, without asking."
+    (interactive)
+    (save-buffer)
+    (server-edit))
   (define-minor-mode my-server-edit-mode
-    "Finish editing an emacsclient buffer with \\[server-edit]."
-    :keymap (define-keymap "C-c C-c" #'server-edit))
+    "Finish editing an emacsclient buffer with \\[my-server-save-and-edit]."
+    :keymap (define-keymap "C-c C-c" #'my-server-save-and-edit))
+  (unless (server-running-p) (server-start))
   :hook
   (server-visit . my-server-edit-mode))
 
