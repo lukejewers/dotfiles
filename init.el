@@ -331,8 +331,9 @@
   (("C-." . my-shell-pop-up)
    :map shell-mode-map
    ("M-r" . my-shell-history))
+  :init
+  (add-hook 'comint-mode-hook #'ghostel-comint-mode)
   :custom
-  (ghostel-comint-global-mode t)
   (read-process-output-max (* 1024 1024))
   (shell-fontify-input-enable nil)
   :config
