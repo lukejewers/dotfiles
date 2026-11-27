@@ -90,10 +90,6 @@
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (electric-pair-delete-adjacent-pairs t)
   (electric-pair-preserve-balance nil)
-  (grep-command "rg -S --no-heading --color=never ")
-  (grep-save-buffers t)
-  (grep-use-headings t)
-  (grep-use-null-device nil)
   (help-window-select t)
   (highlight-nonselected-windows nil)
   (indent-tabs-mode nil)
@@ -205,6 +201,15 @@
   (minibuffer-visible-completions t)
   (completion-eager-update t))
 
+(use-package grep
+  :ensure nil
+  :defer t
+  :config
+  (setopt grep-command "rg -S --no-heading --color=never "
+          grep-save-buffers t
+          grep-use-headings t
+          grep-use-null-device nil))
+
 (use-package compile
   :ensure nil
   :custom
@@ -238,6 +243,7 @@
         (goto-char (point-min)))))
   (defun my-project-grep-dwim ()
     (interactive)
+    (require 'grep)
     (if-let* ((symbol (thing-at-point 'symbol t)))
         (let ((default-directory (project-root (project-current t))))
           (grep (concat grep-command
@@ -247,6 +253,7 @@
       (call-interactively #'my-project-grep)))
   (defun my-project-grep ()
     (interactive)
+    (require 'grep)
     (let* ((default-directory (project-root (project-current t)))
            (command (concat grep-command "-e '' .")))
       (grep (read-shell-command "Grep project: "
