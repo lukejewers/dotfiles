@@ -393,9 +393,17 @@
                         :key 'gptel-api-key
                         :models '("~deepseek/deepseek-flash-latest"))))
 
-(use-package seance
-  :vc (:url "https://github.com/lukejewers/seance")
-  :after ghostel
-  :bind-keymap ("C-c a" . seance-command-map)
-  :config
-  (seance-mode 1))
+(use-package agent-shell
+  :bind (("C-c s s" . agent-shell)
+         ("C-c s t" . agent-shell-toggle)
+         ("C-c s n" . agent-shell-new-shell)
+         ("C-c s b" . agent-shell-switch-buffer)
+         ("C-c s m" . agent-shell-set-session-model)
+         ("C-c s r" . agent-shell-resume-session)
+         ("C-c s c" . agent-shell-prompt-compose)
+         ("C-c s d" . agent-shell-send-dwim)
+         :map agent-shell-mode-map
+         ("C-c C-r" . agent-shell-rename-buffer))
+  :custom
+  (agent-shell-context-sources '(files region error))
+  (agent-shell-session-restore-verbosity 'full))
