@@ -75,11 +75,7 @@
     :keymap my-overrides-map)
   :custom
   (auto-save-default nil)
-  (bs-default-configuration "all-intern-last")
-  (bs-max-window-height 15)
   (c-ts-mode-indent-offset 4)
-  (comint-completion-addsuffix nil)
-  (comint-process-echoes t)
   (create-lockfiles nil)
   (cursor-in-non-selected-windows nil)
   (delete-by-moving-to-trash t)
@@ -94,14 +90,13 @@
   (highlight-nonselected-windows nil)
   (indent-tabs-mode nil)
   (kill-do-not-save-duplicates t)
-  (lazy-highlight-initial-delay 0)
   (make-backup-files nil)
   (mode-line-collapse-minor-modes t)
   (package-install-upgrade-built-in t)
   (pcomplete-termination-string "")
   (python-indent-guess-indent-offset-verbose nil)
   (python-shell-completion-native-enable nil)
-  (resize-mini-windows nil)
+  (read-process-output-max (* 1024 1024))
   (save-interprogram-paste-before-kill t)
   (set-mark-command-repeat-pop t)
   (tab-always-indent 'complete)
@@ -128,17 +123,14 @@
   :hook
   ((after-init . (lambda () (load (expand-file-name "local.el" user-emacs-directory) t t)))
    (after-save . executable-make-buffer-file-executable-if-script-p)
-   (comint-mode . (lambda () (setq-local scroll-margin 1)))
    (before-save . delete-trailing-whitespace)
-   (compilation-filter . ansi-color-compilation-filter)
    (emacs-startup . (lambda () (message "Emacs loaded in %.2f seconds with %d garbage collections"
                                         (float-time (time-subtract after-init-time before-init-time)) gcs-done)))
    (emacs-startup . (lambda () (setq gc-cons-threshold (* 1024 1024 16) gc-cons-percentage 0.1)))
    (emacs-startup . editorconfig-mode)
    (emacs-startup . global-auto-revert-mode)
    (emacs-startup . pixel-scroll-precision-mode)
-   (emacs-startup . savehist-mode)
-   (bs-mode . hl-line-mode)))
+   (emacs-startup . savehist-mode)))
 
 (use-package my-gruber-darker-theme
   :vc (:url "https://github.com/lukejewers/my-gruber-darker")
@@ -147,7 +139,10 @@
 
 (use-package icomplete
   :ensure nil
-  :custom (icomplete-compute-delay 0.0)
+  :custom
+  (icomplete-compute-delay 0.0)
+  (icomplete-prospects-height 1)
+  (icomplete-separator (propertize " │ " 'face 'shadow))
   :config (fido-mode 1))
 
 (use-package isearch
@@ -155,6 +150,7 @@
   :custom
   (isearch-lazy-count t)
   (isearch-allow-motion t)
+  (lazy-highlight-initial-delay 0)
   :bind (:map isearch-mode-map ("C-q" . isearch-query-replace-regexp)))
 
 (use-package prescient
@@ -200,7 +196,10 @@
   (completion-auto-select nil)
   (minibuffer-visible-completions t)
   (minibuffer-default-prompt-format "")
-  (completion-eager-update t))
+  (completion-eager-update t)
+  (history-delete-duplicates t)
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  (resize-mini-windows nil))
 
 (use-package grep
   :ensure nil
@@ -218,7 +217,9 @@
   (compilation-always-kill t)
   (compilation-ask-about-save nil)
   :bind
-  ("C-c c" . compile))
+  ("C-c c" . compile)
+  :hook
+  (compilation-filter . ansi-color-compilation-filter))
 
 (use-package project
   :ensure nil
@@ -290,6 +291,14 @@
     (interactive)
     (kill-new (abbreviate-file-name default-directory))))
 
+(use-package bs
+  :ensure nil
+  :custom
+  (bs-default-configuration "all-intern-last")
+  (bs-max-window-height 15)
+  :hook
+  (bs-mode . hl-line-mode))
+
 (use-package move-text
   :bind
   ("M-p" . move-text-up)
@@ -324,16 +333,21 @@
   :hook
   (server-visit . my-server-edit-mode))
 
+(use-package comint
+  :ensure nil
+  :custom
+  (comint-completion-addsuffix nil)
+  (comint-process-echoes t)
+  :hook
+  (comint-mode . (lambda () (setq-local scroll-margin 1))))
+
 (use-package shell
   :ensure nil
   :bind
   (("C-." . my-shell-pop-up)
    :map shell-mode-map
    ("M-r" . my-shell-history))
-  :init
-  (add-hook 'comint-mode-hook #'ghostel-comint-mode)
   :custom
-  (read-process-output-max (* 1024 1024))
   (shell-fontify-input-enable nil)
   :config
   (defun my-shell-pop-up ()
@@ -353,6 +367,7 @@
       (insert choice))))
 
 (use-package ghostel
+  :hook (comint-mode . ghostel-comint-mode)
   :bind (:map ghostel-semi-char-mode-map
               ("C-<backspace>" . my-ghostel-backward-kill-word)
               ("C-k"  . my-ghostel-send-C-k-and-kill))
